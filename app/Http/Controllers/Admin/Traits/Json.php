@@ -13,9 +13,9 @@ trait Json
      * @var array json 数据
      */
     public $json = [
-        'code' => 1000,
+        'code'    => 1000,
         'message' => '',
-        'data' => '',
+        'data'    => '',
     ];
 
     /**
@@ -27,14 +27,12 @@ trait Json
      */
     public function handleJson($data, $code = 0, $message = '')
     {
-        $this->json['data'] = $data;
-        $this->json['code'] = $code;
-        $this->json['message'] = $message;
+        list($this->json['data'], $this->json['code'], $this->json['message']) = [$data, $code, $message];
     }
 
     /**
      * 返回 json 数据信息
-     * 
+     *
      * @param array $params 返回数据信息
      * @return \Illuminate\Http\JsonResponse
      */
@@ -45,7 +43,7 @@ trait Json
 
         // 处理错误信息
         if (empty($this->json['message'])) {
-            $this->json['message'] = trans('error.'.$this->json['code']);
+            $this->json['message'] = trans('error.' . $this->json['code']);
         }
 
         return response()->json($this->json, 200, [], 320);
@@ -53,23 +51,23 @@ trait Json
 
     /**
      * 处理成功返回
-     * 
-     * @param  mixed|array $data  返回数据信息
+     *
+     * @param  mixed|array $data 返回数据信息
      * @param  string $message 提示信息，默认为空
      * @return \Illuminate\Http\JsonResponse
      */
     public function success($data, $message = '')
     {
         return $this->returnJson([
-            'code' => 0,
+            'code'    => 0,
             'message' => $message,
-            'data' => $data
+            'data'    => $data
         ]);
     }
 
     /**
      * 处理错误信息返回
-     * 
+     *
      * @param  int $code 错误码
      * @param  string $message 提示信息，默认为空
      * @return \Illuminate\Http\JsonResponse
@@ -77,9 +75,9 @@ trait Json
     public function error($code = 1000, $message = '')
     {
         return $this->returnJson([
-            'code' => $code,
+            'code'    => $code,
             'message' => $message,
-            'data' => null,
+            'data'    => null,
         ]);
     }
 }
