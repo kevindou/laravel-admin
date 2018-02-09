@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin;
-use Illuminate\Http\Request;
 
 /**
  * Class AdminsController 后台管理员信息
@@ -32,48 +31,23 @@ class AdminsController extends Controller
     /**
      * 处理显示查询参数配置
      *
-     * @param array $params
      * @return array
      */
-    public function where($params)
+    public function where()
     {
         return [
-            'name' => 'like',
+            'name'  => 'like',
             'email' => '='
         ];
     }
 
     /**
-     * 创建数据
+     * 处理请求中的密码字段
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return array|string
      */
-    public function create()
+    protected function handleRequest()
     {
-        /* @var $model \App\Models\Admin */
-        $model = new $this->model;
-        $array = request()->input();
-        if (!empty($array['password'])) {
-            $array['password'] = bcrypt($array['password']);
-        }
-
-        $model->fill($array);
-        if ($model->save()) {
-            return $this->success($model);
-        } else {
-            return $this->error(1005);
-        }
-    }
-
-    /**
-     * 修改事件信息
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
-    public function update()
-    {
-        $model = $this->findOrFail();
         $array = request()->input();
         if (!empty($array['password'])) {
             $array['password'] = bcrypt($array['password']);
@@ -81,11 +55,6 @@ class AdminsController extends Controller
             unset($array['password']);
         }
 
-        $model->fill($array);
-        if ($model->save()) {
-            return $this->success($model);
-        } else {
-            return $this->error(1007);
-        }
+        return $array;
     }
 }

@@ -52,36 +52,34 @@ class UploadsController extends Controller
      */
     public function upload(Request $request)
     {
-        if ($request->isMethod('post')) {
-            $file = $request->file('file');
-            if ($file->isValid()) {
-                // 上传文件
-                $url = $file->store(date('Ymd'));
-                if ($url) {
-                    // 新增数据
-                    $insert = [
-                        'name' => $file->getClientOriginalName(),
-                        'url' => Storage::url($url),
-                        'path' => $url,
-                        'title' => '',
-                        'extension' => $file->getClientOriginalExtension(),
-                        'public' => 1
-                    ];
-                    if ($upload = Upload::create($insert)) {
-                        $this->handleJson($upload);
-                    } else {
-                        $this->json['code'] = 1005;
-                    }
-                } else {
-                    $this->json['code'] = 1004;
-                }
-
-            } else {
-                $this->json['code'] = 1001;
-            }
+        if (!$request->isMethod('post')) {
+            return $this->error();
         }
 
-        return $this->returnJson();
+        $file = $request->file('file');
+        if ($file->isValid()) {
+            return $this->error(1001);
+        }
+
+        // 上传文件
+        $url = $file->store(date('Ymd'));
+        if ($url) {
+            return $this->error(1004);
+        }
+
+        // 新增数据
+        if ($upload = Upload::create([
+            'name' => $file->getClientOriginalName(),
+            'url' => Storage::url($url),
+            'path' => $url,
+            'title' => '',
+            'extension' => $file->getClientOriginalExtension(),
+            'public' => 1
+        ])) {
+            return $this->success($upload);
+        } else {
+            return $this->error(1005);
+        }
     }
 
     /**

@@ -24,13 +24,13 @@ class MenusController extends Controller
 
         // 查询父类等级
         $parents = DB::table('menus')->where([
-            ['status', '!=', Menu::STATUS_DELETE], 
+            ['status', '!=', Menu::STATUS_DELETE],
             ['parent', '=', 0]
         ])->pluck('name', 'id');
 
         // 载入视图
         return view('admin.menus.index', [
-            'status' => $status,
+            'status'  => $status,
             'parents' => $parents
         ]);
     }
@@ -38,14 +38,13 @@ class MenusController extends Controller
     /**
      * 处理查询参数配置
      *
-     * @param array $params
      * @return array
      */
-    public function where($params)
+    public function where()
     {
         return [
-            'name' => 'like',
-            'url' => 'like',
+            'name'   => 'like',
+            'url'    => 'like',
             'status' => 'in',
         ];
     }

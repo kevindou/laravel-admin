@@ -16,10 +16,9 @@ class CalendarsController extends Controller
     /**
      * 处理显示查询参数配置
      *
-     * @param array $params
      * @return array
      */
-    public function where($params)
+    public function where()
     {
         return [
             'desc'  => 'like',
@@ -48,44 +47,20 @@ class CalendarsController extends Controller
     }
 
     /**
-     * 创建数据
+     * 处理请求参数中的style
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return array|string
      */
-    public function create()
+    protected function handleRequest()
     {
         $array = request()->input();
         unset($array['actionType'], $array['id']);
-        if (!empty($array['style'])) $array['style'] = Calendar::style($array['style']);
-        $array['created_id'] = $array['updated_id'] = 1;
-        if ($calender = Calendar::create($array)) {
-            return $this->success($calender);
-        } else {
-            return $this->error(1005);
-        }
-    }
-
-    /**
-     * 修改事件信息
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
-    public function update()
-    {
-        $calendar = $this->findOrFail();
-        $array    = request()->input();
-        unset($array['actionType']);
         if (!empty($array['style'])) {
             $array['style'] = Calendar::style($array['style']);
         }
 
-        $calendar->fill($array);
-        if ($calendar->save()) {
-            return $this->success($calendar);
-        } else {
-            return $this->error(1007);
-        }
+        $array['created_id'] = $array['updated_id'] = 1;
+        return $array;
     }
 
     /**

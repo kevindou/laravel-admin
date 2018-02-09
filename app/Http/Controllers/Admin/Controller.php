@@ -36,10 +36,9 @@ class Controller extends \App\Http\Controllers\Controller
     /**
      * 处理查询配置信息
      *
-     * @param array $params 查询参数
      * @return array
      */
-    protected function where($params)
+    protected function where()
     {
         return [];
     }
@@ -70,12 +69,8 @@ class Controller extends \App\Http\Controllers\Controller
             }
         }
 
-        // 查询的参数
-        $where = $request->input('where');
-        parse_str($where, $array);
-
+        parse_str($request->input('where'), $array);
         $query = DB::table((new $this->model)->getTable());
-        // 处查询条件
         Helper::handleWhere($query, $array, $this->where($array));
         $total = $query->count();
 
@@ -103,13 +98,7 @@ class Controller extends \App\Http\Controllers\Controller
      */
     public function create()
     {
-        /* @var $model \Illuminate\Database\Eloquent\Model */
-        $model = $this->model;
-        if ($model = $model::create(request()->input())) {
-            return $this->success($model);
-        } else {
-            return $this->error(1005);
-        }
+        return $this->save(new $this->model);
     }
 
     /**
@@ -120,13 +109,7 @@ class Controller extends \App\Http\Controllers\Controller
      */
     public function update()
     {
-        $model = $this->findOrFail();
-        $model->fill(request()->input());
-        if ($model->save()) {
-            return $this->success($model);
-        } else {
-            return $this->error(1007);
-        }
+        return $this->save($this->findOrFail(), 1007);
     }
 
     /**
@@ -157,9 +140,31 @@ class Controller extends \App\Http\Controllers\Controller
         $model = new $this->model;
         $id    = request()->input($model->getKeyName());
         if (!$id) {
-            throw new \Exception('请求数据为空');
+            throw new \UnexpectedValueException('请求数据为空');
         }
 
         return $model::findOrFail($id);
+    }
+
+    /**
+     * 数据编辑和创建
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model model 对象
+     * @param int $error 错误的错误码默认1005
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function save($model, $error = 1005)
+    {
+        return $model->fill($this->handleRequest())->save() ? $this->success($model) : $this->error($error);
+    }
+
+    /**
+     * 处理请求参数
+     *
+     * @return array|string
+     */
+    protected function handleRequest()
+    {
+        return request()->input();
     }
 }
