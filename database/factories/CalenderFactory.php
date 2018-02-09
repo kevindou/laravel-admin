@@ -11,12 +11,12 @@ $factory->define(App\Models\Calendar::class, function (Faker $faker) {
 
     return [
         'title' => $faker->name,
-        'desc' => mt_rand(10000, 99999).str_shuffle(implode('', range('A', 'Z'))),
+        'desc' => mt_rand(10000, 99999) . str_shuffle(implode('', range('A', 'Z'))),
         'status' => mt_rand(0, 5),
         'time_status' => mt_rand(1, 5),
         'admin_id' => mt_rand(1, 9999),
         'start' => date('Y-m-d H:i:s', $intStart),
-        'end' =>  date('Y-m-d H:i:s',$intStart + (mt_rand(1, 31) * 24 * 3600)),
+        'end' => date('Y-m-d H:i:s', $intStart + (mt_rand(1, 31) * 24 * 3600)),
         'style' => json_encode([
             'backgroundColor' => $color[0],
             'borderColor' => $color[0],
