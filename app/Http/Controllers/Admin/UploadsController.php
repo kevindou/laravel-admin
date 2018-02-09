@@ -41,9 +41,7 @@ class UploadsController extends Controller
      */
     public function list()
     {
-        $array = Upload::all();
-        $this->handleJson($array);
-        return $this->returnJson();
+        return $this->success(Upload::all());
     }
 
     /**
@@ -94,19 +92,13 @@ class UploadsController extends Controller
      */
     public function delete(Request $request)
     {
-        $upload = Upload::find($request->input('id'));
-        if ($upload) {
-            if ($upload->delete()) {
-                Storage::delete($upload->path);
-                $this->handleJson($upload);
-            } else {
-                $this->json['code'] = 1003;
-            }
+        $upload = Upload::findOrFail($request->input('id'));
+        if ($upload->delete()) {
+            Storage::delete($upload->path);
+            return $this->success($upload);
         } else {
-            $this->json['code'] = 1002;
+            return $this->error(1003);
         }
-
-        return $this->returnJson();
     }
 
     /**
@@ -117,19 +109,13 @@ class UploadsController extends Controller
      */
     public function update(StoreUpload $request)
     {
-        /* @var $upload Upload */
-        $upload = Upload::find($request->input('id'));
-        if ($upload) {
-            $upload->fill($request->input());
-            if ($upload->save()) {
-                $this->handleJson($upload);
-            } else {
-                $this->json['code'] = 1003;
-            }
+        $upload = Upload::findOrFail($request->input('id'));
+        $upload->fill($request->input());
+        if ($upload->save()) {
+            return $this->success($upload);
         } else {
-            $this->json['code'] = 1002;
+            return $this->error(1003);
         }
-        return $this->returnJson();
     }
 
     /**

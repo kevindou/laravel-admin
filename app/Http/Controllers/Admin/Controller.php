@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Admin\Traits\Json;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -48,13 +47,13 @@ class Controller extends \App\Http\Controllers\Controller
     /**
      * 数据搜索处理
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function search(Request $request)
+    public function search()
     {
+        $request = request();
         // 查询的分页信息
-        $start = $request->input('start');
+        $start  = $request->input('start');
         $length = $request->input('length');
 
         $orderBy = $request->input('order');
@@ -87,88 +86,80 @@ class Controller extends \App\Http\Controllers\Controller
 
         // 返回结果
         return $this->returnJson([
-            'draw' => $request->input('draw'),
-            'recordsTotal' => $total,
+            'draw'            => $request->input('draw'),
+            'recordsTotal'    => $total,
             'recordsFiltered' => $total,
-            'data' => $query->offset($start)->limit($length)->get(),
-            'code' => 0,
-            'params' => $request->input('params'),
-            'sql' => $query->toSql()
+            'data'            => $query->offset($start)->limit($length)->get(),
+            'code'            => 0,
+            'params'          => $request->input('params'),
+            'sql'             => $query->toSql(),
         ]);
     }
 
     /**
      * 创建数据
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create()
     {
+        /* @var $model \Illuminate\Database\Eloquent\Model */
         $model = $this->model;
-        $array = $request->input();
-        if ($calender = $model::create($array)) {
-            $this->handleJson($calender, 0);
+        if ($model = $model::create(request()->input())) {
+            return $this->success($model);
         } else {
-            $this->json['code'] = 1005;
+            return $this->error(1005);
         }
-
-        return $this->returnJson();
     }
 
     /**
-     * 修改事件信息
+     * 修改数据信息
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function update(Request $request)
+    public function update()
     {
-        // 第一步: 验证请求数据
-        $model = new $this->model;
-        $id = $request->input($model->getKeyName());
-        if (!$id) return $this->error();
-
-        // 第二步: 查询数据是否存在
-        $menu = $model::find($id);
-        if (!$menu) return $this->error(1002);
-
-        // 修改数据
-        $menu->fill($request->input());
-        if ($menu->save()) {
-            $this->handleJson($menu);
+        $model = $this->findOrFail();
+        $model->fill(request()->input());
+        if ($model->save()) {
+            return $this->success($model);
         } else {
-            $this->json['code'] = 1007;
+            return $this->error(1007);
         }
-
-        return $this->returnJson();
     }
 
     /**
      * 删除数据
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function delete(Request $request)
+    public function delete()
     {
-        // 第一步: 验证请求数据
-        $model = new $this->model;
-        $id = $request->input($model->getKeyName());
-        if (!$id) return $this->error();
-
-        // 第二步: 查询数据是否存在
-        $modelName = $this->model;
-        $model = $modelName::find($id);
-        if (!$model) return $this->error(1002);
-
-        // 删除数据
+        $model = $this->findOrFail();
         if ($model->delete()) {
-            $this->handleJson([]);
+            return $this->success($model);
         } else {
-            $this->json['code'] = 1006;
+            return $this->error(1006);
+        }
+    }
+
+    /**
+     * 查询model
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     * @throws \Exception
+     */
+    protected function findOrFail()
+    {
+        /* @var $model \Illuminate\Database\Eloquent\Model */
+        $model = new $this->model;
+        $id    = request()->input($model->getKeyName());
+        if (!$id) {
+            throw new \Exception('请求数据为空');
         }
 
-        return $this->returnJson();
+        return $model::findOrFail($id);
     }
 }

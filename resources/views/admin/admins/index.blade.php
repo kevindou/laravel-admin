@@ -138,7 +138,7 @@
                         {
                             "title": "管理员密码", "data": "password", "orderable": false, hide: true,
                             "edit": {
-                                type: "password", required: "true", rangelength: "[6, 20]"
+                                type: "password", rangelength: "[6, 20]"
                             }
                         },
                         {"title": "管理员头像", "data": "avatar", "name": "avatar", "orderable": false},

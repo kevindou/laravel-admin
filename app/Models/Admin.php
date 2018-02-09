@@ -35,7 +35,7 @@ class Admin extends \Illuminate\Foundation\Auth\User
     /**
      * @var array 批量赋值的黑名单
      */
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     /**
      * 获取状态信息

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Admin\Traits\Json;
 use App\Models\Calendar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +22,7 @@ class CalendarsController extends Controller
     public function where($params)
     {
         return [
-            'desc' => 'like',
+            'desc'  => 'like',
             'title' => 'like'
         ];
     }
@@ -36,27 +35,26 @@ class CalendarsController extends Controller
     public function index()
     {
         // 默认状态信息
-        $status = Calendar::getStatus();
+        $status     = Calendar::getStatus();
         $timeStatus = Calendar::getTimeStatus();
-        $colors = Calendar::$arrColor;
+        $colors     = Calendar::$arrColor;
 
         // 载入视图
         return view('admin.calendars.index', [
-            'status' => $status,
+            'status'     => $status,
             'timeStatus' => $timeStatus,
-            'colors' => $colors,
+            'colors'     => $colors,
         ]);
     }
 
     /**
      * 创建数据
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create()
     {
-        $array = $request->input();
+        $array = request()->input();
         unset($array['actionType'], $array['id']);
         if (!empty($array['style'])) $array['style'] = Calendar::style($array['style']);
         $array['created_id'] = $array['updated_id'] = 1;
@@ -70,24 +68,18 @@ class CalendarsController extends Controller
     /**
      * 修改事件信息
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function update(Request $request)
+    public function update()
     {
-        $id = (int)$request->input('id');
-        if ($id <= 0) {
-            return $this->error();
-        }
-
-        $calendar = Calendar::find($id);
-        if (empty($calendar)) {
-            return $this->error(1002);
-        }
-
-        $array = $request->input();
+        $calendar = $this->findOrFail();
+        $array    = request()->input();
         unset($array['actionType']);
-        if (!empty($array['style'])) $array['style'] = Calendar::style($array['style']);
+        if (!empty($array['style'])) {
+            $array['style'] = Calendar::style($array['style']);
+        }
+
         $calendar->fill($array);
         if ($calendar->save()) {
             return $this->success($calendar);
@@ -104,9 +96,9 @@ class CalendarsController extends Controller
     public function self()
     {
         // 默认状态信息
-        $status = Calendar::getStatus();
+        $status     = Calendar::getStatus();
         $timeStatus = Calendar::getTimeStatus();
-        $colors = Calendar::$arrColor;
+        $colors     = Calendar::$arrColor;
 
         // 查询数据
         $all = DB::table('calendars')->where('status', '=', 0)
@@ -117,10 +109,10 @@ class CalendarsController extends Controller
 
         // 载入视图
         return view('admin.calendars.self', [
-            'status' => $status,
+            'status'     => $status,
             'timeStatus' => $timeStatus,
-            'colors' => $colors,
-            'calendars' => $all
+            'colors'     => $colors,
+            'calendars'  => $all
         ]);
     }
 
@@ -134,7 +126,7 @@ class CalendarsController extends Controller
     {
         // 查询的时间
         $start = $request->input('start');
-        $end = $request->input('end');
+        $end   = $request->input('end');
 
         // 查询数据
         $all = DB::table('calendars')->where([
@@ -145,7 +137,6 @@ class CalendarsController extends Controller
 
         foreach ($all as &$value) {
             Calendar::handleStyle($value);
-//            $value->allDay = true;
         }
 
         return response()->json($all);

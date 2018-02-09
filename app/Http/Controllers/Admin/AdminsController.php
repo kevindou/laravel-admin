@@ -46,46 +46,35 @@ class AdminsController extends Controller
     /**
      * 创建数据
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create()
     {
+        /* @var $model \App\Models\Admin */
         $model = new $this->model;
-        $array = $request->input();
+        $array = request()->input();
         if (!empty($array['password'])) {
             $array['password'] = bcrypt($array['password']);
         }
 
         $model->fill($array);
         if ($model->save()) {
-            $this->handleJson($model, 0);
+            return $this->success($model);
         } else {
-            $this->json['code'] = 1005;
+            return $this->error(1005);
         }
-
-        return $this->returnJson();
     }
 
     /**
      * 修改事件信息
      *
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function update(Request $request)
+    public function update()
     {
-        // 第一步: 验证请求数据
-        $id = (int)$request->input('id');
-        if (!$id) return $this->error();
-
-        // 第二步: 查询数据是否存在
-        $modelName = $this->model;
-        $model = $modelName::find($id);
-        if (!$model) return $this->error(1002);
-
-        // 第三步：修改数据
-        $array = $request->input();
+        $model = $this->findOrFail();
+        $array = request()->input();
         if (!empty($array['password'])) {
             $array['password'] = bcrypt($array['password']);
         } else {
@@ -94,11 +83,9 @@ class AdminsController extends Controller
 
         $model->fill($array);
         if ($model->save()) {
-            $this->handleJson($model);
+            return $this->success($model);
         } else {
-            $this->json['code'] = 1007;
+            return $this->error(1007);
         }
-
-        return $this->returnJson();
     }
 }

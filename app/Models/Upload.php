@@ -18,5 +18,5 @@ class Upload extends Model
     /**
      * @var array 批量赋值的黑名单
      */
-    protected $guarded = [];
+    protected $guarded = ['id'];
 }
