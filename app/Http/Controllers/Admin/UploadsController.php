@@ -57,13 +57,13 @@ class UploadsController extends Controller
         }
 
         $file = $request->file('file');
-        if ($file->isValid()) {
+	if (!$file->isValid()) {
             return $this->error(1001);
         }
 
         // 上传文件
         $url = $file->store(date('Ymd'));
-        if ($url) {
+        if (!$url) {
             return $this->error(1004);
         }
 
