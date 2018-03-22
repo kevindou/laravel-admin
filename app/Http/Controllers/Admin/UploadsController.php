@@ -57,7 +57,7 @@ class UploadsController extends Controller
         }
 
         $file = $request->file('file');
-	if (!$file->isValid()) {
+        if (!$file->isValid()) {
             return $this->error(1001);
         }
 
