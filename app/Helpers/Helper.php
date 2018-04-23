@@ -95,8 +95,8 @@ class Helper
             }
 
             if (is_array($value)) {
-                $column = isset($value['column']) ?: $column;
-                $operator = isset($value['operator']) ?: '=';
+                $column = $value['column'] ?? $column;
+                $operator = $value['operator'] ?? '=';
                 if (
                     isset($value['callback']) &&
                     (function_exists($value['callback']) || $value['callback'] instanceof Closure)
