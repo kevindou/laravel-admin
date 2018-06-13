@@ -284,11 +284,12 @@ abstract class Repository
                 $strMethod = $or ? 'orWhere' . $expression : 'where' . $expression;
                 $query->{$strMethod}($column, $value);
             } else {
+                $strMethod = $or ? 'orWhere' : 'where';
                 if (in_array($expression, ['LIKE', 'NOT LIKE'])) {
                     $value = '%' . (string)$value . '%';
                 }
 
-                $query->where($column, $expression, $value);
+                $query->{$strMethod}($column, $expression, $value);
             }
         }
     }
