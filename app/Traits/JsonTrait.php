@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Traits;
+namespace App\Traits;
 
 /**
  * Class Json 数据返回
  *
  * @package App\Http\Controllers\Admin\Json
  */
-trait Json
+trait JsonTrait
 {
     /**
      * @var array json 数据
@@ -27,7 +27,7 @@ trait Json
      */
     public function handleJson($data, $code = 0, $message = '')
     {
-        list($this->json['data'], $this->json['code'], $this->json['message']) = [$data, $code, $message];
+        list($this->json['data'], $this->json['code'], $this->json['message']) = func_get_args();
     }
 
     /**
@@ -46,7 +46,7 @@ trait Json
             $this->json['message'] = trans('error.' . $this->json['code']);
         }
 
-        return response()->json($this->json, 200, [], 320);
+        return response()->json($this->json, 200, [], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**

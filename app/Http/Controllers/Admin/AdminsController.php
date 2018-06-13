@@ -48,11 +48,10 @@ class AdminsController extends Controller
      */
     protected function handleRequest()
     {
-        $array = request()->input();
-        if (!empty($array['password'])) {
-            $array['password'] = bcrypt($array['password']);
-        } else {
-            unset($array['password']);
+        if ($array = request()->input()) {
+            if (!array_get($array, 'password')) {
+                unset($array['password']);
+            }
         }
 
         return $array;

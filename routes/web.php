@@ -19,6 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/home', 'HomeController@actionIndex');
+
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::view('/', 'admin.index.index')
         ->name('admin.index')->middleware('admin');

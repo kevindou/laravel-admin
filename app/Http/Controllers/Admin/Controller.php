@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Helper;
-use App\Http\Controllers\Admin\Traits\Json;
+use App\Traits\JsonTrait;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -16,7 +16,7 @@ class Controller extends \App\Http\Controllers\Controller
     /**
      * 引入json 处理
      */
-    use Json;
+    use JsonTrait;
 
     /**
      * @var string 定义使用model

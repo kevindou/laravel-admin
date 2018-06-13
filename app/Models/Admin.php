@@ -12,6 +12,34 @@ class Admin extends \Illuminate\Foundation\Auth\User
 {
     use EntrustUserTrait;
 
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public $columns = [
+        'id',
+        'name',
+        'email',
+        'avatar',
+        'password',
+        'remember_token',
+        'status',
+        'created_at',
+        'updated_at',
+    ];
+
+    public $fillable = [
+        'name',
+        'email',
+        'avatar',
+        'password',
+        'remember_token',
+        'status',
+        'created_at',
+        'updated_at',
+    ];
+
     /**
      * 开启状态
      */
@@ -41,14 +69,15 @@ class Admin extends \Illuminate\Foundation\Auth\User
      * 获取状态信息
      *
      * @param null $intStatus 状态值
+     *
      * @return array|mixed
      */
     public static function getStatus($intStatus = null)
     {
         $mixReturn = [
-            self::STATUS_ENABLES => '启用',
+            self::STATUS_ENABLES  => '启用',
             self::STATUS_DISABLES => '停用',
-            self::STATUS_DELETE => '删除',
+            self::STATUS_DELETE   => '删除',
         ];
 
         if ($intStatus !== null) $mixReturn = isset($mixReturn[$intStatus]) ? $mixReturn[$intStatus] : null;

@@ -7,7 +7,7 @@ use App\Models\Upload;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Admin\Traits\Json;
+use App\Http\Controllers\Admin\Traits\JsonTrait;
 
 /**
  * Class UploadsController
@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\Traits\Json;
  */
 class UploadsController extends Controller
 {
-    use Json;
+    use JsonTrait;
 
     public function __construct()
     {
