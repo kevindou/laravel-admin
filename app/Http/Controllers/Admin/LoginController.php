@@ -39,6 +39,15 @@ class LoginController extends Controller
         $this->middleware('guest:admin')->except('logout');
     }
 
+    public function actionIndex(Request $request)
+    {
+        if ($request->isMethod('POST')) {
+            return $this->login($request);
+        }
+
+        return view('admin.auth.login');
+    }
+
     /**
      * Show the application's login form.
      *
@@ -69,8 +78,9 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function logout(Request $request)
+    public function actionLogout(Request $request)
     {
+        dd(123);
         $this->guard()->logout();
 
         $request->session()->invalidate();

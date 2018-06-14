@@ -21,7 +21,7 @@ class AdminsController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function actionIndex()
     {
         return view('admin.admins.index', [
             'status' => Admin::getStatus()

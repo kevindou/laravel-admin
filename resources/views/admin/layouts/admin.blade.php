@@ -1,7 +1,7 @@
 <?php
-$user = \Illuminate\Support\Facades\Auth::user();
-$strUserAvatar = $user && $user->avatar ? $user->avatar : asset('admin-assets/img/avatar.png');
-$strUserName = $user && $user->name ? $user->name : 'admin';
+$user             = \Illuminate\Support\Facades\Auth::user();
+$strUserAvatar    = $user && $user->avatar ? $user->avatar : asset('admin-assets/img/avatar.png');
+$strUserName      = $user && $user->name ? $user->name : 'admin';
 $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d H:i:s');
 ?>
         <!DOCTYPE html>
@@ -14,7 +14,7 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
     <!-- Main Header -->
     <header class="main-header">
         <!-- Logo -->
-        <a href="{{ route('admin.index')  }}" class="logo">
+        <a href="{{ url('admin/index/index')  }}" class="logo">
             <span class="logo-mini"><b>{{ trans('admin.projectNameMini') }}</b></span>
             <span class="logo-lg"><b>{{ trans('admin.projectName') }}</b></span>
         </a>
@@ -149,28 +149,28 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
                                     </a>
                                 </div>
                                 {{--<div class="col-xs-6 text-center mb10">--}}
-                                    {{--<a href="http://laravel-admin.com/admin/modules">--}}
-                                        {{--<i class="fa fa-cubes"></i>--}}
-                                        {{--<span>Modules</span>--}}
-                                    {{--</a>--}}
+                                {{--<a href="http://laravel-admin.com/admin/modules">--}}
+                                {{--<i class="fa fa-cubes"></i>--}}
+                                {{--<span>Modules</span>--}}
+                                {{--</a>--}}
                                 {{--</div>--}}
                                 {{--<div class="col-xs-6 text-center mb10">--}}
-                                    {{--<a href="http://laravel-admin.com/admin/la_menus">--}}
-                                        {{--<i class="fa fa-bars"></i>--}}
-                                        {{--<span>Menus</span>--}}
-                                    {{--</a>--}}
+                                {{--<a href="http://laravel-admin.com/admin/la_menus">--}}
+                                {{--<i class="fa fa-bars"></i>--}}
+                                {{--<span>Menus</span>--}}
+                                {{--</a>--}}
                                 {{--</div>--}}
                                 {{--<div class="col-xs-6 text-center mb10">--}}
-                                    {{--<a href="http://laravel-admin.com/admin/la_configs">--}}
-                                        {{--<i class="fa fa-cogs"></i>--}}
-                                        {{--<span>Configure</span>--}}
-                                    {{--</a>--}}
+                                {{--<a href="http://laravel-admin.com/admin/la_configs">--}}
+                                {{--<i class="fa fa-cogs"></i>--}}
+                                {{--<span>Configure</span>--}}
+                                {{--</a>--}}
                                 {{--</div>--}}
                                 {{--<div class="col-xs-6 text-center">--}}
-                                    {{--<a href="http://laravel-admin.com/admin/backups">--}}
-                                        {{--<i class="fa fa-hdd-o"></i>--}}
-                                        {{--<span>Backups</span>--}}
-                                    {{--</a>--}}
+                                {{--<a href="http://laravel-admin.com/admin/backups">--}}
+                                {{--<i class="fa fa-hdd-o"></i>--}}
+                                {{--<span>Backups</span>--}}
+                                {{--</a>--}}
                                 {{--</div>--}}
                             </li>
                             <!-- Menu Footer-->
@@ -179,12 +179,12 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
                                     <a href="http://laravel-admin.com/admin/users/1" class="btn btn-default btn-flat">Profile</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="{{ url('admin/logout') }}" onclick="event.preventDefault();
+                                    <a href="{{ url('admin/login/logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"
                                        class="btn btn-default btn-flat">
                                         {{ trans('admin.logout') }}
                                     </a>
-                                    <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
+                                    <form id="logout-form" action="{{ url('admin/login/logout') }}" method="POST"
                                           style="display: none;">
                                         {{ csrf_field() }}
                                     </form>
@@ -238,7 +238,8 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
                 </span>
             @else
                 <ol class="breadcrumb">
-                    <li><a href="{{ route('admin.index') }}"><i class="fa fa-dashboard"></i> {{ trans('admin.home') }}
+                    <li><a href="{{ url('admin/index/index') }}">
+                            <i class="fa fa-dashboard"></i> {{ trans('admin.home') }}
                         </a></li>
                     @foreach ($breadCrumb as $item)
                         @if ($loop->last)
@@ -253,13 +254,13 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
         <!-- Main content -->
         <section class="content ">
             @if (session('error'))
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4><i class="icon fa fa-ban"></i> {{trans('admin.alert')}} </h4>
-                {{ session('error') }}
-            </div>
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> {{trans('admin.alert')}} </h4>
+                    {{ session('error') }}
+                </div>
             @endif
-            <!-- Your Page Content Here -->
+        <!-- Your Page Content Here -->
             @yield('main-content')
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->
