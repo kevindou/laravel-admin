@@ -11,6 +11,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Admin;
 use App\Repositories\AdminRepository;
 
 class HomeController extends Controller
@@ -27,6 +28,15 @@ class HomeController extends Controller
 
     public function index()
     {
-        $this->adminRepository->findOne(2, ['*', 'roles' => ['*']]);
+        var_dump($this->adminRepository->setModelCondition([
+            'or'        => [
+                'id:eq' => 1,
+                'name'  => 'admin'
+            ],
+            'name'      => 'liujinxing',
+            'name:like' => 123,
+            'user'      => [1, 2]
+        ], ['id', 'name', 'email'])->toSql());
+        dd(Admin::where('id', '!=', 0)->offset(1)->limit(1)->toSql());
     }
 }

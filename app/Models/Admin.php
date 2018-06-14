@@ -84,4 +84,9 @@ class Admin extends \Illuminate\Foundation\Auth\User
 
         return $mixReturn;
     }
+
+    public function scopeUser($query, $value)
+    {
+        $query->whereIn('id', $value);
+    }
 }

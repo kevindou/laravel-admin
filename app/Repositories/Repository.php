@@ -219,21 +219,25 @@ abstract class Repository
 
     public function setModelCondition($conditions = [], $fields = [])
     {
+        $model = $this->model;
+        $table = $this->model->getTable();
+        $this->select($this->model, $fields, $table);
+
         // 查询条件
-        $conditions = $this->getPrimaryKeyCondition($conditions);
-        if (empty($conditions)) {
+        if (!$conditions = $this->getPrimaryKeyCondition($conditions)) {
             return $this->model;
         }
 
 
+        return $this->handleConditionQuery($conditions, $model, $table, $this->getTableColumns($model));
     }
 
     /**
      * 查询字段信息
      *
-     * @param       $query
-     * @param array $fields
-     * @param       $table
+     * @param  mixed $query
+     * @param array  $fields
+     * @param        $table
      *
      * @return mixed
      */
@@ -256,13 +260,128 @@ abstract class Repository
         return $query;
     }
 
+    /**
+     * @param mixed $query
+     * @param       $order_by
+     * @param       $table
+     * @param       $columns
+     *
+     * @return mixed
+     */
     private function orderBy($query, $order_by, $table, $columns)
     {
         if ($orders = explode(',', $order_by)) {
             foreach ($orders as $order) {
                 list($k, $v) = array_pad(explode(' ', preg_replace('/\s+/', ' ', $order)), 2, null);
                 if ($k && isset($columns[$k]) && in_array(strtolower($v), ['', 'asc', 'desc'])) {
-                    $query->orderBy($table ? $table . '.' . $k : $k, $v ?: 'desc');
+                    $query = $query->orderBy($table ? $table . '.' . $k : $k, $v ?: 'desc');
+                }
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param array  $condition
+     * @param mixed  $query
+     * @param string $table
+     * @param array  $columns
+     *
+     * @return mixed
+     */
+    protected function handleConditionQuery($condition, $query, $table, $columns)
+    {
+        // 设置了排序
+        if ($order_by = array_get($condition, 'orderBy')) {
+            $query = $this->orderBy($query, $order_by, $table, $columns);
+            unset($condition['orderBy']);
+        }
+
+        // 设置了limit
+        if ($limit = array_get($condition, 'limit')) {
+            $query = $query->limit(intval($limit));
+            unset($condition['limit']);
+        }
+
+        // 设置了offset
+        if ($offset = array_get($condition, 'offset')) {
+            $query->offset(intval($offset));
+            unset($condition['offset']);
+        }
+
+        // 设置了分组
+        if ($groupBy = array_get($condition, 'groupBy')) {
+            unset($condition['groupBy']);
+        }
+
+        // 没有查询条件直接退出
+        if (empty($condition)) {
+            return $query;
+        }
+
+        return $this->conditionQuery($condition, $query, $table, $columns);
+    }
+
+    /**
+     * @param        $condition
+     * @param  mixed $query
+     * @param        $table
+     * @param        $columns
+     * @param bool   $or
+     *
+     * @return Model|mixed
+     */
+    protected function conditionQuery($condition, $query, $table, $columns, $or = false)
+    {
+        foreach ($condition as $column => $bind_value) {
+            // or 查询
+            if (strtolower($column) === 'or' && is_array($bind_value) && $bind_value) {
+                $query = $query->where(function ($query) use ($bind_value, $table, $columns) {
+                    $this->conditionQuery($bind_value, $query, $table, $columns, true);
+                });
+
+                continue;
+            }
+
+
+            // 字段直接查询 field1 => value1
+            if (isset($columns[$column])) {
+                $this->handleFieldQuery($query, $table . '.' . $column, $bind_value, $or);
+                continue;
+            }
+
+            // 表达式查询 field1:neq => value1
+            list($field, $expression) = array_pad(explode(':', $column, 2), 2, null);
+            if ($field && $expression) {
+                $this->handleExpressionConditionQuery($query, [$field, $expression, $bind_value], $or);
+                continue;
+            }
+
+            // 自定义 scope 查询
+            if (is_a($query, Model::class)) {
+                $strMethod = 'scope' . ucfirst($column);
+                if (!method_exists($query, $strMethod)) {
+                    $strMethod = 'scope' . ucfirst(camel_case($column));
+                    $strMethod = method_exists($query, $strMethod) ? $strMethod : null;
+                }
+
+                if ($strMethod) {
+                    $query->{$strMethod}($query, $bind_value);
+                }
+
+                continue;
+            }
+
+            // scope 自定义查询
+            try {
+                $query->{$column}($bind_value);
+            } catch (\Exception $e) {
+                try {
+                    $column = ucfirst(camel_case($column));
+                    $query->{$column}($bind_value);
+                } catch (\Exception $e) {
+
                 }
             }
         }
@@ -275,6 +394,8 @@ abstract class Repository
      * @param array $condition 查询对象
      *                         ['field', 'expression', 'value']
      * @param bool  $or
+     *
+     * @return Model
      */
     protected function handleExpressionConditionQuery($query, $condition = [], $or = false)
     {
@@ -283,14 +404,37 @@ abstract class Repository
             if (in_array($expression, ['In', 'NotIn', 'Between', 'NotBetween'])) {
                 $strMethod = $or ? 'orWhere' . $expression : 'where' . $expression;
                 $query->{$strMethod}($column, $value);
-            } else {
-                $strMethod = $or ? 'orWhere' : 'where';
-                if (in_array($expression, ['LIKE', 'NOT LIKE'])) {
-                    $value = '%' . (string)$value . '%';
-                }
-
-                $query->{$strMethod}($column, $expression, $value);
             }
+
+            $strMethod = $or ? 'orWhere' : 'where';
+            if (in_array($expression, ['LIKE', 'NOT LIKE'])) {
+                $value = '%' . (string)$value . '%';
+            }
+
+            $query->{$strMethod}($column, $expression, $value);
         }
+
+        return $query;
+    }
+
+    /**
+     * 字段查询
+     *
+     * @param      $query
+     * @param      $field
+     * @param      $value
+     *
+     * @param bool $or
+     *
+     * @return mixed
+     */
+    protected function handleFieldQuery($query, $field, $value, $or = false)
+    {
+        $strMethod = is_array($value) ? 'whereIn' : 'where';
+        if ($or) {
+            $strMethod = 'or' . ucfirst($strMethod);
+        }
+
+        return $query->{$strMethod}($field, $value);
     }
 }
