@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Helpers\Helper;
 use App\Traits\JsonTrait;
 use Illuminate\Support\Facades\DB;
 
@@ -71,7 +70,7 @@ class Controller extends \App\Http\Controllers\Controller
 
         parse_str($request->input('where'), $array);
         $query = DB::table((new $this->model)->getTable());
-        Helper::handleWhere($query, $array, $this->where($array));
+        handle_where($query, $array, $this->where($array));
         $total = $query->count();
 
         // 排序
@@ -123,15 +122,16 @@ class Controller extends \App\Http\Controllers\Controller
         $model = $this->findOrFail();
         if ($model->delete()) {
             return $this->success($model);
-        } else {
-            return $this->error(1006);
         }
+
+        return $this->error(1006);
     }
 
     /**
      * 查询model
      *
      * @return \Illuminate\Database\Eloquent\Model
+     *
      * @throws \Exception
      */
     protected function findOrFail()
