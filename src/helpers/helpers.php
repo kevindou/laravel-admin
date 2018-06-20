@@ -149,6 +149,6 @@ if (!function_exists('admin_path')) {
      */
     function admin_path($path)
     {
-        return __DIR__ . '/../' . $path;
+        return __DIR__ . '/../' . ltrim($path, '/');
     }
 }

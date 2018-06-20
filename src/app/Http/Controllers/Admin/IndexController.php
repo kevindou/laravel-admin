@@ -10,11 +10,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-class IndexController extends \App\Http\Controllers\Controller
+use App\Http\Controllers\Controller as BaseController;
+
+class IndexController extends BaseController
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        // $this->middleware('admin');
     }
 
     public function actionIndex()
