@@ -28,5 +28,12 @@
     "files": [
       "src/helpers/helpers.php"
     ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "App\\Providers\\AdminProvider"
+      ]
+    }
   }
 }
