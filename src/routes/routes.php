@@ -30,7 +30,7 @@ if (request()->is('admin*')) {
             $action     = $defaultAction;
             break;
         default:
-            $action     = 'action' . ucfirst($params ? array_pop($params) : 'index');
+            $action     = strtolower($params ? array_pop($params) : 'index');
             $controller = ($params ? implode('\\', array_map('ucfirst', $params)) : 'Index') . 'Controller';
             break;
     }

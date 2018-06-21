@@ -36,7 +36,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest:admin')->except('actionLogout');
+        $this->middleware('guest:admin')->except('logout');
     }
 
     /**
@@ -44,7 +44,7 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
      */
-    public function actionIndex(Request $request)
+    public function index(Request $request)
     {
         if ($request->isMethod('POST')) {
             return $this->login($request);
@@ -83,7 +83,7 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function actionLogout(Request $request)
+    public function logout(Request $request)
     {
         $this->guard()->logout();
 

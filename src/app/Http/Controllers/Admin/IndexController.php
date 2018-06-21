@@ -19,7 +19,7 @@ class IndexController extends BaseController
         $this->middleware('admin');
     }
 
-    public function actionIndex()
+    public function index()
     {
         return view('admin.index.index');
     }
