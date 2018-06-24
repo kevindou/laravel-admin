@@ -39,7 +39,7 @@ class CalendarsController extends Controller
         $colors     = Calendar::$arrColor;
 
         // 载入视图
-        return view('admin.calendars.index', [
+        return view('admin::calendars.index', [
             'status'     => $status,
             'timeStatus' => $timeStatus,
             'colors'     => $colors,
@@ -83,7 +83,7 @@ class CalendarsController extends Controller
         }
 
         // 载入视图
-        return view('admin.calendars.self', [
+        return view('admin::calendars.self', [
             'status'     => $status,
             'timeStatus' => $timeStatus,
             'colors'     => $colors,

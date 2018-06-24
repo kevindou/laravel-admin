@@ -23,8 +23,8 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        return view('admin.admins.index', [
-            'status' => Admin::getStatus()
+        return view('admin::admins.index', [
+            'status' => admin::getStatus()
         ]);
     }
 

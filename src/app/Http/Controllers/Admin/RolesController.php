@@ -21,7 +21,7 @@ class RolesController extends Controller
      */
     public function index()
     {
-        return view('admin.roles.index');
+        return view('admin::roles.index');
     }
 
     /**
@@ -56,7 +56,7 @@ class RolesController extends Controller
 
         // 添加角色
         if ($model->getTable() === 'roles') {
-            if ($user = Admin::where(['id' => 1])->first()) {
+            if ($user = admin::where(['id' => 1])->first()) {
                 $user->roles()->attach($model->id);
             }
         } else {
@@ -83,9 +83,9 @@ class RolesController extends Controller
         $model->description  = $request->input('description');
         if ($model->save()) {
             return $this->success($model);
-        } else {
-            return $this->error(1007);
         }
+
+        return $this->error(1007);
     }
 
     /**
@@ -97,22 +97,23 @@ class RolesController extends Controller
     {
         if ((new $this->model)->where('id', request()->input('id'))->delete()) {
             return $this->success([]);
-        } else {
-            return $this->error(1006);
         }
+
+        return $this->error(1006);
     }
 
     /**
      * 分配权限信息
      *
      * @param Request $request
-     * @param $id
+     * @param         $id
+     *
      * @return \Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function permissions(Request $request, $id)
     {
         if ($id == 1) {
-            $request->session()->flash('error', trans('admin.notAllowedSetAdmin'));
+            $request->session()->flash('error', trans('admin::notAllowedSetAdmin'));
             return redirect('/admin/roles/index');
         }
 
@@ -130,7 +131,7 @@ class RolesController extends Controller
 
         // 查询全部权限
         $permissions = Permission::all();
-        return view('admin.roles.permissions', [
+        return view('admin::roles.permissions', [
             'model'       => $model,
             'permissions' => $permissions,
         ]);

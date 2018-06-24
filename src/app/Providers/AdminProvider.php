@@ -19,6 +19,8 @@ class AdminProvider extends ServiceProvider
                 AssetLinkCommand::class,
             ]);
         }
+
+        $this->loadViewsFrom(admin_path('resources/views'), 'admin');
         $this->publishes([admin_path('config/admin.php') => config_path('config/admin.php')], 'config');
     }
 

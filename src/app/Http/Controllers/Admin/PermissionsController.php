@@ -21,6 +21,6 @@ class PermissionsController extends RolesController
      */
     public function index()
     {
-        return view('admin.permissions.index');
+        return view('admin::permissions.index');
     }
 }

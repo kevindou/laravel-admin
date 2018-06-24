@@ -50,7 +50,7 @@ class LoginController extends Controller
             return $this->login($request);
         }
 
-        return view('admin.auth.login');
+        return view('admin::auth.login');
     }
 
     /**
@@ -60,7 +60,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('admin.auth.login');
+        return view('admin::auth.login');
     }
 
     protected function guard()
@@ -73,7 +73,7 @@ class LoginController extends Controller
         return Auth::guard('admin')->attempt([
             'email'    => $request->input('email'),
             'password' => $request->input('password'),
-            'status'   => Admin::STATUS_ENABLES
+            'status'   => admin:::STATUS_ENABLES
         ], $request->filled('remember'));
     }
 

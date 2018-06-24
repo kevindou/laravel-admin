@@ -29,7 +29,7 @@ class MenusController extends Controller
         ])->pluck('name', 'id');
 
         // 载入视图
-        return view('admin.menus.index', [
+        return view('admin::menus.index', [
             'status'  => $status,
             'parents' => $parents
         ]);

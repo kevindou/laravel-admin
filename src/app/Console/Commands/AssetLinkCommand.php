@@ -18,7 +18,7 @@ class AssetLinkCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Create a symbolic link from "public/admin-assets" to "./asset"';
+    protected $description = 'Create a symbolic link from "public/admin-assets" to "./resources/assets"';
 
     /**
      * Execute the console command.
@@ -33,7 +33,7 @@ class AssetLinkCommand extends Command
         }
 
         $this->laravel->make('files')->link(
-            admin_path('/assets'), public_path('admin-assets')
+            admin_path('resources/assets'), public_path('admin-assets')
         );
 
         $this->info('The [public/admin-assets] directory has been linked.');

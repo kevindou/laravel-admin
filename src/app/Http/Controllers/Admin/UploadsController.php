@@ -7,7 +7,7 @@ use App\Models\Upload;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Admin\Traits\JsonTrait;
+use App\Traits\JsonTrait;
 
 /**
  * Class UploadsController
@@ -31,7 +31,7 @@ class UploadsController extends Controller
      */
     public function index()
     {
-        return view('admin.uploads.index');
+        return view('admin::uploads.index');
     }
 
     /**
@@ -77,9 +77,9 @@ class UploadsController extends Controller
             'public' => 1
         ])) {
             return $this->success($upload);
-        } else {
-            return $this->error(1005);
         }
+
+        return $this->error(1005);
     }
 
     /**
@@ -94,9 +94,9 @@ class UploadsController extends Controller
         if ($upload->delete()) {
             Storage::delete($upload->path);
             return $this->success($upload);
-        } else {
-            return $this->error(1003);
         }
+
+        return $this->error(1003);
     }
 
     /**
@@ -109,11 +109,11 @@ class UploadsController extends Controller
     {
         $upload = Upload::findOrFail($request->input('id'));
         $upload->fill($request->input());
-        if ($upload->save()) {
-            return $this->success($upload);
-        } else {
+        if (!$upload->save()) {
             return $this->error(1003);
         }
+
+        return $this->success($upload);
     }
 
     /**
