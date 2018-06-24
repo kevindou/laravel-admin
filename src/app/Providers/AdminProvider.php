@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Console\Commands\AssetLinkCommand;
 use Illuminate\Support\ServiceProvider;
 
 class AdminProvider extends ServiceProvider
@@ -13,6 +14,11 @@ class AdminProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                AssetLinkCommand::class,
+            ]);
+        }
         $this->publishes([admin_path('config/admin.php') => config_path('config/admin.php')], 'config');
     }
 

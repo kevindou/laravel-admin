@@ -4,9 +4,11 @@
 
 use \Illuminate\Support\Facades\Route;
 
-if (request()->is('admin*')) {
+Route::group(['prefix' => 'admin'], function () {
     $uri    = trim(request()->getPathInfo(), '/');
     $params = isset($uri[0]) ? explode('/', $uri) : [];
+    array_shift($params);
+    $uri = implode('/', $params);
     foreach ($params as $i => $v) {
         $vv         = explode('-', $v);
         $params[$i] = implode('', array_map(function ($v) {
@@ -15,11 +17,8 @@ if (request()->is('admin*')) {
         );
     }
 
-// 去掉admin 控制器
-    array_shift($params);
-
     $defaultController = 'IndexController';
-    $defaultAction     = 'actionIndex';
+    $defaultAction     = 'index';
     switch (count($params)) {
         case 0:
             $controller = $defaultController;
@@ -38,13 +37,14 @@ if (request()->is('admin*')) {
     $namespace  = '\App\Http\Controllers\Admin\\';
     $options    = ['domain' => request()->getHttpHost(), 'namespace' => $namespace];
     $controller = $namespace . $controller;
-
     if (method_exists($controller, $action)) {
         Route::group($options, function () use ($uri, $controller, $action) {
             Route::match(['get', 'post'], $uri, $controller . '@' . $action);
         });
     }
-}
+});
+
+
 
 
 

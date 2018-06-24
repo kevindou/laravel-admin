@@ -21,11 +21,11 @@ class AdminAuth
             if ($request->ajax() || $request->wantsJson()) {
                 return response('Unauthorized.', 401);
             } else {
-                return redirect()->guest('admin/login');
+                return redirect()->guest('admin/login/index');
             }
         }
 
-        Auth::shouldUse($guards ? $guards : 'admin');
+        Auth::shouldUse($guards ?: 'admin');
 
         return $next($request);
     }
