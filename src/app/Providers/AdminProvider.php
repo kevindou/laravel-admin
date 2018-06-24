@@ -21,7 +21,7 @@ class AdminProvider extends ServiceProvider
         }
 
         $this->loadViewsFrom(admin_path('resources/views'), 'admin');
-        $this->publishes([admin_path('config/admin.php') => config_path('config/admin.php')], 'config');
+        $this->publishes([admin_path('config/admin.php') => config_path('admin.php')], 'config');
     }
 
     /**
@@ -31,6 +31,6 @@ class AdminProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->publishes([admin_path('config/admin.php') => config_path('config/admin.php')], 'config');
+        $this->publishes([admin_path('config/admin.php') => config_path('admin.php')], 'config');
     }
 }

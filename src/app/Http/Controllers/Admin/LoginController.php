@@ -73,7 +73,7 @@ class LoginController extends Controller
         return Auth::guard('admin')->attempt([
             'email'    => $request->input('email'),
             'password' => $request->input('password'),
-            'status'   => admin:::STATUS_ENABLES
+            'status'   => admin::STATUS_ENABLES
         ], $request->filled('remember'));
     }
 
