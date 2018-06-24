@@ -15,12 +15,11 @@ class AdminProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([
-                AssetLinkCommand::class,
-            ]);
+            $this->commands([AssetLinkCommand::class]);
         }
 
         $this->loadViewsFrom(admin_path('resources/views'), 'admin');
+        $this->loadMigrationsFrom(admin_path('database/migrations'));
         $this->publishes([
             admin_path('config/admin.php')               => config_path('admin.php'),
             admin_path('resources/lang/zh-CN/admin.php') => resource_path('lang/zh-CN/admin.php'),
