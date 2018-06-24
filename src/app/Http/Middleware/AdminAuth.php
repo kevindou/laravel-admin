@@ -11,8 +11,9 @@ class AdminAuth
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
-     * @param array $guards
+     * @param  \Closure                 $next
+     * @param array                     $guards
+     *
      * @return mixed
      */
     public function handle($request, Closure $next, ...$guards)
@@ -20,9 +21,9 @@ class AdminAuth
         if (Auth::guard('admin')->guest()) {
             if ($request->ajax() || $request->wantsJson()) {
                 return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('admin/login/index');
             }
+
+            return redirect()->guest('admin/login/index');
         }
 
         Auth::shouldUse($guards ?: 'admin');
