@@ -71,16 +71,17 @@ class LoginController extends Controller
     public function attemptLogin(Request $request)
     {
         return Auth::guard('admin')->attempt([
-            'email' => $request->input('email'),
+            'email'    => $request->input('email'),
             'password' => $request->input('password'),
-            'status' => Admin::STATUS_ENABLES
+            'status'   => Admin::STATUS_ENABLES
         ], $request->filled('remember'));
     }
 
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)

@@ -23,6 +23,6 @@ class AdminProvider extends ServiceProvider
      */
     public function register()
     {
-
+        $this->publishes([admin_path('config/admin.php') => config_path('config/admin.php')], 'config');
     }
 }
