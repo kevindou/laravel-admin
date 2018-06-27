@@ -110,10 +110,11 @@ class RolesController extends Controller
      *
      * @return \Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function permissions(Request $request, $id)
+    public function permissions(Request $request)
     {
+        $id = (int)$request->get('id');
         if ($id == 1) {
-            $request->session()->flash('error', trans('admin::notAllowedSetAdmin'));
+            $request->session()->flash('error', trans('admin.notAllowedSetAdmin'));
             return redirect('/admin/roles/index');
         }
 
@@ -129,6 +130,11 @@ class RolesController extends Controller
             }
         }
 
+        view()->share([
+            'title'           => trans('分配权限'),
+            '__active_menu__' => 'admin/roles/index'
+        ]);
+        
         // 查询全部权限
         $permissions = Permission::all();
         return view('admin::roles.permissions', [

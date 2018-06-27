@@ -1,17 +1,7 @@
 @extends('admin::layouts.admin')
-
-@section('header_title', '角色信息')
-@section('header_description', '分配权限')
-<?php
-$breadCrumb = [
-    ['label' => '角色列表', 'url' => url('/admin/roles/index')],
-    ['label' => '分配权限']
-];
-?>
-
 @section("main-content")
     <div class="row">
-        <form role="form" action="{{ url('/admin/roles/permissions', ['id' => $model->id]) }}" method="post">
+        <form role="form" action="{{ url('/admin/roles/permissions?id='.$model->id) }}" method="post">
             {{ csrf_field() }}
             <div class="col-md-3">
                 <!-- general form elements -->
@@ -67,9 +57,7 @@ $breadCrumb = [
                         @foreach($permissions as $value)
                             <label>
                                 <input type="checkbox" name="permissions[]"
-                                       @permission($value->name)
-                                checked="checked"
-                                @endpermission value="{{ $value->id }}">
+                                       value="{{ $value->id }}">
                                 {{ $value->description }} ({{ $value->name  }})
                             </label>
                         @endforeach
@@ -85,7 +73,7 @@ $breadCrumb = [
 @push("script")
     <script src="{{ asset('admin-assets/plugins/iCheck/icheck.min.js') }}"></script>
     <script>
-        $(function(){
+        $(function () {
             $("input[type=checkbox]").iCheck({
                 checkboxClass: 'icheckbox_minimal-blue',
                 radioClass: 'iradio_minimal-blue'

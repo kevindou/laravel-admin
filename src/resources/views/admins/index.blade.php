@@ -32,54 +32,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-    </div>
-
-    <!--隐藏的编辑表单-->
-    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"> 编辑角色信息 </h4>
-                </div>
-                <div class="modal-body">
-                    <form method="post" id="updateForm" class="form-horizontal" name="updateForm" action="update">
-                        <input type="hidden" name="id" value=""/>
-                        <fieldset>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label" for="input-name"> 管理员名称 </label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="input-name" required="true" rangelength="[2, 50]"
-                                           name="name" class="form-control"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label" for="input-email"> 管理员邮箱 </label>
-                                <div class="col-sm-9">
-                                    <input type="email" id="input-email" required="true" email="true"
-                                           rangelength="[1, 255]"
-                                           name="email" class="form-control"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label" for="input-icon"> 管理员密码 </label>
-                                <div class="col-sm-9">
-                                    <input type="password" id="input-password" rangelength="[6, 20]"
-                                           name="password" class="form-control"/>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-primary btn-image" id="updateFormSubmit">确定</button>
-                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">取消</button>
-                </div>
             </div>
         </div>
     </div>

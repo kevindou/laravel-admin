@@ -1,13 +1,4 @@
 @extends('admin::layouts.admin')
-
-@section('header_title', '日程管理')
-@section('header_description', '我的日程')
-@php
-    $breadCrumb = [
-        ['label' => '日程管理', 'url' => '/admin/uploads/index'],
-        ['label' => '我的日程']
-    ];
-@endphp
 @section("main-content")
     <div class="row">
         <div class="col-md-3">

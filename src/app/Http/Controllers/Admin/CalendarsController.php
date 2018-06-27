@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Admin\Calendar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class CalendarsController extends Controller
 {
@@ -70,6 +71,11 @@ class CalendarsController extends Controller
      */
     public function self()
     {
+        view()->share([
+            'title'           => trans('我的日程'),
+            '__active_menu__' => 'admin/calendars/index'
+        ]);
+
         // 默认状态信息
         $status     = Calendar::getStatus();
         $timeStatus = Calendar::getTimeStatus();
@@ -95,6 +101,7 @@ class CalendarsController extends Controller
      * 查找我的日程事件信息
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function events(Request $request)

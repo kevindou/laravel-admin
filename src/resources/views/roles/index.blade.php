@@ -26,7 +26,9 @@
                                     <input type="text" name="display_name" class="form-control"
                                            id="inputSearchPermissionName" placeholder="显示名称">
                                 </div>
-                                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i>搜索</button>
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fa fa-search"></i>搜索
+                                </button>
                             </form>
                         </div>
                         <div class="col-sm-12">
@@ -65,7 +67,7 @@
             var attr = "data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"";
             var html = "<button class='btn btn-info btn-xs example2-update' " + attr + " ><i class='fa fa-edit'></i></button> ";
             html += "<button class='btn btn-danger btn-xs example2-delete' " + attr + "><i class='fa fa-trash'></i></button> ";
-            html += "<a class=\"btn btn-info btn-xs\" href=\"{{ url('admin/roles/permissions') }}/" + rowData["id"] + "\"><i class='fa fa-leaf'></i> 分配角色</a> ";
+            html += "<a class=\"btn btn-info btn-xs\" href=\"{{ url('admin/roles/permissions') }}?id=" + rowData["id"] + "\"><i class='fa fa-leaf'></i> 分配角色</a> ";
             $(td).html(html);
         }
 
