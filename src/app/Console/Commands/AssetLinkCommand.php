@@ -11,7 +11,7 @@ class AssetLinkCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'admin-assets:link';
+    protected $signature = 'admin:assets-link';
 
     /**
      * The console command description.
