@@ -14,6 +14,8 @@ class AdminProvider extends ServiceProvider
      */
     public function boot()
     {
+        view()->composer(['common::',], BreadCrumbsComposer::class);
+
         if ($this->app->runningInConsole()) {
             $this->commands([AssetLinkCommand::class]);
         }
