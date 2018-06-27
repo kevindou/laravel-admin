@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Menu;
+use App\Models\Admin\Menu;
 use Illuminate\Support\Facades\DB;
 
 class MenusController extends Controller
@@ -10,7 +10,7 @@ class MenusController extends Controller
     /**
      * @var string 定义使用的model
      */
-    public $model = '\App\Models\Menu';
+    public $model = '\App\Models\Admin\Menu';
 
     /**
      * 首页显示

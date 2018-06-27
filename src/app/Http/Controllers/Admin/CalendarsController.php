@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Calendar;
+use App\Models\Admin\Calendar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,7 +11,7 @@ class CalendarsController extends Controller
     /**
      * @var string 定义使用的model
      */
-    public $model = '\App\Models\Calendar';
+    public $model = '\App\Models\Admin\Calendar';
 
     /**
      * 处理显示查询参数配置

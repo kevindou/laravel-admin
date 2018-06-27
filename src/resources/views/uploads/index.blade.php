@@ -1,53 +1,41 @@
 @extends('admin::layouts.admin')
-
-@section('header_title', trans('admin.upload'))
-@section('header_description', trans('admin.dropFileUpload'))
-@section('header_right')
-    <button id="addNewUploads" class="btn btn-info btn-sm pull-right"> {{ trans('admin.upload') }} </button>
-@endsection
-
 @section("main-content")
-<div id="vue-app">
-    <div class="box box-success">
-        <div class="box-header with-border">
-            {{ trans('admin.dropFileUploadList') }}
-            <!-- /.user-block -->
-            <div class="box-tools">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
+    <div id="vue-app">
+        <div class="box box-success">
+            <div class="box-header with-border">
+                {{ trans('admin.dropFileUploadList') }}
+                <button id="addNewUploads" class="btn btn-info btn-sm pull-right">
+                    {{ trans('admin.upload') }}
                 </button>
             </div>
-            <!-- /.box-tools -->
-        </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <div class="row" id="image-lists">
-                <template v-for="item, k in list">
-                    <template v-if="k % 4 === 4 || k % 4 === 0">
-                        <div class="col-md-12" >
-                    </template>
-                    <div class="col-md-3">
-                        <img class="img-responsive pad" :src="item.url" style="max-height: 300px;min-height: 250px"
-                             alt="Photo">
-                        <p>@{{ item.title }}</p>
-                        <button type="button" class="btn btn-success btn-xs" @click="downloadValue(item)">
-                            <i class="fa fa-cloud-download"></i> {{ trans('admin.download') }}
-                        </button>
-                        <button type="button" class="btn btn-info btn-xs" @click="updateValue(item, k)">
-                            <i class="fa fa-pencil-square-o"></i> {{ trans('admin.update') }}
-                        </button>
-                        <button type="button" class="btn btn-danger btn-xs" @click="deleteValue(item)">
-                            <i class="fa fa-trash-o"></i> {{ trans('admin.delete') }}
-                        </button>
-                        <span class="pull-right text-muted">@{{ item.create_time }}</span>
-                    </div>
-                    <template v-if="k%4 === 4 || k%4 === 0">
+            <div class="box-body">
+                <div class="row" id="image-lists">
+                    <template v-for="item, k in list">
+                        <template v-if="k % 4 === 4 || k % 4 === 0">
+                            <div class="col-md-12">
+                        </template>
+                        <div class="col-md-3">
+                            <img class="img-responsive pad" :src="item.url" style="max-height: 300px;min-height: 250px"
+                                 alt="Photo">
+                            <p>@{{ item.title }}</p>
+                            <button type="button" class="btn btn-success btn-xs" @click="downloadValue(item)">
+                                <i class="fa fa-cloud-download"></i> {{ trans('admin.download') }}
+                            </button>
+                            <button type="button" class="btn btn-info btn-xs" @click="updateValue(item, k)">
+                                <i class="fa fa-pencil-square-o"></i> {{ trans('admin.update') }}
+                            </button>
+                            <button type="button" class="btn btn-danger btn-xs" @click="deleteValue(item)">
+                                <i class="fa fa-trash-o"></i> {{ trans('admin.delete') }}
+                            </button>
+                            <span class="pull-right text-muted">@{{ item.create_time }}</span>
                         </div>
+                        <template v-if="k%4 === 4 || k%4 === 0">
+                            </div>
+                        </template>
                     </template>
-                </template>
+                </div>
             </div>
         </div>
-    </div>
 
     <div class="modal fade" id="update-upload-modal" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -61,7 +49,8 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-md-6">
-                            <form v-show="isUpload" action="{{ url('/admin/uploads/upload') }}" class="dropzone" id="dropzone">
+                            <form v-show="isUpload" action="{{ url('/admin/uploads/upload') }}" class="dropzone"
+                                  id="dropzone">
                                 {{ csrf_field() }}
                                 <div class="dz-message text-center">
                                     <i class="fa fa-cloud-upload"></i>
@@ -78,15 +67,20 @@
                                 <input type="hidden" name="id" :value="form.id">
                                 <div class="form-group">
                                     <label for="upload-name"> {{ trans('admin.fileName') }} </label>
-                                    <input class="form-control" required="true" rangelength="[2,255]" :value="form.name" type="text" name="name" id="upload-name" placeholder="{{ trans('admin.fileName') }}" >
+                                    <input class="form-control" required="true" rangelength="[2,255]" :value="form.name"
+                                           type="text" name="name" id="upload-name"
+                                           placeholder="{{ trans('admin.fileName') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="upload-url">{{ trans('admin.fileUrl') }}</label>
-                                    <input class="form-control" type="text" :value="form.url" id="upload-url" placeholder="{{ trans('admin.fileUrl') }}"  readonly>
+                                    <input class="form-control" type="text" :value="form.url" id="upload-url"
+                                           placeholder="{{ trans('admin.fileUrl') }}" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="upload-title">{{ trans('admin.fileTitle') }}</label>
-                                    <input class="form-control" required="true" rangelength="[2,255]" type="text" :value="form.title" name="title" id="upload-title" placeholder="{{ trans('admin.fileTitle') }}" >
+                                    <input class="form-control" required="true" rangelength="[2,255]" type="text"
+                                           :value="form.title" name="title" id="upload-title"
+                                           placeholder="{{ trans('admin.fileTitle') }}">
                                 </div>
                                 <div class="form-group">
                                     <label>{{ trans('admin.filePublic') }} </label>
@@ -104,13 +98,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info" id="update-upload-but">{{ trans('admin.update') }}</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('admin.close') }}</button>
+                    <button type="button" class="btn btn-info"
+                            id="update-upload-but">{{ trans('admin.update') }}</button>
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">{{ trans('admin.close') }}</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    </div>
 @endsection
 @push("style")
     <link rel="stylesheet" type="text/css" href="{{ asset('admin-assets/plugins/dropzone/dropzone.css') }}"/>
@@ -119,6 +115,7 @@
             border: 2px dashed #0087F7;
             min-height: 100%;
         }
+
         .dropzone .dz-default.dz-message {
             background-image: none;
         }
@@ -162,7 +159,7 @@
                         layer.confirm("{{ trans('admin.confirmFileDelete')  }}", {
                             title: "{{ trans('admin.remind')  }}",
                             icon: 0
-                        }, function(index) {
+                        }, function (index) {
                             layer.close(index);
                             for (var x in self.list) {
                                 if (value.id === self.list[x]['id']) {
@@ -171,7 +168,7 @@
                                         data: value,
                                         type: "post",
                                         dataType: "json"
-                                    }).done(function(json) {
+                                    }).done(function (json) {
                                         if (json.code === 0) {
                                             self.list.splice(x, 1);
                                         }
@@ -184,13 +181,13 @@
                     }
                 },
 
-                created: function() {
+                created: function () {
                     var self = this;
                     ajax({
                         url: "{{ url('/admin/uploads/list')  }}",
                         type: "get",
                         dataType: "json"
-                    }).done(function(json){
+                    }).done(function (json) {
                         if (json.code === 0) {
                             self.list = json.data;
                         }
@@ -228,7 +225,7 @@
             });
 
             // 修改添加
-            $("#update-upload-but").click(function(){
+            $("#update-upload-but").click(function () {
                 var $fm = $("#update-form");
                 if ($fm.validate().form()) {
                     getLaravelRequest({
@@ -236,7 +233,7 @@
                         data: $fm.serialize(),
                         dataType: "json",
                         type: "post"
-                    }, "{{ trans('error.server') }}").done(function(json){
+                    }, "{{ trans('error.server') }}").done(function (json) {
                         if (json.code === 0) {
                             vueImage.list.splice(vueImage.index, 1, json.data);
                             $("#update-upload-modal").modal("hide")

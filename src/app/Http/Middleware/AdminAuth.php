@@ -20,7 +20,7 @@ class AdminAuth
     {
         // 验证是否已经登录
         if (Auth::guard('admin')->guest()) {
-            return $this->handleUnauthorized();
+            return $this->handleUnauthorized($request);
         }
 
         Auth::shouldUse($guards ?: 'admin');
@@ -35,10 +35,12 @@ class AdminAuth
 
     /**
      * 没有权限处理
-     * 
+     *
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    protected function handleUnauthorized()
+    protected function handleUnauthorized($request)
     {
         if ($request->ajax() || $request->wantsJson()) {
             return response('Unauthorized.', 401);

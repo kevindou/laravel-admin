@@ -1,56 +1,52 @@
 @extends('admin::layouts.admin')
-
-@section('header_title', '导航管理')
-@section('header_description', '导航栏目列表')
-@section('header_right')
-    <button id="create" class="btn btn-success btn-sm pull-right"> {{ trans('admin.create') }} </button>
-@endsection
-
 @section("main-content")
-<div class="row">
-    <div class="col-xs-12">
-        <div class="box box-primary">
-            <!-- /.box-header -->
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-sm-12" style="margin-bottom: 20px;">
-                        <form class="form-inline" id="search-form" name="searchForm">
-                            <div class="form-group">
-                                <label class="sr-only" for="inputSearchName">名称</label>
-                                <input type="text" name="name" class="form-control" id="inputSearchName"
-                                       placeholder="导航名称">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="inputSearchUrl">地址</label>
-                                <input type="text" name="url" class="form-control" id="inputSearchUrl"
-                                       placeholder="导航地址">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="inputSearchPermissionName">权限名称</label>
-                                <input type="text" name="permission_name" class="form-control"
-                                       id="inputSearchPermissionName" placeholder="权限名称">
-                            </div>
-                            <div class="form-group" style="min-width:200px;">
-                                <select class="form-control select2 pull-left" name="status[]" multiple="multiple"
-                                        id="inputSearchStatus" data-placeholder="选择状态" style="width: 100%;">
-                                    @foreach($status as $key => $value)
-                                        <option value="{{ $key }}">{{ $value }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i>搜索</button>
-                        </form>
-                    </div>
-                    <div class="col-sm-12">
-                        <table id="example2" class="table table-bordered table-hover"></table>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-12" style="margin-bottom: 20px;">
+                            <button id="create" class="btn btn-success btn-sm pull-left">
+                                {{ trans('admin.create') }}
+                            </button>
+                            <form class="form-inline pull-right" id="search-form" name="searchForm">
+                                <div class="form-group">
+                                    <label class="sr-only" for="inputSearchName">名称</label>
+                                    <input type="text" name="name" class="form-control" id="inputSearchName"
+                                           placeholder="导航名称">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="inputSearchUrl">地址</label>
+                                    <input type="text" name="url" class="form-control" id="inputSearchUrl"
+                                           placeholder="导航地址">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="inputSearchPermissionName">权限名称</label>
+                                    <input type="text" name="permission_name" class="form-control"
+                                           id="inputSearchPermissionName" placeholder="权限名称">
+                                </div>
+                                <div class="form-group" style="min-width:200px;">
+                                    <select class="form-control select2 pull-left" name="status[]" multiple="multiple"
+                                            id="inputSearchStatus" data-placeholder="选择状态" style="width: 100%;">
+                                        @foreach($status as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i>搜索</button>
+                            </form>
+                        </div>
+                        <div class="col-sm-12">
+                            <table id="example2" class="table table-bordered table-hover"></table>
+                        </div>
                     </div>
                 </div>
+                <!-- /.box-body -->
             </div>
-            <!-- /.box-body -->
+            <!-- /.box -->
         </div>
-        <!-- /.box -->
     </div>
-</div>
 @endsection
 @push('style')
     <link rel="stylesheet" type="text/css"
@@ -76,8 +72,7 @@
     <script src="{{ asset('admin-assets/plugins/table/table.js') }}"></script>
     <!-- Page specific script -->
     <script>
-        function handleOperator(td, data, rowData, row)
-        {
+        function handleOperator(td, data, rowData, row) {
             var attr = "data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"";
             var html = "<button class='btn btn-success btn-xs example2-detail' " + attr + ">\
             <i class='fa fa-search'></i></button> ";
@@ -105,13 +100,13 @@
                             },
                             {
                                 "title": "地址", "data": "url", "orderable": false,
-                                "edit": {required:"true", rangelength: "[1, 255]"}
+                                "edit": {required: "true", rangelength: "[1, 255]"}
                             },
                             {
                                 "title": "图标", "data": "icon", "orderable": false, "render": function (data) {
                                     return data ? "<i class=\"fa " + data + "\"></i>" : data;
                                 },
-                                "edit": {value: "fa-cube", required:"true", rangelength: "[2, 255]"}
+                                "edit": {value: "fa-cube", required: "true", rangelength: "[2, 255]"}
                             },
                             {
                                 "title": "父级名称", "data": "parent", "render": function (data) {
@@ -127,7 +122,8 @@
                                 value: @json($status, 320),
                                 "edit": {"type": "radio", "number": true, "default": 10, "required": true}
                             },
-                            {"title": "排序", "data": "sort", "name": "sort",
+                            {
+                                "title": "排序", "data": "sort", "name": "sort",
                                 "edit": {"number": true, value: 100}
                             },
                             {"title": "创建时间", "data": "created_at"},

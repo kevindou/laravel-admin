@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Admin;
-use App\Models\Permission;
-use App\Models\Role;
+use App\Models\Admin\Admin;
+use App\Models\Admin\Permission;
+use App\Models\Admin\Role;
 use Illuminate\Http\Request;
 
 class RolesController extends Controller
@@ -12,7 +12,7 @@ class RolesController extends Controller
     /**
      * @var string 定义使用的model
      */
-    public $model = 'App\Models\Role';
+    public $model = 'App\Models\Admin\Role';
 
     /**
      * 首页显示

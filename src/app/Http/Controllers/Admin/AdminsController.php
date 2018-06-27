@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Admin;
+use App\Models\Admin\Admin;
 
 /**
  * Class AdminsController 后台管理员信息
@@ -14,7 +14,7 @@ class AdminsController extends Controller
     /**
      * @var string 定义使用的model
      */
-    public $model = 'App\Models\Admin';
+    public $model = 'App\Models\Admin\Admin';
 
     /**
      * 首页显示

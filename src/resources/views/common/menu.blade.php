@@ -1,6 +1,6 @@
 <?php
 
-use \App\Models\Menu;
+use \App\Models\Admin\Menu;
 
 $menus = Menu::getPermissionMenus();
 $url   = \Illuminate\Support\Facades\Route::current()->uri;

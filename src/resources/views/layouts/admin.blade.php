@@ -188,10 +188,7 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
             </div>
         </nav>
     </header>
-
-    <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             @if (config('admin.admin_left'))
                 <div class="user-panel">
@@ -209,29 +206,7 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
         </section>
     </aside>
     <div class="content-wrapper">
-        <section class="content-header">
-            <h1> @yield('header_title', trans('admin.welcome'))
-                <small> @yield('header_description') </small>
-            </h1>
-            @hasSection('header_right')
-                <span class="pull-right" style="float:right;display: block;margin-top: -28px;position: relative">
-                    @yield('header_right')
-                </span>
-            @else
-                <ol class="breadcrumb">
-                    <li><a href="{{ url('admin/index/index') }}">
-                            <i class="fa fa-dashboard"></i> {{ trans('admin.home') }}
-                        </a></li>
-                    @foreach ($breadCrumb as $item)
-                        @if ($loop->last)
-                            <li class="active">{{ $item['label'] }}</li>
-                        @else
-                            <li><a href="{{ $item['url'] }}">{{ $item['label']  }}</a></li>
-                        @endif
-                    @endforeach
-                </ol>
-            @endif
-        </section>
+        @include('admin::common.breadcrumbs')
         <section class="content ">
             @if (session('error'))
                 <div class="alert alert-danger alert-dismissible">

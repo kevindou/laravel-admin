@@ -1,11 +1,4 @@
 @extends('admin::layouts.admin')
-
-@section('header_title', '角色信息')
-@section('header_description', '角色列表')
-@section('header_right')
-    <button id="create" class="btn btn-success btn-sm pull-right"> {{ trans('admin.create') }} </button>
-@endsection
-
 @section("main-content")
     <div class="row">
         <div class="col-xs-12">
@@ -14,7 +7,10 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-sm-12" style="margin-bottom: 20px;">
-                            <form class="form-inline" id="searchForm" name="searchForm">
+                            <button id="create" class="btn btn-success btn-sm pull-left">
+                                {{ trans('admin.create') }}
+                            </button>
+                            <form class="form-inline pull-right" id="searchForm" name="searchForm">
                                 <div class="form-group">
                                     <label for="inputSearchName">角色名称</label>
                                     <input type="text" name="name" class="form-control" id="inputSearchName"

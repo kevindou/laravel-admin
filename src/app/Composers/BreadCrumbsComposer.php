@@ -2,9 +2,9 @@
 
 namespace App\Composers;
 
-use App\Repositories\Menu\MenuRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
+use App\Repositories\Admin\MenuRepository;
 
 /**
  * 获取面包屑
@@ -40,31 +40,30 @@ class BreadCrumbsComposer
         $uris = [$uri];
 
         // 其他页面路由
-        $active_menu = isset($view['__active_menu__']) ? $view['__active_menu__'] : '';
-        if ($active_menu) {
+        if ($active_menu = $view['__active_menu__'] ?? '') {
             $uris[] = '/' . trim($active_menu, '/');
         }
 
         // 获取到菜单ID
-        $cate_id = 0;
-        $type    = $this->getLoginUser('type') ?? env('PROJECT_TYPE');
+        $menu = $breadCrumb = [];
         foreach ($uris as $uri) {
-            if ($cate_id = $this->menuRepository->hasCateByName($uri, $type)) {
+            if ($menu = $this->menuRepository->findOne(['url' => $uri])) {
                 break;
             }
         }
 
-        // 注入变量
-        if ($cate_id) {
-            $cate_info        = $this->menuRepository->getCateInfo($cate_id);
-            $parent_cate_info = $this->menuRepository->getCateInfo($cate_info['parent_cate_id']);
-            $view->with('title', $cate_info['cate_name']);
-            $view->with('cate', $parent_cate_info['cate_name']);
-            $view->with('sub_cate', $cate_info['cate_name']);
-        } else {
-            $view->with('title', 'VeryStar');
-            $view->with('cate', 'VeryStar');
-            $view->with('sub_cate', '请设置__active_menu__');
+        $title       = $view['title'] ?? '';
+        $description = $view['description'] ?? '';
+
+        if ($menu) {
+            $title        = $title ?: $menu['name'];
+            $breadCrumb[] = array_only($menu, ['name', 'url']);
+            if ($parent_menu = $this->menuRepository->findOne(['id' => array_get($menu, 'parent')])) {
+                array_unshift($breadCrumb, array_only($parent_menu, ['name', 'url']));
+                $description = $description ?: $parent_menu['name'];
+            }
         }
+
+        $view->with(compact('breadCrumb', 'title', 'description'));
     }
 }

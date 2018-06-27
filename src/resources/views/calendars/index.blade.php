@@ -1,33 +1,33 @@
 @extends('admin::layouts.admin')
-
-@section('header_title', '日程管理')
-@section('header_description', '日程列表')
-@section('header_right')
-    <button id="create" class="btn btn-success btn-sm pull-right"> {{ trans('admin.create') }} </button>
-@endsection
-
 @section("main-content")
 <div class="row">
     <div class="col-xs-12">
         <div class="box box-primary">
             <!-- /.box-header -->
+            <div class="box-header with-border">
+                <div class="col-sm-12">
+                    <button id="create" class="btn btn-success btn-sm pull-left">
+                        {{ trans('admin.create') }}
+                    </button>
+                    <form class="form-inline pull-right" id="search-form" name="search-form">
+                        <div class="form-group">
+                            <label for="inputSearchTitle">标题</label>
+                            <input type="text" name="title" class="form-control" id="inputSearchTitle"
+                                   placeholder="标题">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputSearchDesc">说明</label>
+                            <input type="text" name="desc" class="form-control" id="inputSearchUrl"
+                                   placeholder="说明">
+                        </div>
+                        <button type="submit" class="btn btn-info">
+                            <i class="fa fa-search"></i>搜索
+                        </button>
+                    </form>
+                </div>
+            </div>
             <div class="box-body">
                 <div class="row">
-                    <div class="col-sm-12" style="margin-bottom: 10px;">
-                        <form class="form-inline" id="search-form" name="search-form">
-                            <div class="form-group">
-                                <label for="inputSearchTitle">标题</label>
-                                <input type="text" name="title" class="form-control" id="inputSearchTitle"
-                                       placeholder="标题">
-                            </div>
-                            <div class="form-group">
-                                <label for="inputSearchDesc">说明</label>
-                                <input type="text" name="desc" class="form-control" id="inputSearchUrl"
-                                       placeholder="说明">
-                            </div>
-                            <button type="submit" class="btn btn-info"><i class="fa fa-search"></i>搜索</button>
-                        </form>
-                    </div>
                     <div class="col-sm-12">
                         <table id="me-table" class="table table-bordered table-hover"></table>
                     </div>

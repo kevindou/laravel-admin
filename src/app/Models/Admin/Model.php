@@ -8,7 +8,7 @@
  * Editor: created by PhpStorm
  */
 
-namespace App\Models;
+namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
 

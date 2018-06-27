@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 
 /**
  * Class Menu
@@ -39,18 +39,31 @@ class Menu extends Model
      */
     protected $guarded = ['id'];
 
+    public $columns = [
+        'id',
+        'name',
+        'url',
+        'icon',
+        'parent',
+        'status',
+        'sort',
+        'created_at',
+        'updated_at',
+    ];
+
     /**
      * 获取状态信息
      *
      * @param null $intStatus 状态值
+     *
      * @return array|mixed
      */
     public static function getStatus($intStatus = null)
     {
         $mixReturn = [
-            self::STATUS_ENABLES => '启用',
+            self::STATUS_ENABLES  => '启用',
             self::STATUS_DISABLES => '停用',
-            self::STATUS_DELETE => '删除',
+            self::STATUS_DELETE   => '删除',
         ];
 
         if ($intStatus !== null) $mixReturn = isset($mixReturn[$intStatus]) ? $mixReturn[$intStatus] : null;
@@ -67,14 +80,14 @@ class Menu extends Model
     {
         // 查询数据
         $arrReturn = [];
-        $all = self::where('status', '=', self::STATUS_ENABLES)
+        $all       = self::where('status', '=', self::STATUS_ENABLES)
             ->select('id', 'name', 'url', 'icon', 'parent', 'sort')->get();
         if ($all) {
             foreach ($all as $value) {
                 /* @var $value \App\Models\Menu */
                 $arrValue = $value->toArray();
                 if ($value->parent == 0) {
-                    $default = isset($arrReturn[$value->id]) ? $arrReturn[$value->id] : ['child' => []];
+                    $default               = isset($arrReturn[$value->id]) ? $arrReturn[$value->id] : ['child' => []];
                     $arrReturn[$value->id] = array_merge($default, $arrValue);
                 } else {
                     if (isset($arrReturn[$value->parent])) {
