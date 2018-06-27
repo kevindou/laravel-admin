@@ -11,4 +11,5 @@ return [
     // 用户相关
     'user_schedule_events' => true,           // 我的日程是否显示
     'user_detail'          => true,           // 用户详情
+    'verify_permissions'   => true,           // 验证权限
 ];

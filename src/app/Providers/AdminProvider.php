@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Console\Commands\AssetLinkCommand;
+use App\Commands\AssetLinkCommand;
 use Illuminate\Support\ServiceProvider;
 
 class AdminProvider extends ServiceProvider
