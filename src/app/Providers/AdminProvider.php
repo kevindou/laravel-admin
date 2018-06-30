@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Commands\AssetLinkCommand;
 use App\Composers\BreadCrumbsComposer;
+use App\Composers\DataTableComposer;
 use Illuminate\Support\ServiceProvider;
 
 class AdminProvider extends ServiceProvider
@@ -16,6 +17,7 @@ class AdminProvider extends ServiceProvider
     public function boot()
     {
         view()->composer(['admin::common.breadcrumbs'], BreadCrumbsComposer::class);
+        view()->composer(['admin::common.datatable'], DataTableComposer::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([AssetLinkCommand::class]);

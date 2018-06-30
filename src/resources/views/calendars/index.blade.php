@@ -1,65 +1,46 @@
 @extends('admin::layouts.admin')
 @section("main-content")
-<div class="row">
-    <div class="col-xs-12">
-        <div class="box box-primary">
-            <!-- /.box-header -->
-            <div class="box-header with-border">
-                <div class="col-sm-12">
-                    <button id="create" class="btn btn-success btn-sm pull-left">
-                        {{ trans('admin.create') }}
-                    </button>
-                    <form class="form-inline pull-right" id="search-form" name="search-form">
-                        <div class="input-group input-group-sm">
-                            <input type="text" name="desc" class="form-control" placeholder="说明">
-                        </div>
-                        <div class="input-group input-group-sm">
-                            <input type="text" name="title" class="form-control" id="inputSearchTitle"
-                                   placeholder="标题">
-                            <div class="input-group-btn">
-                                <button type="submit" class="btn btn-info">
-                                    <i class="fa fa-search"></i>
-                                    {{ trans('搜索') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="box-body">
-                <div class="row">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <!-- /.box-header -->
+                <div class="box-header with-border">
                     <div class="col-sm-12">
-                        <table id="me-table" class="table table-bordered table-hover"></table>
+                        <button id="create" class="btn btn-success btn-sm pull-left">
+                            {{ trans('admin.create') }}
+                        </button>
+                        <form class="form-inline pull-right" id="search-form" name="search-form">
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="desc" class="form-control" placeholder="说明">
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <input type="text" name="title" class="form-control" id="inputSearchTitle"
+                                       placeholder="标题">
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-info">
+                                        <i class="fa fa-search"></i>
+                                        {{ trans('搜索') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="me-table" class="table table-bordered table-hover"></table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
-@push('style')
-    <link rel="stylesheet" type="text/css"
-          href="{{ asset('admin-assets/plugins/datatables/DataTables-1.10.12/css/dataTables.bootstrap.min.css') }}"/>
-    <style>
-        div.table-page div {
-            float: left;
-        }
-
-        div.dataTables_length {
-            margin-right: 5px;
-            line-height: 35px;
-        }
-    </style>
-@endpush
+@include('admin::common.datatable')
 @push("script")
-    <script src="{{ asset('admin-assets/plugins/datatables/DataTables-1.10.12/js/jquery.dataTables.min.js') }}">
-    </script>
-    <script src="{{ asset('admin-assets/plugins/datatables/DataTables-1.10.12/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/plugins/table/table.js') }}"></script>
     <script>
-        function handleOperator(td, data, rowData, row)
-        {
+        function handleOperator(td, data, rowData, row) {
             var attr = "data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"";
             var html = "<button class='btn btn-success btn-xs me-table-detail' " + attr + ">\
             <i class='fa fa-search'></i></button> ";
@@ -71,7 +52,7 @@
         }
 
         meTables.extend({
-            "colorCreate": function(params) {
+            "colorCreate": function (params) {
                 return '<input type="hidden" name="style" value="#3c8dbc" id="style-input">\
                                 <ul class="fc-color-picker color-chooser" id="style-select">\
                                     <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>\
@@ -90,7 +71,6 @@
         });
 
         $(function () {
-
             var table = meTables({
                 "title": "日程管理",
                 "sTable": "#me-table",
@@ -98,16 +78,20 @@
                     dom: "t<'row'<'table-page col-sm-4'li><'col-sm-8'p>>",
                     columns: [
                         {"title": "id", "data": "id", "defaultOrder": "desc", "edit": {"type": "hidden"}},
-                        {"title": "标题", "data": "title", "orderable": false, 
+                        {
+                            "title": "标题", "data": "title", "orderable": false,
                             "edit": {"rangelength": "[2, 255]", "required": true}
                         },
-                        {"title": "说明", "data": "desc", "orderable": false,
+                        {
+                            "title": "说明", "data": "desc", "orderable": false,
                             "edit": {"type": "textarea", "rangelength": "[2, 255]", "rows": 5, "required": true}
                         },
-                        {"title": "开始时间", "data": "start", 
+                        {
+                            "title": "开始时间", "data": "start",
                             "edit": {"type": "dateTime", "required": true}
                         },
-                        {"title": "结束时间", "data": "end",
+                        {
+                            "title": "结束时间", "data": "end",
                             "edit": {"type": "dateTime", "required": true}
                         },
                         {
@@ -128,8 +112,8 @@
                         {"title": "修改时间", "data": "updated_at"},
                         {
                             "width": "80px",
-                            "title": "操作", 
-                            "data": null, 
+                            "title": "操作",
+                            "data": null,
                             "orderable": false,
                             "createdCell": handleOperator
                         }
@@ -137,12 +121,12 @@
                 }
             });
 
-            $("#create").click(function(){
+            $("#create").click(function () {
                 table.create();
             });
 
             // 颜色点击
-            $("#style-select > li > a").click(function(){
+            $("#style-select > li > a").click(function () {
                 var color = $(this).css("color");
                 $("#style-input").val(color);
                 $(this).parent().parent().parent().prev("label").css("background-color", color);

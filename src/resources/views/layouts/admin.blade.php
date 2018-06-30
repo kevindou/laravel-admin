@@ -4,7 +4,7 @@ $strUserAvatar    = $user && $user->avatar ? $user->avatar : asset('admin-assets
 $strUserName      = $user && $user->name ? $user->name : 'admin';
 $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d H:i:s');
 ?>
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     @include('admin::common.header')

@@ -23,6 +23,10 @@ var jqueryDataTableLanguage = {
     }
 };
 
+function empty(value) {
+    return value === undefined || value === null || value === "";
+}
+
 // 设置ajax
 $.ajaxSetup({
     headers: {

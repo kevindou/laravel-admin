@@ -40,25 +40,8 @@
         </div>
     </div>
 @endsection
-@push('style')
-    <link rel="stylesheet" type="text/css"
-          href="{{ asset('admin-assets/plugins/datatables/DataTables-1.10.12/css/dataTables.bootstrap.min.css') }}"/>
-    <style>
-        div.table-page div {
-            float: left;
-        }
-
-        div.dataTables_length {
-            margin-right: 5px;
-            line-height: 35px;
-        }
-    </style>
-@endpush
+@include('admin::common.datatable')
 @push("script")
-    <script src="{{ asset('admin-assets/plugins/datatables/DataTables-1.10.12/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/plugins/datatables/DataTables-1.10.12/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/plugins/table/table.js') }}"></script>
     <!-- Page specific script -->
     <script>
         $(function () {
