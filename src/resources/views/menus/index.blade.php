@@ -7,7 +7,7 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-sm-12" style="margin-bottom: 20px;">
-                            <button id="create" class="btn btn-success btn-sm pull-left">
+                            <button class="btn btn-success btn-sm pull-left example2-show-table-create">
                                 {{ trans('admin.create') }}
                             </button>
                             <form class="form-inline pull-right" id="search-form" name="searchForm">
@@ -44,6 +44,9 @@
     </div>
 @endsection
 @include('admin::common.datatable')
+@push('style')
+    <link rel="stylesheet" href="{{ asset('admin-assets/plugins/select2/select2.min.css') }}">
+@endpush
 @push("script")
     <script src="{{ asset('admin-assets/plugins/select2/select2.min.js') }}"></script>
     <script>
@@ -114,9 +117,6 @@
                 });
 
             $(".select2").select2();
-            $("#create").click(function () {
-                table.create();
-            });
         })
     </script>
 @endpush

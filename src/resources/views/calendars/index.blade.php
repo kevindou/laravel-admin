@@ -6,7 +6,7 @@
                 <!-- /.box-header -->
                 <div class="box-header with-border">
                     <div class="col-sm-12">
-                        <button id="create" class="btn btn-success btn-sm pull-left">
+                        <button class="btn btn-success btn-sm pull-left me-table-show-table-create">
                             {{ trans('admin.create') }}
                         </button>
                         <form class="form-inline pull-right" id="search-form" name="search-form">
@@ -119,10 +119,6 @@
                         }
                     ]
                 }
-            });
-
-            $("#create").click(function () {
-                table.create();
             });
 
             // 颜色点击

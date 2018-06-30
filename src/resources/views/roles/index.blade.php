@@ -7,7 +7,7 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-sm-12" style="margin-bottom: 20px;">
-                            <button id="create" class="btn btn-success btn-sm pull-left">
+                            <button class="btn btn-success btn-sm pull-left example2-show-table-create">
                                 {{ trans('admin.create') }}
                             </button>
                             <form class="form-inline pull-right" id="searchForm" name="searchForm">
@@ -56,14 +56,24 @@
                 "table": {
                     dom: "t<'row'<'table-page col-sm-4'li><'col-sm-8'p>>",
                     columns: [
-                        {"title": "id", "data": "id", "edit": {"type": "hidden"}, "defaultOrder": "asc"},
                         {
-                            "title": "角色名称", "data": "name", "orderable": false, "edit": {
+                            "title": "id",
+                            "data": "id",
+                            "edit": {"type": "hidden"}, "defaultOrder": "asc"
+                        },
+                        {
+                            "title": "角色名称",
+                            "data": "name",
+                            "orderable": false,
+                            "edit": {
                                 "required": true, "rangelength": "[2, 190]"
                             }
                         },
                         {
-                            "title": "角色说明", "data": "description", "orderable": false, "edit": {
+                            "title": "角色说明",
+                            "data": "description",
+                            "orderable": false,
+                            "edit": {
                                 "required": true, "rangelength": "[2, 190]"
                             }
                         },
@@ -83,13 +93,6 @@
                         }
                     ]
                 }
-            });
-
-
-            // 表单新增
-            $("#create").click(function (e) {
-                e.preventDefault();
-                meTable.create();
             });
         })
     </script>

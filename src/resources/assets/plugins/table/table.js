@@ -83,7 +83,7 @@
             this.action = "init";
             this.initRender();
             // 初始化主要表格
-            this.table = $(this.options.sTable).DataTable(this.options.table);  
+            this.table = $(this.options.sTable).DataTable(this.options.table);
             var self = this;
             // 搜索表单的事件
             if (this.options.bEvent) {
@@ -100,6 +100,14 @@
                 evt.preventDefault();
                 self.search(true);
             });
+
+            // 添加事件
+            $(document).on('click', "." + self.uniqueName + "-show-table-create", function (evt) {
+                evt.preventDefault();
+                self.create();
+            });
+
+            console.info("." + self.uniqueName + "-show-table-create");
 
             // 添加保存事件
             $(document).on('click', self.options.sTable + "-save", function (evt) {
@@ -125,7 +133,7 @@
         // 初始化页面渲染
         initRender: function () {
             if (!this.options.sFormId) {
-                this.options.sFormId = "#" + this.uniqueName + "-form"; 
+                this.options.sFormId = "#" + this.uniqueName + "-form";
             }
 
             this.options.form.id = this.options.sFormId.replace("#", "");
@@ -145,23 +153,23 @@
 
                 // 编辑表单信息
                 if (k.edit !== undefined) {
-                    form += meTables.formCreate(k, self.options.editFormParams); 
+                    form += meTables.formCreate(k, self.options.editFormParams);
                 }
 
                 // 搜索信息
                 if (k.search !== undefined) {
-                    self.options.searchHtml += meTables.searchInputCreate(k, v, self.options.searchType);  
+                    self.options.searchHtml += meTables.searchInputCreate(k, v, self.options.searchType);
                 }
 
                 // 默认排序
                 if (k.defaultOrder) {
-                    aOrders.push([v, k.defaultOrder]);  
+                    aOrders.push([v, k.defaultOrder]);
                 }
 
                 // 是否隐藏                     
                 if (k.hide) {
                     aTargets.push(v);
-                }                                                   
+                }
             });
 
             var appendHtml = '';
@@ -186,7 +194,7 @@
                     "modalDialogClass": self.options.editFormParams.modalDialogClass
                 });
             }
-            
+
             appendHtml += meTables.detailDivCreate(views, {"id": "data-detail-" + self.uniqueName});
 
             // 添加处理表格排序配置
@@ -305,7 +313,7 @@
             if (data === undefined) {
                 return false;
             }
-            
+
             meTables.detailTable(this.options.table.columns, data, "." + self.uniqueName + "-data-detail-", row);
             // 弹出显示
             this.options.oLoading = layer.open({
@@ -426,7 +434,7 @@
 
             // 确定操作的表单和模型
             $(this.options.sModal).find("h4")
-            .html(this.options.title + this.getLanguage(this.action === "create" ? "sCreate" : "sUpdate"));
+                .html(this.options.title + this.getLanguage(this.action === "create" ? "sCreate" : "sUpdate"));
             meTables.initForm(this.options.sFormId, data);
 
             // 显示之后的处理
@@ -710,7 +718,7 @@
                     form += '</div>';
                 }
 
-                oParams.index ++;
+                oParams.index++;
             }
 
             return form;
@@ -914,8 +922,8 @@
             return html;
         },
 
-        detailDivCreate: function(content, params) {
-            params.class =  params.class ? params + " hide" : "hide";
+        detailDivCreate: function (content, params) {
+            params.class = params.class ? params + " hide" : "hide";
             return '<div ' + this.handleParams(params) + '> ' + content + ' </table></div>';
         },
 
@@ -985,7 +993,7 @@
                 "createdCell": function (td, data, array, row, col) {
                     $(td).html('<input type="checkbox" class="input-checkbox" value="' + row + '" data-row="' + row + '" />');
                 }
-            },              
+            },
             params: null,               // 请求携带参数
             searchForm: "#search-form", // 搜索表单选择器
             bEvent: true,               // 是否监听事件
