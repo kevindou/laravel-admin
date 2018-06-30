@@ -7,7 +7,7 @@ use \Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'admin'], function () {
     $uri    = request()->path();
     $params = isset($uri[0]) ? explode('/', $uri) : [];
-    array_shift($params);
+    array_shift($params);   // 因为是admin 前缀分组信息，那么下面的路由需要去掉 admin 前缀
     $uri = implode('/', $params);
     foreach ($params as &$val) {
         $val = camel_case($val);;

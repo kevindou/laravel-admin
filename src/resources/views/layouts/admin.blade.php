@@ -4,7 +4,7 @@ $strUserAvatar    = $user && $user->avatar ? $user->avatar : asset('admin-assets
 $strUserName      = $user && $user->name ? $user->name : 'admin';
 $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d H:i:s');
 ?>
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     @include('admin::common.header')
@@ -233,11 +233,12 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
 <script src="{{ asset('admin-assets/js/app.min.js') }}"></script>
 <script src="{{ asset('admin-assets/plugins/stickytabs/jquery.stickytabs.js') }}"></script>
 <script src="{{ asset('admin-assets/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-<script src="{{ asset('js/layer/layer.js') }}"></script>
+<script src="{{ asset('admin-assets/plugins/layer/layer.js') }}"></script>
 <script src="{{ asset('admin-assets/js/tools.js') }}"></script>
 @stack('script')
 <script>
-    $("#admin-menus").find("li[data-url='" + (currentUrl ? currentUrl : "/") + "']")
+    var strCurrentUrl = $("#admin-menus").data("url") || "/";
+    $("#admin-menus").find("li[data-url='" + strCurrentUrl + "']")
         .addClass("active").parent("ul").parent("li").addClass("active");
 </script>
 </body>

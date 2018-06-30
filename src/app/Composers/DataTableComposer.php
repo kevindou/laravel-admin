@@ -24,11 +24,11 @@ class DataTableComposer
     {
         $view->with([
             'tableCss'        => [
-                'admin-assets/plugins/datatables/DataTables-1.10.12/css/dataTables.bootstrap.min.css',
+                'admin-assets/plugins/datatables/css/dataTables.bootstrap.min.css',
             ],
             'tableJavascript' => [
-                'admin-assets/plugins/datatables/DataTables-1.10.12/js/jquery.dataTables.min.js',
-                'admin-assets/plugins/datatables/DataTables-1.10.12/js/dataTables.bootstrap.min.js',
+                'admin-assets/plugins/datatables/js/jquery.dataTables.min.js',
+                'admin-assets/plugins/datatables/js/dataTables.bootstrap.min.js',
                 'admin-assets/plugins/jquery-validation/jquery.validate.min.js',
                 'admin-assets/plugins/jquery-validation/validate.message.js',
                 'admin-assets/plugins/table/table.js',
