@@ -10,19 +10,19 @@
                         {{ trans('admin.create') }}
                     </button>
                     <form class="form-inline pull-right" id="search-form" name="search-form">
-                        <div class="form-group">
-                            <label for="inputSearchTitle">标题</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" name="desc" class="form-control" placeholder="说明">
+                        </div>
+                        <div class="input-group input-group-sm">
                             <input type="text" name="title" class="form-control" id="inputSearchTitle"
                                    placeholder="标题">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fa fa-search"></i>
+                                    {{ trans('搜索') }}
+                                </button>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="inputSearchDesc">说明</label>
-                            <input type="text" name="desc" class="form-control" id="inputSearchUrl"
-                                   placeholder="说明">
-                        </div>
-                        <button type="submit" class="btn btn-info">
-                            <i class="fa fa-search"></i>搜索
-                        </button>
                     </form>
                 </div>
             </div>
@@ -33,9 +33,7 @@
                     </div>
                 </div>
             </div>
-            <!-- /.box-body -->
         </div>
-        <!-- /.box -->
     </div>
 </div>
 @endsection

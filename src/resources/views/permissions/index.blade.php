@@ -10,23 +10,23 @@
                             <button id="create" class="btn btn-success btn-sm pull-left">
                                 {{ trans('admin.create') }}
                             </button>
+
                             <form class="form-inline pull-right" id="search-form" name="searchForm">
-                                <div class="form-group">
-                                    <label for="inputSearchName">权限名称</label>
-                                    <input type="text" name="name" class="form-control" id="inputSearchName"
-                                           placeholder="名称">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" name="description" class="form-control" placeholder="权限说明">
                                 </div>
-                                <div class="form-group">
-                                    <label for="inputSearchUrl">权限说明</label>
-                                    <input type="text" name="description" class="form-control" id="inputSearchUrl"
-                                           placeholder="说明">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" name="display_name" class="form-control" placeholder="显示名称">
                                 </div>
-                                <div class="form-group">
-                                    <label for="inputSearchPermissionName"> 显示名称</label>
-                                    <input type="text" name="display_name" class="form-control"
-                                           id="inputSearchPermissionName" placeholder="显示名称">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" name="name" class="form-control" placeholder="权限名称">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-info">
+                                            <i class="fa fa-search"></i>
+                                            {{ trans('搜索') }}
+                                        </button>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i>搜索</button>
                             </form>
                         </div>
                         <div class="col-sm-12">

@@ -21,11 +21,6 @@
                                     <input type="text" name="url" class="form-control" id="inputSearchUrl"
                                            placeholder="导航地址">
                                 </div>
-                                <div class="form-group">
-                                    <label class="sr-only" for="inputSearchPermissionName">权限名称</label>
-                                    <input type="text" name="permission_name" class="form-control"
-                                           id="inputSearchPermissionName" placeholder="权限名称">
-                                </div>
                                 <div class="form-group" style="min-width:200px;">
                                     <select class="form-control select2 pull-left" name="status[]" multiple="multiple"
                                             id="inputSearchStatus" data-placeholder="选择状态" style="width: 100%;">
