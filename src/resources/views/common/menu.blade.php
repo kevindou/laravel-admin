@@ -1,10 +1,4 @@
-<?php
-$url   = \Illuminate\Support\Facades\Route::current()->uri;
-?>
-<script>
-    var currentUrl = "/{{ $url  }}";
-</script>
-<ul class="sidebar-menu" id="admin-menus">
+<ul class="sidebar-menu" id="admin-menus" data-url="/{{ request()->path()  }}">
     @if (config('admin.home'))
         <li @if(in_array($url, ['admin/index', 'admin'])) class="active" @endif>
             <a href="{{ url('/admin/index') }}">

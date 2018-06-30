@@ -1,6 +1,11 @@
 <?php
 
 return [
+    // 配置信息
+    'defaultController'    => 'IndexController',
+    'defaultAction'        => 'index',
+
+    // 页面信息
     'admin_left'           => false,           // 左边用户信息是否显示
     'home'                 => false,           // 首页链接是否显示
     'messages-menu'        => false,           // 邮件
