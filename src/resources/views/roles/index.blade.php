@@ -10,7 +10,7 @@
                             <button class="btn btn-success btn-sm pull-left example2-show-table-create">
                                 {{ trans('admin.create') }}
                             </button>
-                            <form class="form-inline pull-right" id="searchForm" name="searchForm">
+                            <form class="form-inline pull-right" id="search-form" name="searchForm">
                                 <div class="input-group input-group-sm">
                                     <input type="text" name="description" class="form-control" placeholder="角色说明">
                                 </div>
@@ -23,6 +23,13 @@
                                         <button type="submit" class="btn btn-info">
                                             <i class="fa fa-search"></i>
                                             {{ trans('搜索') }}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-btn">
+                                        <button type="reset" class="btn btn-warning example2-reset-table">
+                                            {{ trans('清除') }}
                                         </button>
                                     </div>
                                 </div>

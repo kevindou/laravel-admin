@@ -29,7 +29,12 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i>搜索</button>
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fa fa-search"></i>搜索
+                                </button>
+                                <button type="reset" class="btn btn-warning example2-reset-table">
+                                    {{ trans('清除') }}
+                                </button>
                             </form>
                         </div>
                         <div class="col-sm-12">

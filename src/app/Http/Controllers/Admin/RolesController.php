@@ -33,6 +33,7 @@ class RolesController extends Controller
     {
         return [
             'name'         => 'like',
+            'description'  => 'like',
             'display_name' => 'like',
         ];
     }
@@ -134,7 +135,7 @@ class RolesController extends Controller
             'title'           => trans('分配权限'),
             '__active_menu__' => 'admin/roles/index'
         ]);
-        
+
         // 查询全部权限
         $permissions = Permission::all();
         return view('admin::roles.permissions', [

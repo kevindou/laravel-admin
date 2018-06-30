@@ -23,6 +23,13 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-btn">
+                                    <button type="reset" class="btn btn-warning me-table-reset-table">
+                                        {{ trans('清除') }}
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

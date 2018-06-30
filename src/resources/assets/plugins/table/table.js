@@ -101,6 +101,12 @@
                 self.search(true);
             });
 
+            // 刷新当前数据
+            $(document).on('click', "." + self.uniqueName + "-reset-table", function () {
+                $(self.options.searchForm).get(0).reset();
+                self.search();
+            });
+
             // 添加事件
             $(document).on('click', "." + self.uniqueName + "-show-table-create", function (evt) {
                 evt.preventDefault();
