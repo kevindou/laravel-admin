@@ -4,6 +4,8 @@ return [
     // 配置信息
     'defaultController'    => 'IndexController',
     'defaultAction'        => 'index',
+    'super_admin_id'       => 1,    // 超级管理员ID
+    'super_role_id'        => 1,    // 超级管理员角色ID
 
     // 页面信息
     'admin_left'           => false,           // 左边用户信息是否显示

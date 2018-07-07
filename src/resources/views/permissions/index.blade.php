@@ -68,12 +68,7 @@
                         {"title": "修改时间", "data": "updated_at"},
                         {
                             "title": "操作", "data": null, "orderable": false,
-                            "createdCell": function (td, data, rowData, row, col) {
-                                var attr = "data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"";
-                                var html = "<button class='btn btn-info btn-xs example2-update' " + attr + "><i class='fa fa-edit'></i></button> ";
-                                html += "<button class='btn btn-danger btn-xs example2-delete' " + attr + "><i class='fa fa-trash'></i></button>";
-                                $(td).html(html);
-                            }
+                            "createdCell": meTables.handleOperator
                         }
                     ]
                 }

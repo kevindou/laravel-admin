@@ -41,6 +41,7 @@
             this.options = this.extend(this.options, options);
 
             // 判断添加数据(多选)
+            console.info(this.options.checkbox);
             if (this.options.checkbox) {
                 this.options.table.columns.unshift(this.options.checkbox);
             }
@@ -131,15 +132,15 @@
                 evt.preventDefault();
                 self.save();
             });
-            $(document).on('click', "." + self.uniqueName + "-update", function (evt) {
+            $(document).on('click', ".me-table-update", function (evt) {
                 evt.preventDefault();
                 self.update($(this).attr("data-row"))
             })
-            $(document).on('click', "." + self.uniqueName + "-delete", function (evt) {
+            $(document).on('click', ".me-table-delete", function (evt) {
                 evt.preventDefault();
                 self.delete($(this).attr("data-row"))
             });
-            $(document).on('click', "." + self.uniqueName + "-detail", function (evt) {
+            $(document).on('click', ".me-table-detail", function (evt) {
                 evt.preventDefault();
                 self.detail($(this).attr("data-row"))
             });
@@ -495,6 +496,11 @@
                         continue;
                     }
 
+                    if (options[name] === false || options[name] === null) {
+                        target[name] = options[name];
+                        continue;
+                    }
+
                     if (typeof target[name] === "object") {
                         target[name] = this.extend(target[name], options[name]);
                     } else if (options[name] !== undefined) {
@@ -534,6 +540,17 @@
         // 是否为空
         empty: function (value) {
             return value === undefined || value === "" || value === null;
+        },
+
+        handleOperator: function (td, data, rowData, row) {
+            var attr = "data-index=\"" + meTables.fn.options.pk + "\" data-row=\"" + row + "\"";
+            var html = "<button class='btn btn-success btn-xs me-table-detail' " + attr + ">\
+                <i class='fa fa-search'></i></button> ";
+            html += "<button class='btn btn-info btn-xs me-table-update' " + attr + ">\
+                <i class='fa fa-edit'></i></button> ";
+            html += "<button class='btn btn-danger btn-xs me-table-delete' " + attr + ">\
+                <i class='fa fa-trash'></i></button> ";
+            $(td).html(html);
         },
 
         isObject: function (value) {
@@ -1019,6 +1036,7 @@
     meTables.fn.extend({
         options: {
             sModal: "",                 // 编辑Modal选择器
+            pk: "id",                   // 主键名称
             title: "",                  // 表格的标题
             language: "zh-cn",          // 使用语言
             sTable: "#show-table",      // 显示表格选择器

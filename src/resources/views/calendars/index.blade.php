@@ -25,17 +25,6 @@
 @include('admin::common.datatable')
 @push("script")
     <script>
-        function handleOperator(td, data, rowData, row) {
-            var attr = "data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"";
-            var html = "<button class='btn btn-success btn-xs me-table-detail' " + attr + ">\
-            <i class='fa fa-search'></i></button> ";
-            html += "<button class='btn btn-info btn-xs me-table-update' " + attr + ">\
-            <i class='fa fa-edit'></i></button> ";
-            html += "<button class='btn btn-danger btn-xs me-table-delete' " + attr + ">\
-            <i class='fa fa-trash'></i></button> ";
-            $(td).html(html);
-        }
-
         meTables.extend({
             "colorCreate": function (params) {
                 return '<input type="hidden" name="style" value="#3c8dbc" id="style-input">\
@@ -111,7 +100,7 @@
                             "title": "操作",
                             "data": null,
                             "orderable": false,
-                            "createdCell": handleOperator
+                            "createdCell": meTables.handleOperator
                         }
                     ]
                 }

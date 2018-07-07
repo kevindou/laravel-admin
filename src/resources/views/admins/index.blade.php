@@ -22,15 +22,7 @@
 @endsection
 @include('admin::common.datatable')
 @push("script")
-    <!-- Page specific script -->
     <script>
-        function handleOperator(td, data, rowData, row) {
-            var html = "<button class='btn btn-info btn-xs example2-update' data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"><i class='fa fa-edit'></i></button> ";
-            html += "<button class='btn btn-danger btn-xs example2-delete' data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"><i class='fa fa-trash'></i></button> ";
-            // html += "<a class='btn btn-info btn-xs' href=\"{{ url('admin/roles/permissions') }}/" + rowData["id"] + "\" data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"><i class='fa fa-leaf'></i> 分配角色</a> ";
-            $(td).html(html);
-        }
-
         var arrStatus = @json($status, 320),
             arrColors = {"10": "label-success", "0": "label-warning", "-1": "label-danger"};
 
@@ -38,6 +30,7 @@
             var meTable = meTables({
                 sTable: "#example2",
                 searchType: "middle",
+                checkbox: null,
                 table: {
                     columns: [
                         {
@@ -79,8 +72,10 @@
                         {"title": "创建时间", "data": "created_at"},
                         {"title": "修改时间", "data": "updated_at"},
                         {
-                            "title": "操作", "data": null, "orderable": false,
-                            "createdCell": handleOperator
+                            "title": "操作",
+                            "data": null,
+                            "orderable": false,
+                            "createdCell": meTables.handleOperator
                         }
                     ]
                 }

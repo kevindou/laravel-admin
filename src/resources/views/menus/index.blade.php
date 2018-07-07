@@ -7,7 +7,7 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="col-sm-12" style="margin-bottom: 20px;">
-                            <button class="btn btn-success btn-sm pull-left example2-show-table-create">
+                            <button class="btn btn-success btn-sm pull-left me-table-create">
                                 {{ trans('admin.create') }}
                             </button>
                             <form class="form-inline pull-right" id="search-form" name="searchForm">
@@ -55,17 +55,6 @@
 @push("script")
     <script src="{{ asset('admin-assets/plugins/select2/select2.min.js') }}"></script>
     <script>
-        function handleOperator(td, data, rowData, row) {
-            var attr = "data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"";
-            var html = "<button class='btn btn-success btn-xs example2-detail' " + attr + ">\
-            <i class='fa fa-search'></i></button> ";
-            html += "<button class='btn btn-info btn-xs example2-update' " + attr + ">\
-            <i class='fa fa-edit'></i></button> ";
-            html += "<button class='btn btn-danger btn-xs example2-delete' " + attr + ">\
-            <i class='fa fa-trash'></i></button> ";
-            $(td).html(html);
-        }
-
         $(function () {
             var arrParents = @json($parents, 320),
                 arrStatus = @json($status, 320),
@@ -114,7 +103,7 @@
                                 "title": "操作",
                                 "data": null,
                                 "orderable": false,
-                                "createdCell": handleOperator
+                                "createdCell": meTables.handleOperator
                             }
                         ]
                     }
