@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Requests\Admins\Admins;
+namespace App\Http\Requests\Admins\Admin;
 
-class DeleteRequest
+use App\Http\Requests\Request;
+
+class DeleteRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
