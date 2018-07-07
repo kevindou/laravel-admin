@@ -71,13 +71,23 @@ class AdminsController extends Controller
     }
 
     /**
+     * 添加数据
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store()
+    {
+        return $this->sendJson($this->adminRepository->create(request()->all()));
+    }
+
+    /**
      * 删除数据
      *
      * @param DeleteRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete(DeleteRequest $request)
+    public function destroy(DeleteRequest $request)
     {
         return $this->sendJson($this->adminRepository->delete($request->input('id')));
     }

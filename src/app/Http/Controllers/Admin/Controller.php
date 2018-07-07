@@ -110,22 +110,22 @@ class Controller extends \App\Http\Controllers\Controller
     {
         return $this->save($this->findOrFail(), 1007);
     }
-//
-//    /**
-//     * 删除数据
-//     *
-//     * @return \Illuminate\Http\JsonResponse
-//     * @throws \Exception
-//     */
-//    public function delete()
-//    {
-//        $model = $this->findOrFail();
-//        if ($model->delete()) {
-//            return $this->success($model);
-//        }
-//
-//        return $this->error(1006);
-//    }
+
+    /**
+     * 删除数据
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        $model = $this->findOrFail();
+        if ($model->delete()) {
+            return $this->success($model);
+        }
+
+        return $this->error(1006);
+    }
 
     /**
      * 查询model
