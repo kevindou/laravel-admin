@@ -5,32 +5,10 @@
             <div class="box box-primary">
                 <!-- /.box-header -->
                 <div class="box-header with-border">
-                    <div class="col-sm-12">
-                        <button class="btn btn-success btn-sm pull-left me-table-show-table-create">
+                    <div class="col-sm-12" id="me-table-search-form">
+                        <button class="btn btn-success btn-sm pull-left me-table-create">
                             {{ trans('admin.create') }}
                         </button>
-                        <form class="form-inline pull-right" id="search-form" name="search-form">
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="desc" class="form-control" placeholder="说明">
-                            </div>
-                            <div class="input-group input-group-sm">
-                                <input type="text" name="title" class="form-control" id="inputSearchTitle"
-                                       placeholder="标题">
-                                <div class="input-group-btn">
-                                    <button type="submit" class="btn btn-info">
-                                        <i class="fa fa-search"></i>
-                                        {{ trans('搜索') }}
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="input-group input-group-sm">
-                                <div class="input-group-btn">
-                                    <button type="reset" class="btn btn-warning me-table-reset-table">
-                                        {{ trans('清除') }}
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
                 </div>
                 <div class="box-body">
@@ -81,16 +59,27 @@
             var table = meTables({
                 "title": "日程管理",
                 "sTable": "#me-table",
+                "searchType": "middle",
                 "table": {
-                    dom: "t<'row'<'table-page col-sm-4'li><'col-sm-8'p>>",
                     columns: [
-                        {"title": "id", "data": "id", "defaultOrder": "desc", "edit": {"type": "hidden"}},
                         {
-                            "title": "标题", "data": "title", "orderable": false,
+                            "title": "id",
+                            "data": "id",
+                            "defaultOrder": "desc",
+                            "edit": {"type": "hidden"}
+                        },
+                        {
+                            "title": "标题",
+                            "data": "title",
+                            "orderable": false,
+                            "search": {"type": "text"},
                             "edit": {"rangelength": "[2, 255]", "required": true}
                         },
                         {
-                            "title": "说明", "data": "desc", "orderable": false,
+                            "title": "说明",
+                            "data": "desc",
+                            "orderable": false,
+                            "search": {"type": "text"},
                             "edit": {"type": "textarea", "rangelength": "[2, 255]", "rows": 5, "required": true}
                         },
                         {

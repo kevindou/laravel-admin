@@ -71,10 +71,9 @@
                 arrStatus = @json($status, 320),
                 arrColors = {"10": "label-success", "0": "label-warning", "-1": "label-danger"},
                 table = meTables({
-                    "sTable": "#example2",
-                    "title": "导航栏目",
-                    "table": {
-                        dom: "t<'row'<'table-page col-sm-4'li><'col-sm-8'p>>",
+                    sTable: "#example2",
+                    title: "导航栏目",
+                    table: {
                         columns: [
                             {"title": "id", "data": "id", "edit": {type: "hidden"}, "defaultOrder": "asc"},
                             {

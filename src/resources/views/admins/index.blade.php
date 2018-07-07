@@ -6,33 +6,10 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="row">
-                        <div class="col-sm-12" style="margin-bottom: 20px;">
-                            <button class="btn btn-success btn-sm pull-left example2-show-table-create">
+                        <div class="col-sm-12" style="margin-bottom: 20px;" id="me-table-search-form">
+                            <button class="btn btn-success btn-sm pull-left me-table-create">
                                 {{ trans('admin.create') }}
                             </button>
-                            <form class="form-inline pull-right" id="search-form" name="searchForm">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" name="name" class="form-control"
-                                           placeholder="管理员名称">
-                                </div>
-                                <div class="input-group input-group-sm">
-                                    <input type="email" name="email" class="form-control pull-right"
-                                           placeholder="邮箱">
-                                    <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-info">
-                                            <i class="fa fa-search"></i>
-                                            {{ trans('搜索') }}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="input-group input-group-sm">
-                                    <div class="input-group-btn">
-                                        <button type="reset" class="btn btn-warning example2-reset-table">
-                                            {{ trans('清除') }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
                         <div class="col-sm-12">
                             <table id="example2" class="table table-bordered table-hover"></table>
@@ -60,19 +37,27 @@
         $(function () {
             var meTable = meTables({
                 sTable: "#example2",
+                searchType: "middle",
                 table: {
-                    dom: "t<'row'<'table-page col-sm-4'li><'col-sm-8'p>>",
                     columns: [
                         {
                             "title": "ID", "data": "id", "defaultOrder": "asc", "edit": {type: "hidden"}
                         },
                         {
-                            "title": "管理员名称", "data": "name", "orderable": false, "edit": {
+                            "title": "管理员名称",
+                            "data": "name",
+                            "orderable": false,
+                            "search": {"type": "text"},
+                            "edit": {
                                 required: "true", rangelength: "[2, 50]"
                             }
                         },
                         {
-                            "title": "管理员邮箱", "data": "email", "orderable": false, "edit": {
+                            "title": "管理员邮箱",
+                            "data": "email",
+                            "orderable": false,
+                            "search": {"type": "text"},
+                            "edit": {
                                 required: "true", rangelength: "[2, 100]", email: true
                             }
                         },
@@ -99,7 +84,6 @@
                         }
                     ]
                 }
-
             });
         })
     </script>

@@ -49,16 +49,17 @@
 
             // 表格的配置
             this.options.table = $.extend({
-                "paging": true,
-                "lengthMenu": [15, 30, 50, 100],
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "processing": true,
-                "serverSide": true,
-                "paginationType": "full_numbers",
-                "language": this.getLanguage("dataTables", "*")
+                paging: true,
+                lengthMenu: [15, 30, 50, 100],
+                searching: false,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                processing: true,
+                serverSide: true,
+                paginationType: "full_numbers",
+                language: this.getLanguage("dataTables", "*"),
+                dom: "t<'row'<'table-page col-sm-4'li><'col-sm-8'p>>"
             }, this.options.table);
 
             // 没有配置地址
@@ -85,6 +86,17 @@
             // 初始化主要表格
             this.table = $(this.options.sTable).DataTable(this.options.table);
             var self = this;
+
+            // 判断初始化处理(搜索添加位置)
+            if (this.options.searchType === "middle") {
+                var sFormName = self.options.searchForm.replace("#", "");
+                $("#me-table-search-form").append(meTables.searchFormCreate(self.options.searchHtml, {
+                    "id": sFormName,
+                    "name": sFormName,
+                    "class": "form-inline pull-right"
+                }));
+            }
+
             // 搜索表单的事件
             if (this.options.bEvent) {
                 $(this.options.searchForm + ' input').on(this.options.searchInputEvent, function () {
@@ -95,6 +107,7 @@
                 });
             }
 
+
             // 添加表单事件
             $(this.options.searchForm).submit(function (evt) {
                 evt.preventDefault();
@@ -102,18 +115,16 @@
             });
 
             // 刷新当前数据
-            $(document).on('click', "." + self.uniqueName + "-reset-table", function () {
+            $(document).on('click', ".me-table-reset", function () {
                 $(self.options.searchForm).get(0).reset();
                 self.search();
             });
 
             // 添加事件
-            $(document).on('click', "." + self.uniqueName + "-show-table-create", function (evt) {
+            $(document).on('click', ".me-table-create", function (evt) {
                 evt.preventDefault();
                 self.create();
             });
-
-            console.info("." + self.uniqueName + "-show-table-create");
 
             // 添加保存事件
             $(document).on('click', self.options.sTable + "-save", function (evt) {
@@ -149,6 +160,7 @@
                 views = "<table class=\"table table-bordered table-striped table-detail\">",
                 aOrders = [],
                 aTargets = [];
+            self.options.searchHtml = self.options.searchHtml || '';
 
             // 处理生成表单
             this.options.table.columns.forEach(function (k, v) {
@@ -164,6 +176,7 @@
 
                 // 搜索信息
                 if (k.search !== undefined) {
+                    console.info(k.search, self.options.searchType)
                     self.options.searchHtml += meTables.searchInputCreate(k, v, self.options.searchType);
                 }
 
@@ -645,25 +658,25 @@
         // 搜索框表单元素创建
         searchInputCreate: function (k, v, searchType) {
             // 默认值
-            if (!k.search.name) k.search.name = k.data;
-            if (!k.search.title) k.search.title = k.title;
-            if (!k.search.type) k.search.type = "text";
+            k.search.name = k.search.name || k.data;
+            k.search.title = k.search.title || k.title;
+            k.search.type = k.search.type || "text";
 
             // select 默认选中
-            var defaultObject = k.search.type === "select" ? {"All": meTables.fn.getLanguage("all")} : null;
-
+            var defaultObject = k.search.type === "select" ? {"All": meTables.fn.getLanguage("all")} : null,
+                method = k.search.type + "SearchCreate",
+                defaultMethod = "textSearchCreate";
             if (searchType === "middle") {
-                try {
-                    html = this[k.search.type + "SearchMiddleCreate"](k.search, k.value, defaultObject);
-                } catch (e) {
-                    html = this.textSearchMiddleCreate(k.search);
-                }
-            } else {
-                try {
-                    html = this[k.search.type + "SearchCreate"](k.search, k.value, defaultObject);
-                } catch (e) {
-                    html = this.textSearchCreate(k.search);
-                }
+                method = k.search.type + "SearchMiddleCreate";
+                defaultMethod = "textSearchMiddleCreate";
+            }
+
+            console.info(method, defaultMethod)
+
+            try {
+                html = this[method](k.search, k.value, defaultObject);
+            } catch (e) {
+                html = this[defaultMethod](k.search);
             }
 
             return html;
@@ -750,12 +763,33 @@
 
         textSearchMiddleCreate: function (params) {
             params["id"] = "search-" + params.name;
-            return '<label for="search-' + params.name + '"> ' + params.title + ': ' + this.inputCreate(params) + '</label>';
+            params.placeholder = params.placeholder || params.title || params.name;
+            params.class = params.class || "form-control";
+            return '<div class="input-group input-group-sm"> ' + this.inputCreate(params) + ' </div> ';
         },
 
         selectSearchMiddleCreate: function (params, value, defaultObject) {
             params["id"] = "search-" + params.name;
             return '<label for="search-' + params.name + '"> ' + params.title + ': ' + this.selectInput(params, value, defaultObject) + '</label>';
+        },
+
+        searchFormCreate: function (html, params) {
+            html += '<div class="input-group input-group-sm">\n' +
+                '     <div class="input-group-btn">\n' +
+                '           <button type="submit" class="btn btn-info">\n' +
+                '                <i class="fa fa-search"></i>\n' +
+                '                     ' + meTables.fn.getLanguage('meTables', 'search') +
+                '           </button>\n' +
+                '     </div>\n' +
+                '</div>\n' +
+                '<div class="input-group input-group-sm">\n' +
+                '     <div class="input-group-btn">\n' +
+                '          <button type="reset" class="btn btn-warning me-table-reset">\n' +
+                '               ' + meTables.fn.getLanguage('meTables', 'clear') +
+                '          </button>\n' +
+                '     </div>\n' +
+                '</div>';
+            return '<form ' + this.handleParams(params) + '>' + html + '</form>';
         },
 
         searchParams: function (params) {
@@ -916,13 +950,13 @@
                     html += '<tr>';
                 }
 
-                html += '<td width="25%">' + title + '</td><td class="views-info data-detail-' + data + '"></td>';
+                html += '<td width="25%" class="text-right">' + title + '</td><td class="views-info data-detail-' + data + '"></td>';
 
                 if (aParams.iColsLength > 1 && iKey % aParams.iColsLength === (aParams.iColsLength - 1)) {
                     html += '</tr>';
                 }
             } else {
-                html += '<tr><td width="25%">' + title + '</td><td class="views-info ' + prefix + '-data-detail-' + data + '"></td></tr>';
+                html += '<tr><td width="25%" class="text-right">' + title + '</td><td class="views-info ' + prefix + '-data-detail-' + data + '"></td></tr>';
             }
 
             return html;
@@ -1096,6 +1130,7 @@
                     "refresh": "刷新",
                     "export": "导出",
                     "pleaseInput": "请输入",
+                    "clear": "清除",
                     "all": "全部"
                 },
 
