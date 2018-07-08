@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin\Calendar;
+use App\Repositories\Admin\CalendarRepository;
 use App\Http\Requests\Admin\Calendars\DestroyRequest;
 use App\Http\Requests\Admin\Calendars\StoreRequest;
 use App\Http\Requests\Admin\Calendars\UpdateRequest;
-use App\Models\Admin\Calendar;
-use App\Repositories\Admin\CalendarRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CalendarsController extends Controller
 {
@@ -103,15 +102,10 @@ class CalendarsController extends Controller
         $colors     = Calendar::$arrColor;
 
         // 查询数据
-        $all = $this->repository->findAll(['status' => 0, 'orderBy' => 'id desc']);
+        $calendars = $this->repository->findAll(['status' => 0, 'orderBy' => 'id desc']);
 
         // 载入视图
-        return view('admin::calendars.self', [
-            'status'     => $status,
-            'timeStatus' => $timeStatus,
-            'colors'     => $colors,
-            'calendars'  => $all
-        ]);
+        return view('admin::calendars.self', compact('status', 'timeStatus', 'colors', 'calendars'));
     }
 
     /**
