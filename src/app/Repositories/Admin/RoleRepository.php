@@ -38,4 +38,30 @@ class RoleRepository extends Repository
             return $this->error($e->getMessage());
         }
     }
+
+    /**
+     * 修改权限
+     *
+     * @param integer $role_id     角色ID
+     * @param array   $data        修改数据
+     * @param array   $permissions 权限信息
+     *
+     * @return array
+     * @throws \Throwable
+     */
+    public function updatePermissions($role_id, $data, $permissions)
+    {
+        DB::beginTransaction();
+        try {
+            // 删除自己
+            list($ok, $msg) = $this->update($role_id, $data);
+            throw_if(!$ok, new \Exception($msg));
+            $this->getModel()->where('id', $role_id)->first()->perms()->sync($permissions);
+            DB::commit();
+            return $this->success($data);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e->getMessage());
+        }
+    }
 }

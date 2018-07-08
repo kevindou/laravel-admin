@@ -14,6 +14,7 @@ class CreateMenusTable extends Migration {
 	{
 		Schema::create('menus', function(Blueprint $table)
 		{
+            $table->engine = 'InnoDB';
 			$table->increments('id')->comment('导航栏目ID');
 			$table->string('name', 50)->comment('导航栏目名称');
 			$table->string('url', 256)->comment('导航的地址');

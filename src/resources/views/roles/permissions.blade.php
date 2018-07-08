@@ -1,7 +1,8 @@
 @extends('admin::layouts.admin')
 @section("main-content")
     <div class="row">
-        <form role="form" action="{{ url('/admin/roles/permissions?id='.$model->id) }}" method="post">
+        <form role="form" action="{{ url('/admin/roles/update-permissions?id='.array_get($role, 'id')) }}"
+              method="post">
             {{ csrf_field() }}
             <div class="col-md-3">
                 <!-- general form elements -->
@@ -13,7 +14,7 @@
                         <div class="form-group">
                             <label for="input-name"> 角色名称 </label>
                             <input type="text" name="name" class="form-control"
-                                   value="{{ $model->name }}" id="input-name" placeholder="角色名称">
+                                   value="{{ array_get($role, 'name') }}" id="input-name" placeholder="角色名称">
                             @if ($errors->has('email'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name') }}</strong>
@@ -23,7 +24,7 @@
                         <div class="form-group">
                             <label for="input-description">角色说明</label>
                             <textarea name="description" class="form-control" id="input-description"
-                                      placeholder="角色说明">{{ $model->description }}</textarea>
+                                      placeholder="角色说明">{{ array_get($role, 'description') }}</textarea>
                             @if ($errors->has('email'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('description') }}</strong>
@@ -33,7 +34,7 @@
                         <div class="form-group">
                             <label for="input-display-name">显示名称</label>
                             <input type="text" name="display_name" class="form-control" id="input-display-name"
-                                   value="{{ $model->display_name }}" placeholder="显示名称">
+                                   value="{{ array_get($role, 'display_name') }}" placeholder="显示名称">
                             @if ($errors->has('email'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('display_name') }}</strong>
@@ -57,8 +58,12 @@
                         @foreach($permissions as $value)
                             <label>
                                 <input type="checkbox" name="permissions[]"
-                                       value="{{ $value->id }}">
-                                {{ $value->description }} ({{ $value->name  }})
+                                       value="{{ array_get($value, 'id') }}"
+                                @if (in_array(array_get($value, 'id'), $hasIds))
+                                    checked="checked"
+                                        @endif
+                                >
+                                {{ array_get($value, 'description') }} ({{ array_get($value, 'name') }})
                             </label>
                         @endforeach
                     </div>

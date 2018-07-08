@@ -67,9 +67,7 @@ class CalendarsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $id   = $request->input('id');
-        $data = $request->all();
-        return $this->sendJson($this->repository->update($id, $data));
+        return $this->sendJson($this->repository->update($request->input('id'), $request->all()));
     }
 
     /**

@@ -14,6 +14,7 @@ class CreateCalendarsTable extends Migration {
 	{
 		Schema::create('calendars', function(Blueprint $table)
 		{
+            $table->engine = 'InnoDB';
 			$table->integer('id', true)->comment('记录ID');
 			$table->string('title', 100)->default('')->comment('事件标题');
 			$table->string('desc')->nullable()->default('')->comment('事件描述');

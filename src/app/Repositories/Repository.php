@@ -52,16 +52,6 @@ abstract class Repository
     ];
 
     /**
-     * 获取model
-     *
-     * @return Model
-     */
-    public function getModel()
-    {
-        return $this->model;
-    }
-
-    /**
      * 创建数据
      *
      * @param $data
@@ -143,6 +133,96 @@ abstract class Repository
     }
 
     /**
+     * 查询单条数据
+     *
+     * @param        $condition
+     * @param string $fields
+     *
+     * @return array
+     */
+    public function findOne($condition, $fields = '*')
+    {
+        if ($one = $this->setModelCondition($condition, $fields)->first()) {
+            /* @var $one Collection */
+            return $one->toArray();
+        }
+
+        return [];
+    }
+
+    /**
+     * 查询单条数据的单个字段信息
+     *
+     * @param array|mixed $condition 查询条件
+     * @param string      $column    查询的字段信息
+     *
+     * @return mixed|null
+     */
+    public function findColumn($condition, $column)
+    {
+        if ($one = $this->findOne($condition, [$column])) {
+            return array_get($one, $column);
+        }
+
+        return null;
+    }
+
+    /**
+     * 查询全部数据
+     *
+     * @param array        $condition 查询条件
+     * @param string|array $fields    查询的字段
+     *
+     * @return array
+     */
+    public function findAll($condition = [], $fields = '*')
+    {
+        if ($all = $this->setModelCondition($condition, $fields)->get()) {
+            /* @var $all Collection */
+            return $all->toArray();
+        }
+
+        return [];
+    }
+
+    /**
+     * 查询全部的一个字段组成的数组
+     *
+     * @param array  $condition 查询条件
+     * @param string $column    查询的字段名称
+     *
+     * @return array
+     */
+    public function findAllColumn($condition = [], $column)
+    {
+        if ($columns = $this->findAll($condition, [$column])) {
+            return array_column($columns, $column);
+        }
+
+        return [];
+    }
+
+    public function findOneBySql($sql, $binds = [], $connection = 'default')
+    {
+
+    }
+
+    public function findAllBySql($sql, $binds = [], $connection = 'default')
+    {
+
+    }
+
+    /**
+     * 获取model
+     *
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
      * 获取主键查询条件
      *
      * @param $condition
@@ -196,42 +276,6 @@ abstract class Repository
         // 记录数据库执行错误日志
         logger()->error('db error', ['message' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()]);
         return app()->environment('production') ? '系统错误，请重试' : $e->getMessage();
-    }
-
-    /**
-     * @param        $condition
-     * @param string $fields
-     *
-     * @return array
-     */
-    public function findOne($condition, $fields = '*')
-    {
-        if ($one = $this->setModelCondition($condition, $fields)->first()) {
-            /* @var $one Collection */
-            return $one->toArray();
-        }
-
-        return [];
-    }
-
-    public function findAll($condition, $fields = '*')
-    {
-        if ($all = $this->setModelCondition($condition, $fields)->get()) {
-            /* @var $all Collection */
-            return $all->toArray();
-        }
-
-        return [];
-    }
-
-    public function findOneBySql($sql, $binds = [], $connection = 'default')
-    {
-
-    }
-
-    public function findAllBySql($sql, $binds = [], $connection = 'default')
-    {
-
     }
 
     /**

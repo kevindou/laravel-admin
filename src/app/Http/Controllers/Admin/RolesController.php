@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Admin\Role;
 use App\Http\Requests\Admin\Roles\DestroyRequest;
 use App\Http\Requests\Admin\Roles\StoreRequest;
 use App\Http\Requests\Admin\Roles\UpdateRequest;
-use App\Models\Admin\Admin;
-use App\Models\Admin\Permission;
-use App\Models\Admin\Role;
+use App\Repositories\Admin\PermissionRepository;
+use App\Repositories\Admin\PermissionRoleRepository;
 use App\Repositories\Admin\RoleRepository;
 use App\Repositories\Admin\RoleUserRepository;
-use Illuminate\Http\Request;
 
 class RolesController extends Controller
 {
@@ -19,11 +18,27 @@ class RolesController extends Controller
      */
     private $roleUserRepository;
 
-    public function __construct(RoleRepository $repository, RoleUserRepository $roleUserRepository)
+    /**
+     * @var PermissionRepository
+     */
+    private $permissionRepository;
+    /**
+     * @var PermissionRoleRepository
+     */
+    private $permissionRoleRepository;
+
+    public function __construct(
+        RoleRepository $repository,
+        RoleUserRepository $roleUserRepository,
+        PermissionRepository $permissionRepository,
+        PermissionRoleRepository $permissionRoleRepository
+    )
     {
         parent::__construct();
-        $this->repository         = $repository;
-        $this->roleUserRepository = $roleUserRepository;
+        $this->repository               = $repository;
+        $this->roleUserRepository       = $roleUserRepository;
+        $this->permissionRepository     = $permissionRepository;
+        $this->permissionRoleRepository = $permissionRoleRepository;
     }
 
     /**
@@ -85,6 +100,7 @@ class RolesController extends Controller
      * @param DestroyRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function destroy(DestroyRequest $request)
     {
@@ -98,13 +114,13 @@ class RolesController extends Controller
     }
 
     /**
-     * 分配权限信息
+     * 分配权限
      *
-     * @param Request $request
+     * @param DestroyRequest $request
      *
-     * @return \Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function permissions(Request $request)
+    public function permissions(DestroyRequest $request)
     {
         $id = (int)$request->get('id');
         if ($id == 1) {
@@ -112,28 +128,28 @@ class RolesController extends Controller
             return redirect('/admin/roles/index');
         }
 
-        // 查询角色
-        $model = Role::findOrFail($id);
-        if ($request->isMethod('post')) {
-            $model->name         = $request->input('name');
-            $model->display_name = $request->input('display_name');
-            $model->description  = $request->input('description');
-            if ($model->save()) {
-                $model->perms()->sync($request->input('permissions'));
-                return redirect('/admin/roles/index');
-            }
-        }
-
         view()->share([
             'title'           => trans('分配权限'),
             '__active_menu__' => 'admin/roles/index'
         ]);
 
-        // 查询全部权限
-        $permissions = Permission::all();
-        return view('admin::roles.permissions', [
-            'model'       => $model,
-            'permissions' => $permissions,
-        ]);
+        $role        = $this->repository->findOne($id);
+        $permissions = $this->permissionRepository->findAll();
+        $hasIds      = $this->permissionRoleRepository->findAllColumn(['role_id' => $id], 'permission_id');
+        return view('admin::roles.permissions', compact('role', 'permissions', 'hasIds'));
+    }
+
+    /**
+     * 修改权限
+     *
+     * @param UpdateRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function updatePermissions(UpdateRequest $request)
+    {
+        $data = $request->all();
+        $this->repository->updatePermissions(array_get($data, 'id'), $data, array_get('permissions', []));
+        return redirect('/admin/roles/index');
     }
 }

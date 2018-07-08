@@ -14,6 +14,7 @@ class CreateAdminsTable extends Migration {
 	{
 		Schema::create('admins', function(Blueprint $table)
 		{
+            $table->engine = 'InnoDB';
 			$table->increments('id')->comment('唯一ID');
 			$table->string('name', 191)->default('')->comment('管理员名称');
 			$table->string('email', 191)->unique('users_email_unique')->comment('管理员邮箱');

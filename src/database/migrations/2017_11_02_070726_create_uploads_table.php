@@ -14,6 +14,7 @@ class CreateUploadsTable extends Migration {
 	{
 		Schema::create('uploads', function(Blueprint $table)
 		{
+            $table->engine = 'InnoDB';
 			$table->increments('id')->comment('Id');
 			$table->string('title', 250)->comment('标题');
 			$table->string('name', 250)->default('')->comment('名称');
