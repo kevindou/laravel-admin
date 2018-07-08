@@ -56,8 +56,9 @@
     <script src="{{ asset('admin-assets/plugins/select2/select2.min.js') }}"></script>
     <script>
         $(function () {
-            var arrParents = @json($parents, 320),
-                arrStatus = @json($status, 320),
+            var arrParents = @json($parents, 320);
+            arrParents["0"] = "顶级分类";
+            var arrStatus = @json($status, 320),
                 arrColors = {"10": "label-success", "0": "label-warning", "-1": "label-danger"},
                 table = meTables({
                     sTable: "#example2",
@@ -83,7 +84,7 @@
                                 "title": "父级名称", "data": "parent", "render": function (data) {
                                     return arrParents[data] ? arrParents[data] : "顶级分类";
                                 },
-                                value: @json($parents, 320),
+                                value: arrParents,
                                 "edit": {"type": "select", "number": true}
                             },
                             {
