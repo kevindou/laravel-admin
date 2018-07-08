@@ -2,13 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\Roles\DestroyRequest;
+use App\Http\Requests\Admin\Roles\StoreRequest;
+use App\Http\Requests\Admin\Roles\UpdateRequest;
 use App\Models\Admin\Admin;
 use App\Models\Admin\Permission;
 use App\Models\Admin\Role;
+use App\Repositories\Admin\RoleRepository;
 use Illuminate\Http\Request;
 
 class RolesController extends Controller
 {
+    public function __construct(RoleRepository $repository)
+    {
+        parent::__construct();
+        $this->repository = $repository;
+    }
+
     /**
      * @var string 定义使用的model
      */
@@ -70,44 +80,53 @@ class RolesController extends Controller
     }
 
     /**
-     * 修改事件信息
+     * 添加数据
+     *
+     * @param StoreRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
      */
-    public function update()
+    public function store(StoreRequest $request)
     {
-        $request             = request();
-        $model               = $this->findOrFail();
-        $model->name         = $request->input('name');
-        $model->display_name = $request->input('display_name');
-        $model->description  = $request->input('description');
-        if ($model->save()) {
-            return $this->success($model);
+        list($ok, $msg, $data) = $this->repository->create($request->all());
+        if ($ok && $user = admin::where(['id' => 1])->first()) {
+            $user->roles()->attach($data['id']);
         }
 
-        return $this->error(1007);
+        return $this->sendJson([$ok, $msg, $data]);
+    }
+
+    /**
+     * 修改数据
+     *
+     * @param UpdateRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(UpdateRequest $request)
+    {
+        return $this->sendJson($this->repository->update(
+            $request->input('id'),
+            $request->all()
+        ));
     }
 
     /**
      * 删除数据
      *
+     * @param DestroyRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete()
+    public function destroy(DestroyRequest $request)
     {
-        if ((new $this->model)->where('id', request()->input('id'))->delete()) {
-            return $this->success([]);
-        }
-
-        return $this->error(1006);
+        return $this->sendJson($this->repository->delete($request->input('id')));
     }
 
     /**
      * 分配权限信息
      *
      * @param Request $request
-     * @param         $id
      *
      * @return \Illuminate\Routing\Redirector|\Illuminate\View\View
      */

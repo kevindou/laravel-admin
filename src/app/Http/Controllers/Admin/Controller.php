@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Repositories\Repository;
 use App\Traits\JsonTrait;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller as BaseController;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
  * Class Controller 后台基础控制器
@@ -17,7 +20,7 @@ class Controller extends BaseController
     /**
      * 引入json 处理
      */
-    use JsonTrait;
+    use JsonTrait, AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
      * @var Repository
