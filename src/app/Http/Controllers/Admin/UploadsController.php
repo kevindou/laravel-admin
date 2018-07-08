@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreUpload;
-use App\Models\Admin\Upload;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Uploads\DestroyRequest;
+use App\Http\Requests\Admin\Uploads\UpdateRequest;
+use App\Http\Requests\Admin\Uploads\UploadRequest;
+use App\Repositories\Admin\UploadRepository;
 use Illuminate\Support\Facades\Storage;
-use App\Traits\JsonTrait;
 
 /**
  * Class UploadsController
@@ -17,11 +16,10 @@ use App\Traits\JsonTrait;
  */
 class UploadsController extends Controller
 {
-    use JsonTrait;
-
-    public function __construct()
+    public function __construct(UploadRepository $repository)
     {
-        $this->middleware('admin');
+        parent::__construct();
+        $this->repository = $repository;
     }
 
     /**
@@ -41,59 +39,55 @@ class UploadsController extends Controller
      */
     public function list()
     {
-        return $this->success(Upload::all());
+        return $this->success($this->repository->findAll());
     }
 
     /**
      * 文件上传 Upload files via DropZone.js
      *
-     * @param Request $request
+     * @param UploadRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function upload(Request $request)
+    public function upload(UploadRequest $request)
     {
-        if (!$request->isMethod('post')) {
-            return $this->error();
-        }
-
         $file = $request->file('file');
         if (!$file->isValid()) {
             return $this->error(1001);
         }
 
         // 上传文件
-        $url = $file->store(date('Ymd'));
-        if (!$url) {
+        if (!$url = $file->store(date('Ymd'))) {
             return $this->error(1004);
         }
 
         // 新增数据
-        if ($upload = Upload::create([
-            'name' => $file->getClientOriginalName(),
-            'url' => Storage::url($url),
-            'path' => $url,
-            'title' => '',
+        return $this->sendJson($this->repository->create([
+            'name'      => $file->getClientOriginalName(),
+            'url'       => Storage::url($url),
+            'path'      => $url,
+            'title'     => '',
             'extension' => $file->getClientOriginalExtension(),
-            'public' => 1
-        ])) {
-            return $this->success($upload);
-        }
-
-        return $this->error(1005);
+            'public'    => 1
+        ]));
     }
 
     /**
      * 删除图片信息
      *
-     * @param Request $request
+     * @param DestroyRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete(Request $request)
+    public function destroy(DestroyRequest $request)
     {
-        $upload = Upload::findOrFail($request->input('id'));
-        if ($upload->delete()) {
-            Storage::delete($upload->path);
-            return $this->success($upload);
+        if ($one = $this->repository->findOne($request->input('id'))) {
+            $data = $this->repository->delete(['id' => $one['id']]);
+            if ($data[0] && $path = array_get($one, 'path')) {
+                Storage::delete($path);
+            }
+
+            return $this->sendJson($data);
         }
 
         return $this->error(1003);
@@ -102,28 +96,31 @@ class UploadsController extends Controller
     /**
      * 修改图片上传信息
      *
-     * @param StoreUpload $request
+     * @param UpdateRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(StoreUpload $request)
+    public function update(UpdateRequest $request)
     {
-        $upload = Upload::findOrFail($request->input('id'));
-        $upload->fill($request->input());
-        if (!$upload->save()) {
-            return $this->error(1003);
+        $id = $request->input('id');
+        list($ok, $msg) = $this->repository->update($id, $request->all());
+        if ($ok) {
+            return $this->success($this->repository->findOne($id));
         }
 
-        return $this->success($upload);
+        return $this->error(1001, $msg);
     }
 
     /**
      * 文件下载
      *
-     * @param Request $request
+     * @param DestroyRequest $request
+     *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function download(Request $request)
+    public function download(DestroyRequest $request)
     {
-        return response()->download('.' . trim($request->input('file'), '.'));
+        $url = (string)$this->repository->findColumn($request->input('id'), 'url');
+        return response()->download('.' . ltrim($url, '.'));
     }
 }

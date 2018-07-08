@@ -1,21 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin\Uploads;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Request;
 
-class StoreUpload extends FormRequest
+class UpdateRequest extends Request
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,6 +14,7 @@ class StoreUpload extends FormRequest
     public function rules()
     {
         return [
+            'id'     => 'required|integer|min:1|exists:uploads',
             'title'  => 'required|max:255|min:2',
             'name'   => 'required|max:255|min:6',
             'public' => 'required|integer'

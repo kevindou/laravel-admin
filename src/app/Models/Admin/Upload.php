@@ -2,6 +2,8 @@
 
 namespace App\Models\Admin;
 
+use App\Models\Model;
+
 /**
  * Class Uploads 上传文件表
  * @package App\Models

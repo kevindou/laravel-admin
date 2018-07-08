@@ -124,6 +124,7 @@
 @push("script")
     <script src="{{ asset('admin-assets/plugins/dropzone/dropzone.min.js') }}"></script>
     <script src="{{ asset('admin-assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/plugins/jquery-validation/validate.message.js') }}"></script>
     <script src="https://unpkg.com/vue"></script>
     <script>
         var defaultValue = {
@@ -146,7 +147,7 @@
                 },
                 methods: {
                     downloadValue: function (value) {
-                        window.location.href = '{{ url('admin/uploads/download')  }}?file=' + value.url;
+                        window.location.href = '{{ url('admin/uploads/download')  }}?id=' + value.id;
                     },
                     updateValue: function (value, key) {
                         this.index = key;
@@ -164,7 +165,7 @@
                             for (var x in self.list) {
                                 if (value.id === self.list[x]['id']) {
                                     ajax({
-                                        url: "{{ url('admin/uploads/delete') }}",
+                                        url: "{{ url('admin/uploads/destroy') }}",
                                         data: value,
                                         type: "post",
                                         dataType: "json"
