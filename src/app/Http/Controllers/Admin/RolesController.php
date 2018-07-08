@@ -145,11 +145,12 @@ class RolesController extends Controller
      * @param UpdateRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Throwable
      */
     public function updatePermissions(UpdateRequest $request)
     {
         $data = $request->all();
-        $this->repository->updatePermissions(array_get($data, 'id'), $data, array_get('permissions', []));
+        $this->repository->updatePermissions(array_get($data, 'id'), $data, array_get($data,'permissions', []));
         return redirect('/admin/roles/index');
     }
 }
