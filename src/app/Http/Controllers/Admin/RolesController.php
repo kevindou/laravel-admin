@@ -9,14 +9,21 @@ use App\Models\Admin\Admin;
 use App\Models\Admin\Permission;
 use App\Models\Admin\Role;
 use App\Repositories\Admin\RoleRepository;
+use App\Repositories\Admin\RoleUserRepository;
 use Illuminate\Http\Request;
 
 class RolesController extends Controller
 {
-    public function __construct(RoleRepository $repository)
+    /**
+     * @var RoleUserRepository
+     */
+    private $roleUserRepository;
+
+    public function __construct(RoleRepository $repository, RoleUserRepository $roleUserRepository)
     {
         parent::__construct();
-        $this->repository = $repository;
+        $this->repository         = $repository;
+        $this->roleUserRepository = $roleUserRepository;
     }
 
     /**
@@ -49,37 +56,6 @@ class RolesController extends Controller
     }
 
     /**
-     * 创建数据
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function create()
-    {
-        /* @var $model \Illuminate\Database\Eloquent\Model */
-        $request             = request();
-        $model               = new $this->model;
-        $model->name         = $request->input('name');
-        $model->display_name = $request->input('display_name');
-        $model->description  = $request->input('description');
-        if (!$model->save()) {
-            return $this->error(1005);
-        }
-
-        // 添加角色
-        if ($model->getTable() === 'roles') {
-            if ($user = admin::where(['id' => 1])->first()) {
-                $user->roles()->attach($model->id);
-            }
-        } else {
-            if ($role = Role::where(['name' => 'admin'])->first()) {
-                $role->perms()->attach($model->id);
-            }
-        }
-
-        return $this->success($model);
-    }
-
-    /**
      * 添加数据
      *
      * @param StoreRequest $request
@@ -88,12 +64,7 @@ class RolesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        list($ok, $msg, $data) = $this->repository->create($request->all());
-        if ($ok && $user = admin::where(['id' => 1])->first()) {
-            $user->roles()->attach($data['id']);
-        }
-
-        return $this->sendJson([$ok, $msg, $data]);
+        return $this->sendJson($this->repository->create($request->all()));
     }
 
     /**
@@ -105,10 +76,7 @@ class RolesController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        return $this->sendJson($this->repository->update(
-            $request->input('id'),
-            $request->all()
-        ));
+        return $this->sendJson($this->repository->update($request->input('id'), $request->all()));
     }
 
     /**
@@ -120,7 +88,13 @@ class RolesController extends Controller
      */
     public function destroy(DestroyRequest $request)
     {
-        return $this->sendJson($this->repository->delete($request->input('id')));
+        // 查询角色是否在使用
+        $id = $request->input('id');
+        if ($this->roleUserRepository->findOne(['role_id' => $id])) {
+            return $this->error(1008);
+        }
+
+        return $this->sendJson($this->repository->deleteRole(['id' => $id]));
     }
 
     /**
