@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admins\Admin;
+namespace App\Http\Requests\Admin\Admins;
 
 use App\Http\Requests\Request;
 
@@ -13,7 +13,7 @@ class DeleteRequest extends Request
      */
     public function authorize()
     {
-        return true;
+        return request()->input('id') != config('admin.super_admin_id');
     }
 
     /**

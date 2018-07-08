@@ -2,18 +2,23 @@
 
 namespace App\Models\Admin;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 
 class Calendar extends Model
 {
+    /**
+     * @var string 定义表名字
+     */
+    protected $table = 'calendars';
+
     // 状态信息
-    const STATUS_PENDING = 0;  // 待处理
+    const STATUS_PENDING  = 0;  // 待处理
     const STATUS_DELEGATE = 1;  // 委派处理
     const STATUS_COMPLETE = 2;  // 处理完成
-    const STATUS_DEFER = 3;  // 延期处理
+    const STATUS_DEFER    = 3;  // 延期处理
 
     // 时间状态
-    const TIME_STATUS_SLOW = 0; // 缓慢
+    const TIME_STATUS_SLOW   = 0; // 缓慢
     const TIME_STATUS_NORMAL = 1; // 正常
     const TIME_STATUS_URGENT = 2; // 紧急
 
@@ -34,28 +39,46 @@ class Calendar extends Model
         'rgb(0, 31, 63)',
     ];
 
-    /**
-     * @var string 定义表名字
-     */
-    protected $table = 'calendars';
+    public $columns = [
+        'id',
+        'title',
+        'desc',
+        'status',
+        'time_status',
+        'start',
+        'end',
+        'admin_id',
+        'style',
+        'created_at',
+        'updated_at',
+        'created_id',
+        'updated_id',
+    ];
 
-    /**
-     * @var array 批量赋值的黑名单
-     */
-    protected $guarded = ['id'];
+    public function setStyleAttribute($value)
+    {
+        $this->attributes['style'] = $value ? static::style($value) : '';
+    }
+
+    public function getStyleAttribute($value)
+    {
+        return $value ? json_decode($value, true) : null;
+    }
 
     /**
      * getStatus() 获取状态信息
+     *
      * @param null $intStatus 状态值
+     *
      * @return array|mixed
      */
     public static function getStatus($intStatus = null)
     {
         $arrReturn = [
             self::STATUS_DELEGATE => '委派处理',
-            self::STATUS_PENDING => '待处理',
+            self::STATUS_PENDING  => '待处理',
             self::STATUS_COMPLETE => '处理完成',
-            self::STATUS_DEFER => '延期处理'
+            self::STATUS_DEFER    => '延期处理'
         ];
 
         if ($intStatus != null && isset($arrReturn[$intStatus])) {
@@ -67,13 +90,15 @@ class Calendar extends Model
 
     /**
      * getTimeStatus() 获取时间状态信息
+     *
      * @param null $intStatus 状态值
+     *
      * @return array|mixed
      */
     public static function getTimeStatus($intStatus = null)
     {
         $arrReturn = [
-            self::TIME_STATUS_SLOW => '缓慢',
+            self::TIME_STATUS_SLOW   => '缓慢',
             self::TIME_STATUS_NORMAL => '正常',
             self::TIME_STATUS_URGENT => '紧急',
         ];
@@ -89,13 +114,14 @@ class Calendar extends Model
      * 样式处理
      *
      * @param string $style 样式
+     *
      * @return string
      */
     public static function style($style)
     {
         return json_encode([
             'backgroundColor' => $style,
-            'borderColor' => $style,
+            'borderColor'     => $style,
         ], 320);
     }
 

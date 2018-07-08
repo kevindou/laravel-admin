@@ -69,25 +69,46 @@
                             "data": "desc",
                             "orderable": false,
                             "search": {"type": "text"},
-                            "edit": {"type": "textarea", "rangelength": "[2, 255]", "rows": 5, "required": true}
+                            "edit": {
+                                "type": "textarea",
+                                "rangelength": "[2, 255]",
+                                "rows": 5,
+                                "required": true
+                            }
                         },
                         {
-                            "title": "开始时间", "data": "start",
-                            "edit": {"type": "dateTime", "required": true}
+                            "title": "开始时间",
+                            "data": "start",
+                            "edit": {
+                                "type": "dateTime",
+                                "required": true
+                            }
                         },
                         {
-                            "title": "结束时间", "data": "end",
-                            "edit": {"type": "dateTime", "required": true}
+                            "title": "结束时间",
+                            "data": "end",
+                            "edit": {
+                                "type": "dateTime",
+                                "required": true
+                            }
                         },
                         {
-                            "title": "状态", "data": "status", "hide": true,
+                            "title": "状态",
+                            "data": "status",
+                            "hide": true,
                             "value": @json($status, 320),
                             "edit": {"type": "radio", "number": true, "required": true}
                         },
                         {
-                            "title": "时间状态", "data": "time_status", "hide": true,
+                            "title": "时间状态",
+                            "data": "time_status",
+                            "hide": true,
                             "value": @json($timeStatus, 320),
-                            "edit": {"type": "radio", "number": true, "required": true}
+                            "edit": {
+                                "type": "radio",
+                                "number": true,
+                                "required": true
+                            }
                         },
                         {
                             "title": "背景颜色", "data": "style", "hide": true,

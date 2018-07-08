@@ -11,12 +11,12 @@
                     <div id="external-events">
                         @foreach($calendars as $calendar)
                             <div class="external-event"
-                                 style="color: #fff; background-color: {{ $calendar->backgroundColor }}; border-color: {{ $calendar->borderColor }}"
-                                 data-id="{{ $calendar->id }}"
-                                 data-title="{{ $calendar->title }}"
-                                 data-desc="{{ $calendar->desc }}"
-                                 data-time_status="{{ $calendar->time_status }}"
-                            >{{ $calendar->title }}</div>
+                                 style="color: #fff; background-color: {{ array_get($calendar, 'style.backgroundColor') }}; border-color: {{ array_get($calendar, 'style.borderColor') }}"
+                                 data-id="{{ array_get($calendar, 'id') }}"
+                                 data-title="{{ array_get($calendar, 'title') }}"
+                                 data-desc="{{ array_get($calendar, 'desc') }}"
+                                 data-time_status="{{ array_get($calendar, 'time_status') }}"
+                            >{{ array_get($calendar, 'title') }}</div>
                         @endforeach
                         <div class="checkbox">
                             <label for="drop-remove">
@@ -88,7 +88,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="post" id="editForm" class="form-horizontal" name="editForm" action="update">
-                        <input type="hidden" name="actionType" value="create"/>
+                        <input type="hidden" name="actionType" value="store"/>
                         <input type="hidden" name="id" value=""/>
                         <input type="hidden" name="admin_id" value="1"/>
                         <fieldset>
@@ -312,7 +312,7 @@
                         "end": moment(endDate).format("YYYY-MM-DD HH:mm:ss"),
                         "status": 1,
                         "time_status": $.trim($(this).attr("data-time_status")),
-                        "actionType": isDel ? "update" : "create",
+                        "actionType": isDel ? "update" : "store",
                         "style": $(this).css("background-color")
                     });
 
@@ -354,7 +354,7 @@
                         'end': end.format('YYYY-MM-DD HH:mm:ss'),       // 时间结束
                         'time_status': 1,                               // 时间状态
                         'status': 1,                                    // 状态
-                        'actionType': 'create'                          // 操作类型
+                        'actionType': 'store'                          // 操作类型
                     });
 
                     // 添加一个新的日程事件
@@ -390,7 +390,7 @@
 
                 // 开始新增数据
                 getLaravelRequest({
-                    url: "{{ url('admin/calendars/create') }}",
+                    url: "{{ url('admin/calendars/store') }}",
                     data: {
                         title: val,
                         style: currColor,
@@ -490,7 +490,7 @@
                     // 确认删除
                 }, function () {
                     ajax({
-                        url: 'delete',
+                        url: '{{ url('admin/calendars/destroy') }}',
                         type: 'POST',
                         dataType: 'json',
                         data: {

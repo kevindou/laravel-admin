@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\Calendars\DestroyRequest;
+use App\Http\Requests\Admin\Calendars\StoreRequest;
+use App\Http\Requests\Admin\Calendars\UpdateRequest;
 use App\Models\Admin\Calendar;
+use App\Repositories\Admin\CalendarRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
 
 class CalendarsController extends Controller
 {
-    /**
-     * @var string 定义使用的model
-     */
-    public $model = '\App\Models\Admin\Calendar';
+    public function __construct(CalendarRepository $calendarRepository)
+    {
+        parent::__construct();
+        $this->repository = $calendarRepository;
+    }
 
     /**
      * 处理显示查询参数配置
@@ -40,28 +44,45 @@ class CalendarsController extends Controller
         $colors     = Calendar::$arrColor;
 
         // 载入视图
-        return view('admin::calendars.index', [
-            'status'     => $status,
-            'timeStatus' => $timeStatus,
-            'colors'     => $colors,
-        ]);
+        return view('admin::calendars.index', compact('status', 'timeStatus', 'colors'));
     }
 
     /**
-     * 处理请求参数中的style
+     * 添加数据
      *
-     * @return array|string
+     * @param StoreRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    protected function handleRequest()
+    public function store(StoreRequest $request)
     {
-        $array = request()->input();
-        unset($array['actionType'], $array['id']);
-        if (!empty($array['style'])) {
-            $array['style'] = Calendar::style($array['style']);
-        }
+        return $this->sendJson($this->repository->create($request->all()));
+    }
 
-        $array['created_id'] = $array['updated_id'] = 1;
-        return $array;
+    /**
+     * 修改数据
+     *
+     * @param UpdateRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(UpdateRequest $request)
+    {
+        $id   = $request->input('id');
+        $data = $request->all();
+        return $this->sendJson($this->repository->update($id, $data));
+    }
+
+    /**
+     * 删除数据
+     *
+     * @param DestroyRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(DestroyRequest $request)
+    {
+        return $this->sendJson($this->repository->delete($request->input('id')));
     }
 
     /**
@@ -82,11 +103,7 @@ class CalendarsController extends Controller
         $colors     = Calendar::$arrColor;
 
         // 查询数据
-        $all = DB::table('calendars')->where('status', '=', 0)
-            ->orderBy('id', 'desc')->get();
-        foreach ($all as &$value) {
-            Calendar::handleStyle($value);
-        }
+        $all = $this->repository->findAll(['status' => 0, 'orderBy' => 'id desc']);
 
         // 载入视图
         return view('admin::calendars.self', [
@@ -106,20 +123,12 @@ class CalendarsController extends Controller
      */
     public function events(Request $request)
     {
-        // 查询的时间
-        $start = $request->input('start');
-        $end   = $request->input('end');
-
         // 查询数据
-        $all = DB::table('calendars')->where([
-            ['created_id', '=', 1],
-            ['start', '>=', $start],
-            ['end', '<=', $end . ' 23:59:59']
-        ])->get();
-
-        foreach ($all as &$value) {
-            Calendar::handleStyle($value);
-        }
+        $all = $this->repository->findAll([
+            'created_id' => 1,
+            'start:egt'  => $request->input('start') . ' 00:00:00',
+            'end:elt'    => $request->input('end') . ' 23:59:59'
+        ]);
 
         return response()->json($all);
     }

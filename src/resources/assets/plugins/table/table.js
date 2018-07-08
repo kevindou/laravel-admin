@@ -41,7 +41,6 @@
             this.options = this.extend(this.options, options);
 
             // 判断添加数据(多选)
-            console.info(this.options.checkbox);
             if (this.options.checkbox) {
                 this.options.table.columns.unshift(this.options.checkbox);
             }
@@ -177,7 +176,6 @@
 
                 // 搜索信息
                 if (k.search !== undefined) {
-                    console.info(k.search, self.options.searchType)
                     self.options.searchHtml += meTables.searchInputCreate(k, v, self.options.searchType);
                 }
 
@@ -519,8 +517,16 @@
             mixLoading = layer.load();
             return $.ajax(params).always(function () {
                 layer.close(mixLoading);
-            }).fail(function () {
-                layer.msg(meTables.fn.getLanguage("sServerError"), {icon: 5});
+            }).fail(function (response) {
+                var m = meTables.fn.getLanguage("sServerError");
+                if (response.responseJSON) {
+                    m = response.responseJSON.message;
+                    for (var x in response.responseJSON.errors) {
+                        m += response.responseJSON.errors[x].join(" ")
+                    }
+                }
+
+                layer.msg(m, {icon: 5});
             });
         },
 
@@ -687,8 +693,6 @@
                 method = k.search.type + "SearchMiddleCreate";
                 defaultMethod = "textSearchMiddleCreate";
             }
-
-            console.info(method, defaultMethod)
 
             try {
                 html = this[method](k.search, k.value, defaultObject);
@@ -1106,9 +1110,9 @@
             // 关于地址配置信息
             url: {
                 search: "search",
-                create: "create",
+                create: "store",
                 update: "update",
-                delete: "delete",
+                delete: "destroy",
                 export: "export",
                 upload: "upload",
                 deleteAll: "delete-all"
