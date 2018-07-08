@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Admin\Role;
 use App\Http\Requests\Admin\Roles\DestroyRequest;
 use App\Http\Requests\Admin\Roles\StoreRequest;
 use App\Http\Requests\Admin\Roles\UpdateRequest;
