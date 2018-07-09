@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Commands\AssetLinkCommand;
+use App\Commands\ModelCommand;
 use App\Composers\BreadCrumbsComposer;
 use App\Composers\DataTableComposer;
 use App\Composers\MenusComposer;
@@ -22,7 +23,7 @@ class AdminProvider extends ServiceProvider
         view()->composer(['admin::common.menu'], MenusComposer::class);
 
         if ($this->app->runningInConsole()) {
-            $this->commands([AssetLinkCommand::class]);
+            $this->commands([AssetLinkCommand::class, ModelCommand::class]);
         }
 
         $this->loadViewsFrom(admin_path('resources/views'), 'admin');
