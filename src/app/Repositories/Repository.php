@@ -13,6 +13,7 @@ namespace App\Repositories;
 use App\Traits\ResponseTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 abstract class Repository
 {
@@ -28,6 +29,9 @@ abstract class Repository
      */
     protected $max_collection_size = 10000;
 
+    /**
+     * @var array 支持查询的表达式
+     */
     protected $expression = [
         'eq'          => '=',
         'neq'         => '!=',
@@ -54,7 +58,7 @@ abstract class Repository
     /**
      * 创建数据
      *
-     * @param $data
+     * @param array $data 新增的数据
      *
      * @return array
      */
@@ -70,6 +74,14 @@ abstract class Repository
         return $this->success($model->toArray());
     }
 
+    /**
+     * 修改数据
+     *
+     * @param integer $condition   修改时的查询条件
+     * @param array   $update_data 修改的数据
+     *
+     * @return array
+     */
     public function update($condition, $update_data)
     {
         // 没有添加更新条件或者修改条件
@@ -80,8 +92,9 @@ abstract class Repository
         $condition = $this->getPrimaryKeyCondition($condition);
 
         // 不能更新主键
-        if (array_get($update_data, $this->model->getKeyName())) {
-            unset($update_data[$this->model->getKeyName()]);
+        $keyName = $this->model->getKeyName();
+        if (isset($update_data[$keyName])) {
+            unset($update_data[$keyName], $keyName);
         }
 
         // 不能修改不存在的字段
@@ -135,8 +148,8 @@ abstract class Repository
     /**
      * 查询单条数据
      *
-     * @param        $condition
-     * @param string $fields
+     * @param integer|array $condition 查询条件
+     * @param string|array  $fields    查询的字段
      *
      * @return array
      */
@@ -202,14 +215,81 @@ abstract class Repository
         return [];
     }
 
+    /**
+     * 查询一条数据
+     *
+     * @param string $sql        查询的SQL
+     * @param array  $binds      绑定的参数
+     * @param string $connection 连接的数据库
+     *
+     * @return mixed
+     */
     public function findOneBySql($sql, $binds = [], $connection = 'default')
     {
-
+        return $this->getConnection($connection)->selectOne($sql, $binds);
     }
 
+    /**
+     * 通过sql 查询一条数据的一个字段信息
+     *
+     * @param string $sql    查询的SQL
+     * @param array  $binds  绑定的参数
+     * @param string $column 查询的字段信息
+     *
+     * @return mixed|null
+     */
+    public function findColumnBySql($sql, $binds = [], $column)
+    {
+        if ($one = $this->findOneBySql($sql, $binds)) {
+            return array_get($one, $column);
+        }
+
+        return null;
+    }
+
+    /**
+     * 查询多条数据
+     *
+     * @param string $sql        查询的SQL
+     * @param array  $binds      绑定的参数
+     * @param string $connection 连接的数据库
+     *
+     * @return array
+     */
     public function findAllBySql($sql, $binds = [], $connection = 'default')
     {
+        return $this->getConnection($connection)->select($sql, $binds);
+    }
 
+    /**
+     * 通过sql 查询全部数据的一个字段信息
+     *
+     * @param string $sql    查询的SQL
+     * @param array  $binds  绑定的参数
+     * @param string $column 查询的字段信息
+     *
+     * @return array
+     */
+    public function findAllColumnBySql($sql, $binds = [], $column)
+    {
+        if ($all = $this->findAllBySql($sql, $binds)) {
+            return array_column($all, $column);
+        }
+
+        return [];
+    }
+
+    /**
+     * 获取查询的SQL
+     *
+     * @param integer|array $condition 查询的条件
+     * @param string        $fields    查询的字段
+     *
+     * @return mixed
+     */
+    public function toSql($condition, $fields = '*')
+    {
+        return $this->setModelCondition($condition, $fields)->toSql();
     }
 
     /**
@@ -220,6 +300,18 @@ abstract class Repository
     public function getModel()
     {
         return $this->model;
+    }
+
+    /**
+     * 获取database实例
+     *
+     * @param string $connection
+     *
+     * @return \Illuminate\Database\Connection
+     */
+    public function getConnection($connection = 'default')
+    {
+        return DB::connection($connection);
     }
 
     /**
@@ -394,7 +486,6 @@ abstract class Repository
                 continue;
             }
 
-
             // 字段直接查询 field1 => value1
             if (isset($columns[$column])) {
                 $this->handleFieldQuery($query, $table . '.' . $column, $bind_value, $or);
@@ -431,7 +522,6 @@ abstract class Repository
                     $column = ucfirst(camel_case($column));
                     $query->{$column}($bind_value);
                 } catch (\Exception $e) {
-
                 }
             }
         }
@@ -454,14 +544,14 @@ abstract class Repository
             if (in_array($expression, ['In', 'NotIn', 'Between', 'NotBetween'])) {
                 $strMethod = $or ? 'orWhere' . $expression : 'where' . $expression;
                 $query->{$strMethod}($column, $value);
-            }
+            } else {
+                $strMethod = $or ? 'orWhere' : 'where';
+                if (in_array($expression, ['LIKE', 'NOT LIKE'])) {
+                    $value = '%' . (string)$value . '%';
+                }
 
-            $strMethod = $or ? 'orWhere' : 'where';
-            if (in_array($expression, ['LIKE', 'NOT LIKE'])) {
-                $value = '%' . (string)$value . '%';
+                $query->{$strMethod}($column, $expression, $value);
             }
-
-            $query->{$strMethod}($column, $expression, $value);
         }
 
         return $query;
