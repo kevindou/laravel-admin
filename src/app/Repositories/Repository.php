@@ -583,16 +583,15 @@ abstract class Repository
      */
     public function setModelCondition($conditions = [], $fields = [])
     {
-        $model   = $this->model;
-        $table   = $this->model->getTable();
-        $columns = $this->getTableColumns($model);
-
-        // 查询条件
+        // 查询条件为空，直接返回
         if (!$conditions = $this->getPrimaryKeyCondition($conditions)) {
             return $this->model;
         }
 
-        $fields = (array)$fields;
+        $model   = $this->model;
+        $table   = $this->model->getTable();
+        $columns = $this->getTableColumns($model);
+        $fields  = (array)$fields;
 
         // 分组，如果是relation的查询条件，需要放在前面build
         $relation_condition = $model_condition = [];
@@ -709,7 +708,6 @@ abstract class Repository
                 }
             }
         } catch (\Exception $e) {
-
         }
 
         return $relation_data;
