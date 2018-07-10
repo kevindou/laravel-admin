@@ -435,26 +435,23 @@ abstract class Repository
     protected function handleConditionQuery($condition, $query, $table, $columns)
     {
         // 设置了排序
-        if ($order_by = array_get($condition, 'orderBy')) {
-            $query = $this->orderBy($query, $order_by, $table, $columns);
-            unset($condition['orderBy']);
+        if ($order_by = array_pull($condition, 'orderBy')) {
+            $this->orderBy($query, $order_by, $table, $columns);
         }
 
         // 设置了limit
-        if ($limit = array_get($condition, 'limit')) {
-            $query = $query->limit(intval($limit));
-            unset($condition['limit']);
+        if ($limit = array_pull($condition, 'limit')) {
+            $query->limit(intval($limit));
         }
 
         // 设置了offset
-        if ($offset = array_get($condition, 'offset')) {
+        if ($offset = array_pull($condition, 'offset')) {
             $query->offset(intval($offset));
-            unset($condition['offset']);
         }
 
         // 设置了分组
-        if ($groupBy = array_get($condition, 'groupBy')) {
-            unset($condition['groupBy']);
+        if ($groupBy = array_pull($condition, 'groupBy')) {
+            $query->groupBy($groupBy);
         }
 
         // 没有查询条件直接退出
