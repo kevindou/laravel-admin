@@ -146,6 +146,20 @@ abstract class Repository
     }
 
     /**
+     * 查询一个对象
+     *
+     * @param  array|mixed $condition 查询条件
+     *
+     * @param array|string $fields    查询字段信息
+     *
+     * @return mixed
+     */
+    public function one($condition, $fields = '*')
+    {
+        return $this->setModelCondition($condition, $fields)->first();
+    }
+
+    /**
      * 查询单条数据
      *
      * @param integer|array $condition 查询条件
@@ -183,7 +197,20 @@ abstract class Repository
     /**
      * 查询全部数据
      *
-     * @param array        $condition 查询条件
+     * @param array|mixed  $condition 查询条件
+     * @param string|array $fields    查询的字段
+     *
+     * @return array
+     */
+    public function all($condition, $fields = '*')
+    {
+        return $this->setModelCondition($condition, $fields)->get();
+    }
+
+    /**
+     * 查询全部数据
+     *
+     * @param array|mixed  $condition 查询条件
      * @param string|array $fields    查询的字段
      *
      * @return array
