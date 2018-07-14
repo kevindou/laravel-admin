@@ -28,10 +28,8 @@
             var html = "<button class='btn btn-info btn-xs me-table-update' " + attr + " ><i class='fa fa-edit'></i></button> ";
             if (rowData["id"] != super_role_id) {
                 html += "<button class='btn btn-danger btn-xs me-table-delete' " + attr + "><i class='fa fa-trash'></i></button> ";
-                html += "<a class=\"btn btn-info btn-xs\" href=\"{{ url('admin/roles/permissions') }}?id=" + rowData["id"] + "\">" +
-                    "<i class='fa fa-leaf'></i> 分配角色</a> ";
-                html += "<a class=\"btn btn-warning btn-xs\" href=\"{{ url('admin/roles/menus') }}?id=" + rowData["id"] + "\">" +
-                    "<i class='fa fa-edit'></i> 分配菜单 </a> ";
+                html += "<a class=\"btn btn-warning btn-xs\" href=\"{{ url('admin/roles/permissions') }}?id=" + rowData["id"] + "\">" +
+                    "<i class='fa fa-leaf'></i> 分配权限&菜单 </a> ";
             }
 
             $(td).html(html);

@@ -33,6 +33,6 @@ class MenusComposer
      */
     public function compose(View $view)
     {
-        $view->with('menus', $this->menuRepository->getPermissionMenus());
+        $view->with('menus', $this->menuRepository->getPermissionMenus(1));
     }
 }

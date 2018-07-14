@@ -13,9 +13,12 @@ use App\Repositories\Admin\PermissionRoleRepository;
 use App\Repositories\Admin\RoleMenusRepository;
 use App\Repositories\Admin\RoleRepository;
 use App\Repositories\Admin\RoleUserRepository;
+use App\Traits\UserTrait;
 
 class RolesController extends Controller
 {
+    use UserTrait;
+
     /**
      * @var RoleUserRepository
      */
