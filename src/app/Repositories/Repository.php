@@ -243,6 +243,21 @@ abstract class Repository
     }
 
     /**
+     * 查询数据处理为 key => value 数组
+     *
+     * @param array|mixed  $condition
+     * @param array|string $fields
+     * @param string       $key
+     * @param null|string  $value
+     *
+     * @return mixed
+     */
+    public function findAllToIndex($condition, $fields, $key, $value = null)
+    {
+        return $this->setModelCondition($condition, $fields)->pluck($value, $key)->toArray();
+    }
+
+    /**
      * 查询一条数据
      *
      * @param string $sql        查询的SQL
@@ -251,23 +266,28 @@ abstract class Repository
      *
      * @return mixed
      */
-    public function findOneBySql($sql, $binds = [], $connection = 'default')
+    public function findOneBySql($sql, $binds = [], $connection = null)
     {
-        return $this->getConnection($connection)->selectOne($sql, $binds);
+        if ($one = $this->getConnection($connection)->selectOne($sql, $binds)) {
+            return get_object_vars($one);
+        }
+
+        return $one;
     }
 
     /**
      * 通过sql 查询一条数据的一个字段信息
      *
-     * @param string $sql    查询的SQL
-     * @param array  $binds  绑定的参数
-     * @param string $column 查询的字段信息
+     * @param string $sql        查询的SQL
+     * @param array  $binds      绑定的参数
+     * @param string $column     查询的字段信息
+     * @param null   $connection 连接的数据库
      *
      * @return mixed|null
      */
-    public function findColumnBySql($sql, $binds = [], $column)
+    public function findColumnBySql($sql, $binds = [], $column, $connection = null)
     {
-        if ($one = $this->findOneBySql($sql, $binds)) {
+        if ($one = $this->findOneBySql($sql, $binds, $connection)) {
             return array_get($one, $column);
         }
 
@@ -283,23 +303,33 @@ abstract class Repository
      *
      * @return array
      */
-    public function findAllBySql($sql, $binds = [], $connection = 'default')
+    public function findAllBySql($sql, $binds = [], $connection = null)
     {
-        return $this->getConnection($connection)->select($sql, $binds);
+        if ($all = $this->getConnection($connection)->select($sql, $binds)) {
+            $return = [];
+            foreach ($all as $value) {
+                $return[] = get_object_vars($value);
+            }
+
+            return $return;
+        }
+
+        return $all;
     }
 
     /**
      * 通过sql 查询全部数据的一个字段信息
      *
-     * @param string $sql    查询的SQL
-     * @param array  $binds  绑定的参数
-     * @param string $column 查询的字段信息
+     * @param string $sql        查询的SQL
+     * @param array  $binds      绑定的参数
+     * @param string $column     查询的字段信息
+     * @param null   $connection 连接的数据库
      *
      * @return array
      */
-    public function findAllColumnBySql($sql, $binds = [], $column)
+    public function findAllColumnBySql($sql, $binds = [], $column, $connection = null)
     {
-        if ($all = $this->findAllBySql($sql, $binds)) {
+        if ($all = $this->findAllBySql($sql, $binds, $connection)) {
             return array_column($all, $column);
         }
 
@@ -336,7 +366,7 @@ abstract class Repository
      *
      * @return \Illuminate\Database\Connection
      */
-    public function getConnection($connection = 'default')
+    public function getConnection($connection = null)
     {
         return DB::connection($connection);
     }

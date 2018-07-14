@@ -9,10 +9,13 @@
 namespace App\Composers;
 
 use App\Repositories\Admin\MenuRepository;
+use App\Traits\UserTrait;
 use Illuminate\Contracts\View\View;
 
 class MenusComposer
 {
+    use UserTrait;
+
     /**
      * @var MenuRepository
      */
@@ -33,6 +36,6 @@ class MenusComposer
      */
     public function compose(View $view)
     {
-        $view->with('menus', $this->menuRepository->getPermissionMenus(1));
+        $view->with('menus', $this->menuRepository->getPermissionMenus($this->getUser('id')));
     }
 }

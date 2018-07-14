@@ -7,7 +7,6 @@ use App\Http\Requests\Admin\Menus\StoreRequest;
 use App\Http\Requests\Admin\Menus\UpdateRequest;
 use App\Models\Admin\Menu;
 use App\Repositories\Admin\MenuRepository;
-use Illuminate\Support\Facades\DB;
 
 class MenusController extends Controller
 {
@@ -28,10 +27,10 @@ class MenusController extends Controller
         $status = Menu::getStatus();
 
         // 查询父类等级
-        $parents = DB::table('menus')->where([
-            ['status', '!=', Menu::STATUS_DELETE],
-            ['parent', '=', 0]
-        ])->pluck('name', 'id');
+        $parents = $this->repository->findAllToIndex([
+            'status:neq' => Menu::STATUS_DELETE,
+            'parent'     => 0
+        ], '*', 'id', 'name');
 
         // 载入视图
         return view('admin::menus.index', compact('status', 'parents'));
