@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Tree;
 use App\Http\Requests\Admin\Roles\DestroyRequest;
 use App\Http\Requests\Admin\Roles\StoreRequest;
 use App\Http\Requests\Admin\Roles\UpdateRequest;
+use App\Models\Admin\RoleMenus;
+use App\Repositories\Admin\MenuRepository;
 use App\Repositories\Admin\PermissionRepository;
 use App\Repositories\Admin\PermissionRoleRepository;
+use App\Repositories\Admin\RoleMenusRepository;
 use App\Repositories\Admin\RoleRepository;
 use App\Repositories\Admin\RoleUserRepository;
 
@@ -26,11 +30,23 @@ class RolesController extends Controller
      */
     private $permissionRoleRepository;
 
+    /**
+     * @var MenuRepository
+     */
+    private $menuRepository;
+
+    /**
+     * @var RoleMenusRepository
+     */
+    private $roleMenusRepository;
+
     public function __construct(
         RoleRepository $repository,
         RoleUserRepository $roleUserRepository,
         PermissionRepository $permissionRepository,
-        PermissionRoleRepository $permissionRoleRepository
+        PermissionRoleRepository $permissionRoleRepository,
+        MenuRepository $menuRepository,
+        RoleMenusRepository $roleMenusRepository
     )
     {
         parent::__construct();
@@ -38,12 +54,9 @@ class RolesController extends Controller
         $this->roleUserRepository       = $roleUserRepository;
         $this->permissionRepository     = $permissionRepository;
         $this->permissionRoleRepository = $permissionRoleRepository;
+        $this->menuRepository           = $menuRepository;
+        $this->roleMenusRepository      = $roleMenusRepository;
     }
-
-    /**
-     * @var string 定义使用的model
-     */
-    public $model = 'App\Models\Admin\Role';
 
     /**
      * 首页显示
@@ -134,8 +147,20 @@ class RolesController extends Controller
 
         $role        = $this->repository->findOne($id);
         $permissions = $this->permissionRepository->findAll();
+        $menus       = $this->menuRepository->findAll();
+        $menuIds     = $this->roleMenusRepository->findAllColumn(['role_id' => $id], 'menu_id');
         $hasIds      = $this->permissionRoleRepository->findAllColumn(['role_id' => $id], 'permission_id');
-        return view('admin::roles.permissions', compact('role', 'permissions', 'hasIds'));
+
+        $tree  = (new Tree([
+            'parentIdName' => 'parent',
+            'childrenName' => 'children',
+            'array'        => $menus,
+        ]))->getTreeArray(0);
+        $trees = $this->menuRepository->getJsMenus($tree, $menuIds);
+        return view(
+            'admin::roles.permissions',
+            compact('role', 'permissions', 'hasIds', 'trees')
+        );
     }
 
     /**
@@ -148,8 +173,10 @@ class RolesController extends Controller
      */
     public function updatePermissions(UpdateRequest $request)
     {
-        $data = $request->all();
-        $this->repository->updatePermissions(array_get($data, 'id'), $data, array_get($data,'permissions', []));
+        $data    = $request->all();
+        $role_id = intval(array_get($data, 'id'));
+        $this->roleMenusRepository->updateMenus($role_id, array_get($data, 'menu_ids'));
+        $this->repository->updatePermissions($role_id, $data, array_get($data, 'permissions', []));
         return redirect('/admin/roles/index');
     }
 }

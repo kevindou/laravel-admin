@@ -32,7 +32,7 @@ class ModelCommand extends Command
      *
      * @var string
      */
-    protected $description = '生成 model {--table=} 指定表 {--path=} 指定目录[没有传递绝对路径，否则使用绝对路径 从 Models 开始]  {--r=} 是否需要生成Repositories 默认生成';
+    protected $description = '生成 model {--table=} 指定表 {--path=} 指定目录[没有传递绝对路径，否则使用绝对路径 从 Models 开始]  {--r=true|false} 是否需要生成Repositories 默认生成';
 
     /**
      * 获取目录
@@ -47,7 +47,7 @@ class ModelCommand extends Command
     {
         $path = rtrim($path, '/') . '/';
         if (strpos($path, '/') !== 0) {
-            $path = core_path('app/') . ($type == 'model' ? 'Models' : 'Repositories') . '/' . $path;
+            $path = admin_path('app/') . ($type == 'model' ? 'Models' : 'Repositories') . '/' . $path;
         } elseif ($type != 'model') {
             $path = str_replace('Models', 'Repositories', $path);
         }
@@ -67,7 +67,7 @@ class ModelCommand extends Command
             return;
         }
 
-        if (!$tables = DB::select('SHOW TABLES like :table', ['table' => $table])) {
+        if (!$tables = DB::select('SHOW TABLES LIKE "' . $table . '"')) {
             $this->error('表不存在');
             return;
         }
@@ -79,16 +79,16 @@ class ModelCommand extends Command
         $primaryKey = 'id';
         $columns    = "[\n";
         foreach ($structure as $column) {
-            $field = array_get($column, 'Field');
-            if (array_get($column, 'Key') === 'PRI') {
+            $field = data_get($column, 'Field');
+            if (data_get($column, 'Key') === 'PRI') {
                 $primaryKey = $field;
             }
 
-            $columns .= "\t'{$field}',\n";
+            $columns .= "\t\t'{$field}',\n";
         }
 
         $path    = $this->option('path') ?: '';
-        $columns .= ']';
+        $columns .= "\t]";
         $str     = str_replace([
             '{model_name}',
             '{table}',
@@ -113,7 +113,7 @@ class ModelCommand extends Command
                 $this->info($file_name . ' 文件已经存在');
             }
 
-            if ($this->option('r') == false) {
+            if ($this->option('r') == 'false') {
                 $this->info('处理成功');
                 return;
             }

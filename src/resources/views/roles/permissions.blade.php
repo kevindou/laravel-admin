@@ -46,6 +46,16 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
+
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">角色信息</h3>
+                    </div>
+                    <div class="box-body">
+                        <div id="tree-one" class="tree tree-selectable"></div>
+                        <input type="hidden" name="menu_ids" id="menu_ids" value="">
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-9">
@@ -59,8 +69,8 @@
                             <label>
                                 <input type="checkbox" name="permissions[]"
                                        value="{{ array_get($value, 'id') }}"
-                                @if (in_array(array_get($value, 'id'), $hasIds))
-                                    checked="checked"
+                                       @if (in_array(array_get($value, 'id'), $hasIds))
+                                       checked="checked"
                                         @endif
                                 >
                                 {{ array_get($value, 'description') }} ({{ array_get($value, 'name') }})
@@ -74,14 +84,57 @@
 @endsection
 @push('style')
     <link rel="stylesheet" href="{{ asset('admin-assets/plugins/iCheck/all.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin-assets/plugins/jstree/default/style.min.css') }}">
 @endpush
 @push("script")
     <script src="{{ asset('admin-assets/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/plugins/jstree/jstree.min.js') }}"></script>
     <script>
+        function getChildrenAttributes(data, parent_object) {
+            var array_attributes = [], length = data.children.length;
+            if (length > 0) {
+                for (var i = 0; i < length; i++) {
+                    var tmp_data = parent_object.instance.get_node(data.children[i]);
+                    array_attributes.push.apply(array_attributes, getChildrenAttributes(tmp_data, parent_object));
+                }
+            } else if (data.data != null) {
+                var array_data = data.data.split("/");
+
+                if (array_data && array_data.length > 0) {
+                    array_data.pop();
+                }
+
+                if (array_data.length > 0) {
+                    array_attributes.push(array_data.join("/"));
+                }
+            }
+
+            return array_attributes;
+        }
+
+        var strCurrentUrl = '/admin/roles/index';
         $(function () {
             $("input[type=checkbox]").iCheck({
                 checkboxClass: 'icheckbox_minimal-blue',
                 radioClass: 'iradio_minimal-blue'
+            });
+
+            $("#tree-one").jstree({
+                "plugins": ["checkbox"],
+                core: {
+                    "animation": 0,
+                    "check_callback": true,
+                    data: @json($trees, 320)
+                }
+            }).on("changed.jstree", function (e, data) {
+                $("#menu_ids").val(data.selected.join(","))
+                if (data.action === "select_node" || data.action === "deselect_node") {
+                    var isChecked = data.action === "select_node",
+                        attributes = getChildrenAttributes(data.node, data);
+                    attributes.forEach(function (attribute) {
+                        $("input[value^='" + attribute + "/']").prop("checked", isChecked);
+                    });
+                }
             });
         })
     </script>

@@ -23,7 +23,6 @@
 @push("script")
     <script>
         var super_role_id = '{{ config('admin.super_role_id') }}';
-
         function handleOperator(td, data, rowData, row) {
             var attr = "data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"";
             var html = "<button class='btn btn-info btn-xs me-table-update' " + attr + " ><i class='fa fa-edit'></i></button> ";
@@ -31,6 +30,8 @@
                 html += "<button class='btn btn-danger btn-xs me-table-delete' " + attr + "><i class='fa fa-trash'></i></button> ";
                 html += "<a class=\"btn btn-info btn-xs\" href=\"{{ url('admin/roles/permissions') }}?id=" + rowData["id"] + "\">" +
                     "<i class='fa fa-leaf'></i> 分配角色</a> ";
+                html += "<a class=\"btn btn-warning btn-xs\" href=\"{{ url('admin/roles/menus') }}?id=" + rowData["id"] + "\">" +
+                    "<i class='fa fa-edit'></i> 分配菜单 </a> ";
             }
 
             $(td).html(html);

@@ -1,10 +1,10 @@
 <?php
 $user             = \Illuminate\Support\Facades\Auth::user();
-$strUserAvatar    = $user && $user->avatar ? $user->avatar : asset('admin-assets/img/avatar.png');
-$strUserName      = $user && $user->name ? $user->name : 'admin';
-$strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d H:i:s');
+$strUserAvatar    = data_get($user, 'avatar') ?: asset('admin-assets/img/avatar.png');
+$strUserName      = data_get($user, 'name') ?: 'admin';
+$strUserCreatedAt = data_get($user, 'created_at') ?: date('Y-m-d H:i:s');
 ?>
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     @include('admin::common.header')
@@ -237,7 +237,7 @@ $strUserCreatedAt = $user && $user->created_at ? $user->created_at : date('Y-m-d
 <script src="{{ asset('admin-assets/js/tools.js') }}"></script>
 @stack('script')
 <script>
-    var strCurrentUrl = $("#admin-menus").data("url") || "/";
+    var strCurrentUrl = strCurrentUrl || $("#admin-menus").data("url") || "/";
     $("#admin-menus").find("li[data-url='" + strCurrentUrl + "']")
         .addClass("active").parent("ul").parent("li").addClass("active");
 </script>

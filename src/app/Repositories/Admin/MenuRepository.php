@@ -42,4 +42,39 @@ class MenuRepository extends Repository
 
         return $arrReturn;
     }
+
+    /**
+     * 获取jstree 需要的数据
+     *
+     * @param array $array    数据信息
+     * @param array $arrHaves 需要选中的数据
+     *
+     * @return array
+     */
+    public function getJsMenus($array, $arrHaves)
+    {
+        if (empty($array) || !is_array($array)) {
+            return [];
+        }
+
+        $arrReturn = [];
+        foreach ($array as $value) {
+            $array = [
+                'text'  => $value['name'],
+                'id'    => $value['id'],
+                'data'  => $value['url'],
+                'state' => [],
+            ];
+
+            $array['state']['selected'] = in_array($value['id'], $arrHaves);
+            $array['icon']              = $value['parent'] == 0 || !empty($value['children']) ? 'menu-icon fa fa-list orange' : false;
+            if (!empty($value['children'])) {
+                $array['children'] = $this->getJsMenus($value['children'], $arrHaves);
+            }
+
+            $arrReturn[] = $array;
+        }
+
+        return $arrReturn;
+    }
 }
