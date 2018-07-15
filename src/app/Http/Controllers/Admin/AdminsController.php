@@ -16,10 +16,19 @@ use App\Repositories\Admin\RoleRepository;
  */
 class AdminsController extends Controller
 {
-    public function __construct(AdminRepository $adminRepository, RoleRepository $roleRepository)
+    /**
+     * @var RoleRepository
+     */
+    private $roleRepository;
+
+    public function __construct(
+        AdminRepository $adminRepository, 
+        RoleRepository $roleRepository
+    )
     {
         parent::__construct();
-        $this->repository = $adminRepository;
+        $this->repository     = $adminRepository;
+        $this->roleRepository = $roleRepository;
     }
 
     /**
@@ -29,7 +38,11 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        return view('admin::admins.index', ['status' => admin::getStatus()]);
+        $roles = $this->roleRepository->findAllToIndex([], '*', 'id', 'name');
+        return view('admin::admins.index', [
+            'status' => admin::getStatus(),
+            'roles'  => $roles
+        ]);
     }
 
     /**
@@ -54,12 +67,19 @@ class AdminsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        return $this->sendJson($this->repository->create($request->all()));
+        list($ok, $msg, $admin) = $this->repository->create($request->all());
+        if (!$ok) {
+            return $this->error(1000, $msg);
+        }
+        
+        
+
+        return $this->success($admin);
     }
 
     /**
      * 修改数据
-     * 
+     *
      * @param UpdateRequest $request
      *
      * @return \Illuminate\Http\JsonResponse

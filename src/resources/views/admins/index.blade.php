@@ -24,6 +24,7 @@
 @push("script")
     <script>
         var arrStatus = @json($status, 320),
+            arrRoles = @json($roles, 320),
             arrColors = {"10": "label-success", "0": "label-warning", "-1": "label-danger"};
 
         $(function () {
@@ -68,6 +69,14 @@
                             },
                             value: arrStatus,
                             edit: {type: "radio", "default": 10, "required": true, "number": true}
+                        },
+                        {
+                            "title": "角色",
+                            "data": null,
+                            "orderable": false,
+                            "bHide": true,
+                            value: arrRoles,
+                            edit: {type: "checkbox", "required": true, "number": true}
                         },
                         {"title": "创建时间", "data": "created_at"},
                         {"title": "修改时间", "data": "updated_at"},
