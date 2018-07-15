@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\Admins\DeleteRequest;
 use App\Http\Requests\Admin\Admins\StoreRequest;
 use App\Http\Requests\Admin\Admins\UpdateRequest;
 use App\Repositories\Admin\RoleRepository;
+use App\Repositories\Admin\RoleUserRepository;
 
 /**
  * Class AdminsController 后台管理员信息
@@ -20,15 +21,21 @@ class AdminsController extends Controller
      * @var RoleRepository
      */
     private $roleRepository;
+    /**
+     * @var RoleUserRepository
+     */
+    private $roleUserRepository;
 
     public function __construct(
-        AdminRepository $adminRepository, 
-        RoleRepository $roleRepository
+        AdminRepository $adminRepository,
+        RoleRepository $roleRepository,
+        RoleUserRepository $roleUserRepository
     )
     {
         parent::__construct();
-        $this->repository     = $adminRepository;
-        $this->roleRepository = $roleRepository;
+        $this->repository         = $adminRepository;
+        $this->roleRepository     = $roleRepository;
+        $this->roleUserRepository = $roleUserRepository;
     }
 
     /**
@@ -67,13 +74,14 @@ class AdminsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        list($ok, $msg, $admin) = $this->repository->create($request->all());
+        $data = $request->all();
+        list($ok, $msg, $admin) = $this->repository->create($data);
         if (!$ok) {
             return $this->error(1000, $msg);
         }
-        
-        
 
+        // 添加角色
+        $this->roleUserRepository->createUserRoles(array_get($admin, 'id'), array_get($data, 'role_ids'));
         return $this->success($admin);
     }
 

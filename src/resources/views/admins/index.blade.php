@@ -76,7 +76,12 @@
                             "orderable": false,
                             "bHide": true,
                             value: arrRoles,
-                            edit: {type: "checkbox", "required": true, "number": true}
+                            edit: {
+                                name: "role_ids[]",
+                                type: "checkbox",
+                                required: true,
+                                number: true
+                            }
                         },
                         {"title": "创建时间", "data": "created_at"},
                         {"title": "修改时间", "data": "updated_at"},
