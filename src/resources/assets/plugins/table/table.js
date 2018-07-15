@@ -625,13 +625,13 @@
         checkboxCreate: function (params, d) {
             html = '';
             if (d && this.isObject(d)) {
-                var o = params.all, c = params.divClass ? params.divClass : "col-xs-6";
+                var o = params.all;
                 delete params.all;
                 delete params.divClass;
                 params["class"] = "ace m-checkbox";
                 params = this.handleParams(params);
                 if (o) {
-                    html += '<div class="checkbox col-xs-12">' +
+                    html += '<div class="checkbox">' +
                         '<label>' +
                         '<input type="checkbox" class="ace checkbox-all" onclick="var isChecked = $(this).prop(\'checked\');$(this).parent().parent().parent().find(\'input[type=checkbox]\').prop(\'checked\', isChecked);" />' +
                         '<span class="lbl"> ' + meTables.fn.getLanguage("sSelectAll") + ' </span>' +
@@ -639,7 +639,7 @@
                         '</div>';
                 }
                 for (i in d) {
-                    html += '<div class="checkbox ' + c + '">' +
+                    html += '<div class="checkbox">' +
                         '<label>' +
                         '<input type="checkbox" ' + params + ' value="' + i + '" />' +
                         '<span class="lbl"> ' + d[i] + ' </span>' +
@@ -741,8 +741,9 @@
                     form += '<div class="form-group">';
                 }
 
-                form += this.labelCreate(k.title, {"class": "col-sm-" + oParams.aCols[0] + " control-label"});
-                form += '<div class="col-sm-' + oParams.aCols[1] + '">';
+                var div_name = k.edit.name.replace("[]", "");
+                form += this.labelCreate(k.title, {"class": "col-sm-" + oParams.aCols[0] + " control-label div-left-" + div_name});
+                form += '<div class="col-sm-' + oParams.aCols[1] + ' div-right-' + div_name + '">';
 
                 // 使用函数
                 try {

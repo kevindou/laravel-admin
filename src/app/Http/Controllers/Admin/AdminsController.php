@@ -45,7 +45,16 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        $roles = $this->roleRepository->findAllToIndex([], '*', 'id', 'name');
+        // 角色信息
+        if ($roles = $this->roleRepository->findAll()) {
+            $list = [];
+            foreach ($roles as $role) {
+                $list[$role['id']] = $role['name'].' ('.$role['display_name'].')';
+            }
+
+            $roles = $list;
+        }
+
         return view('admin::admins.index', [
             'status' => admin::getStatus(),
             'roles'  => $roles

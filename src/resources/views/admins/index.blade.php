@@ -27,6 +27,13 @@
             arrRoles = @json($roles, 320),
             arrColors = {"10": "label-success", "0": "label-warning", "-1": "label-danger"};
 
+        meTables.fn.extend({
+            beforeShow: function () {
+                var method = this.action == "create" ? "show" : "hide";
+                $(".div-right-role_ids").parent()[method]();
+                return true;
+            }
+        });
         $(function () {
             var meTable = meTables({
                 sTable: "#example2",
@@ -56,7 +63,11 @@
                             }
                         },
                         {
-                            "title": "管理员密码", "data": "password", "orderable": false, hide: true,
+                            "title": "管理员密码",
+                            "data": "password",
+                            "orderable": false,
+                            hide: true,
+                            bViews: false,
                             "edit": {
                                 type: "password", rangelength: "[6, 20]"
                             }
@@ -74,8 +85,9 @@
                             "title": "角色",
                             "data": null,
                             "orderable": false,
-                            "bHide": true,
+                            "hide": true,
                             value: arrRoles,
+                            bViews: false,
                             edit: {
                                 name: "role_ids[]",
                                 type: "checkbox",
