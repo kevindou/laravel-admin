@@ -7,6 +7,7 @@ use App\Repositories\Admin\AdminRepository;
 use App\Http\Requests\Admin\Admins\DeleteRequest;
 use App\Http\Requests\Admin\Admins\StoreRequest;
 use App\Http\Requests\Admin\Admins\UpdateRequest;
+use App\Repositories\Admin\RoleRepository;
 
 /**
  * Class AdminsController 后台管理员信息
@@ -15,7 +16,7 @@ use App\Http\Requests\Admin\Admins\UpdateRequest;
  */
 class AdminsController extends Controller
 {
-    public function __construct(AdminRepository $adminRepository)
+    public function __construct(AdminRepository $adminRepository, RoleRepository $roleRepository)
     {
         parent::__construct();
         $this->repository = $adminRepository;
@@ -28,9 +29,7 @@ class AdminsController extends Controller
      */
     public function index()
     {
-        return view('admin::admins.index', [
-            'status' => admin::getStatus()
-        ]);
+        return view('admin::admins.index', ['status' => admin::getStatus()]);
     }
 
     /**

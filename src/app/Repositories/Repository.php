@@ -217,12 +217,7 @@ abstract class Repository
      */
     public function findAll($condition = [], $fields = '*')
     {
-        if ($all = $this->setModelCondition($condition, $fields)->get()) {
-            /* @var $all Collection */
-            return $all->toArray();
-        }
-
-        return [];
+        return $this->all($condition, $fields)->toArray();
     }
 
     /**
