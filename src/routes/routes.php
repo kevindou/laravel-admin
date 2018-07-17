@@ -10,7 +10,7 @@ Route::group(['prefix' => 'admin'], function () {
     array_shift($params);   // 因为是admin 前缀分组信息，那么下面的路由需要去掉 admin 前缀
     $uri = implode('/', $params);
     foreach ($params as &$val) {
-        $val = camel_case($val);;
+        $val = studly_case($val);;
     }
 
     unset($val);
