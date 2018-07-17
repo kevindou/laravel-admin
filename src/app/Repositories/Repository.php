@@ -200,7 +200,7 @@ abstract class Repository
      * @param array|mixed  $condition 查询条件
      * @param string|array $fields    查询的字段
      *
-     * @return array
+     * @return mixed
      */
     public function all($condition, $fields = '*')
     {
@@ -392,12 +392,13 @@ abstract class Repository
      *
      * 获取表格字段，并转换为KV格式
      *
-     * @param $model
+     * @param string|model $model
      *
      * @return array
      */
     public function getTableColumns($model = '')
     {
+        /* @var $model \App\Models\Model */
         $model    = $model && is_object($model) ? $model : $this->model;
         $_columns = [];
         foreach ($model->columns as $column) {
@@ -425,11 +426,10 @@ abstract class Repository
     /**
      * 查询字段信息
      *
-     * @param  mixed $query
-     * @param array  $fields
-     * @param        $table
-     *
-     * @param array  $columns
+     * @param mixed|model $query   查询对象
+     * @param array       $fields  查询的字段
+     * @param string      $table   表名称
+     * @param array       $columns 表字段信息
      *
      * @return mixed
      */
@@ -455,10 +455,12 @@ abstract class Repository
     }
 
     /**
-     * @param mixed $query
-     * @param       $order_by
-     * @param       $table
-     * @param       $columns
+     * 排序查询
+     *
+     * @param mixed|model $query    查询对象
+     * @param string      $order_by 排序信息
+     * @param string      $table    表名称
+     * @param array       $columns  表字段信息
      *
      * @return mixed
      */
@@ -477,10 +479,12 @@ abstract class Repository
     }
 
     /**
-     * @param array  $condition
-     * @param mixed  $query
-     * @param string $table
-     * @param array  $columns
+     * 查询处理
+     *
+     * @param array  $condition 查询条件
+     * @param mixed  $query     查询对象
+     * @param string $table     查询的表
+     * @param array  $columns   查询的字段
      *
      * @return mixed
      */
@@ -515,11 +519,13 @@ abstract class Repository
     }
 
     /**
-     * @param        $condition
-     * @param  mixed $query
-     * @param        $table
-     * @param        $columns
-     * @param bool   $or
+     * 查询处理
+     *
+     * @param array  $condition 查询条件
+     * @param mixed  $query     查询对象
+     * @param string $table     查询表名称
+     * @param array  $columns   查询的字段
+     * @param bool   $or        是否是or 查询默认false
      *
      * @return Model|mixed
      */
@@ -579,6 +585,8 @@ abstract class Repository
     }
 
     /**
+     * 处理表达式查询
+     *
      * @param Model $query
      * @param array $condition 查询对象
      *                         ['field', 'expression', 'value']
@@ -592,7 +600,7 @@ abstract class Repository
         if ($expression = array_get($this->expression, strtolower($expression))) {
             if (in_array($expression, ['In', 'NotIn', 'Between', 'NotBetween'])) {
                 $strMethod = $or ? 'orWhere' . $expression : 'where' . $expression;
-                $query->{$strMethod}($column, $value);
+                $query->{$strMethod}($column, (array)$value);
             } else {
                 $strMethod = $or ? 'orWhere' : 'where';
                 if (in_array($expression, ['LIKE', 'NOT LIKE'])) {
@@ -609,11 +617,10 @@ abstract class Repository
     /**
      * 字段查询
      *
-     * @param      $query
-     * @param      $field
-     * @param      $value
-     *
-     * @param bool $or
+     * @param  model       $query 查询对象
+     * @param  string      $field 查询字段
+     * @param  mixed|array $value 查询的值
+     * @param bool         $or    是否是or 查询
      *
      * @return mixed
      */
@@ -628,8 +635,10 @@ abstract class Repository
     }
 
     /**
-     * @param array $conditions
-     * @param array $fields
+     * 设置model 的查询信息
+     *
+     * @param array $conditions 查询条件
+     * @param array $fields     查询字段
      *
      * @return Model|mixed
      */
@@ -672,9 +681,9 @@ abstract class Repository
     /**
      * 获取关联表集合
      *
-     * @param $model
-     * @param $fields
-     * @param $relation_condition
+     * @param model        $model              查询的model
+     * @param string|array $fields             查询的字段
+     * @param array        $relation_condition 关联查询的条件
      *
      * @return array
      */
@@ -736,8 +745,10 @@ abstract class Repository
     }
 
     /**
-     * @param $model
-     * @param $relation_name
+     * 获取关联查询的默认查询条件
+     *
+     * @param model  $model         查询的model
+     * @param string $relation_name 关联查询字段
      *
      * @return array
      */
@@ -766,8 +777,10 @@ abstract class Repository
     }
 
     /**
-     * @param $relation_filters
-     * @param $relation_fields
+     * 添加关联查询
+     *
+     * @param array $relation_filters 关联查询的条件
+     * @param array $relation_fields  关联查询的字段信息
      *
      * @return \Closure
      */
@@ -796,9 +809,11 @@ abstract class Repository
     }
 
     /**
-     * @param mixed $model
-     * @param       $fields
-     * @param       $relation_filters
+     * 添加关联查询的统计
+     *
+     * @param mixed|model $model            查询的model
+     * @param array       $fields           查询的字段信息
+     * @param array       $relation_filters 关联查询的字段信息
      *
      * @return mixed
      */
