@@ -152,3 +152,52 @@ if (!function_exists('admin_path')) {
         return __DIR__ . '/../' . ltrim($path, '/');
     }
 }
+
+if (!function_exists('array_studly_case')) {
+    /**
+     * 将数组元素转为大驼峰法
+     * 例如：get-user-info GetUserInfo
+     *
+     * @param $params
+     */
+    function array_studly_case(array &$params)
+    {
+        foreach ($params as &$value) {
+            $value = studly_case($value);
+        }
+
+        unset($value);
+    }
+}
+
+if (!function_exists('get_controller_action')) {
+    /**
+     * 获取控制器名称和请求方法名称
+     *
+     * @param array $params 请求的参数
+     *
+     * @return array
+     */
+    function get_controller_action($params)
+    {
+        switch (count($params)) {
+            case 0:
+                // 根路由走默认控制器
+                $controller = config('admin.defaultController') ?: 'IndexController';
+                $action     = config('admin.defaultAction') ?: 'index';
+                break;
+            case 1:
+                // 一个参数认为是控制器
+                $controller = $params[0] . 'Controller';
+                $action     = 'index';
+                break;
+            default:
+                // 2个以上，倒数第一个为action，倒数第二个为控制器，其他为命名空间
+                $action     = strtolower(array_pop($params));
+                $controller = implode('\\', $params) . 'Controller';
+                break;
+        }
+
+        return [$controller, $action];
+    }
+}
