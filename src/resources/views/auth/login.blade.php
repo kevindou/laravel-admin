@@ -29,7 +29,7 @@
     <!-- /.login-logo -->
     <div class="login-box-body">
         <p class="login-box-msg">{{ trans('admin.loginDesc') }}</p>
-        <form action="{{ url('/admin/login') }}" method="post">
+        <form action="{{ url('/admin/login/login') }}" method="post">
             {{ csrf_field() }}
             <div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
                 <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="{{ trans('admin.email') }}">
