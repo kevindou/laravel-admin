@@ -62,7 +62,7 @@ abstract class Repository
      *
      * @return array
      */
-    public function create($data)
+    final public function create($data)
     {
         if (!is_array($data) || !$data) {
             return $this->error('操作失败');
@@ -82,7 +82,7 @@ abstract class Repository
      *
      * @return array
      */
-    public function update($condition, $update_data)
+    final public function update($condition, $update_data)
     {
         // 没有添加更新条件或者修改条件
         if (empty($condition) || empty($update_data)) {
@@ -130,7 +130,7 @@ abstract class Repository
      *
      * @return array
      */
-    public function delete($condition)
+    final public function delete($condition)
     {
         $condition = $this->getPrimaryKeyCondition($condition);
         try {

@@ -7,6 +7,8 @@ use App\Commands\ModelCommand;
 use App\Composers\BreadCrumbsComposer;
 use App\Composers\DataTableComposer;
 use App\Composers\MenusComposer;
+use Illuminate\Database\Events\StatementPrepared;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AdminProvider extends ServiceProvider
@@ -18,6 +20,12 @@ class AdminProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (config('database.fetch')) {
+            Event::listen(StatementPrepared::class, function ($event) {
+                $event->statement->setFetchMode(config('database.fetch'));
+            });
+        }
+
         view()->composer(['admin::common.breadcrumbs'], BreadCrumbsComposer::class);
         view()->composer(['admin::common.datatable'], DataTableComposer::class);
         view()->composer(['admin::common.menu'], MenusComposer::class);
