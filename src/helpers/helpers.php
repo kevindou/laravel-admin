@@ -193,7 +193,7 @@ if (!function_exists('get_controller_action')) {
                 break;
             default:
                 // 2个以上，倒数第一个为action，倒数第二个为控制器，其他为命名空间
-                $action     = strtolower(array_pop($params));
+                $action     = array_pop($params);
                 $controller = implode('\\', $params) . 'Controller';
                 break;
         }
