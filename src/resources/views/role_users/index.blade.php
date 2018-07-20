@@ -69,7 +69,7 @@
                             "orderable": false,
                             "createdCell": function (td, data, rowData, row) {
                                 var attr = "data-index=\"" + meTables.fn.options.pk + "\" data-row=\"" + row + "\"";
-                                var html = "<button class='btn btn-danger btn-xs role-user-delete' " + attr + ">\
+                                var html = "<button class='btn btn-danger btn-xs me-table-delete' " + attr + ">\
                                     <i class='fa fa-trash'></i></button>";
                                 $(td).html(html);
                             }
