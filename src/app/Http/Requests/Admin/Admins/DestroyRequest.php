@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\Admins;
 
 use App\Http\Requests\Request;
 
-class DeleteRequest extends Request
+class DestroyRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.

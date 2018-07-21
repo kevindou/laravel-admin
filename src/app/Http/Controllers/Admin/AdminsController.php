@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin\Admin;
 use App\Repositories\Admin\AdminRepository;
-use App\Http\Requests\Admin\Admins\DeleteRequest;
+use App\Http\Requests\Admin\Admins\DestroyRequest;
 use App\Http\Requests\Admin\Admins\StoreRequest;
 use App\Http\Requests\Admin\Admins\UpdateRequest;
 use App\Repositories\Admin\RoleRepository;
@@ -49,7 +49,7 @@ class AdminsController extends Controller
         if ($roles = $this->roleRepository->findAll()) {
             $list = [];
             foreach ($roles as $role) {
-                $list[$role['id']] = $role['name'].' ('.$role['display_name'].')';
+                $list[$role['id']] = $role['name'] . ' (' . $role['display_name'] . ')';
             }
 
             $roles = $list;
@@ -103,23 +103,22 @@ class AdminsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $id   = $request->input('id');
         $data = $request->all();
         if (isset($data['password']) && empty($data['password'])) {
             unset($data['password']);
         }
 
-        return $this->sendJson($this->repository->update($id, $data));
+        return $this->sendJson($this->repository->update(array_get($data, 'id'), $data));
     }
 
     /**
      * 删除数据
      *
-     * @param DeleteRequest $request
+     * @param DestroyRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(DeleteRequest $request)
+    public function destroy(DestroyRequest $request)
     {
         return $this->sendJson($this->repository->delete($request->input('id')));
     }
