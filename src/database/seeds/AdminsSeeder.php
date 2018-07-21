@@ -21,10 +21,10 @@ class AdminsSeeder extends Seeder
 
         // 添加一个用户
         $intAdminId = DB::table('admins')->insertGetId([
-            'name' => 'admin',
-            'email' => 'admin@admin.com',
-            'password' => bcrypt('admin888'),
-            'status' => 10,
+            'name'       => 'admin',
+            'email'      => 'admin@admin.com',
+            'password'   => bcrypt('admin888'),
+            'status'     => 10,
             'created_at' => $date,
             'updated_at' => $date
         ]);
@@ -39,6 +39,7 @@ class AdminsSeeder extends Seeder
             ['name' => '导航栏目', 'url' => '/admin/menus/index', 'icon' => 'fa-bars', 'parent' => $intParentId, 'created_at' => $date, 'updated_at' => $date],
             ['name' => '角色管理', 'url' => '/admin/roles/index', 'icon' => 'fa-magic', 'parent' => $intParentId, 'created_at' => $date, 'updated_at' => $date],
             ['name' => '权限管理', 'url' => '/admin/permissions/index', 'icon' => 'fa-leaf', 'parent' => $intParentId, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => '权限分配', 'url' => '/admin/role-users/index', 'icon' => 'fa-paper-plane', 'parent' => $intParentId, 'created_at' => $date, 'updated_at' => $date],
         ]);
 
         // 添加导航栏目

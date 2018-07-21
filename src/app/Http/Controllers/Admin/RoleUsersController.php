@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Admin\RoleUsers\DestroyRequest;
+use App\Http\Requests\Admin\RoleUsers\StoreRequest;
+use App\Http\Requests\Admin\RoleUsers\UpdateRequest;
 use App\Models\Admin\Menu;
 use App\Repositories\Admin\AdminRepository;
 use App\Repositories\Admin\MenuRepository;
@@ -31,6 +34,14 @@ class RoleUsersController extends Controller
         $this->adminRepository = $adminRepository;
     }
 
+    public function where()
+    {
+        return [
+            'user_id' => '=',
+            'role_id' => '='
+        ];
+    }
+
     /**
      * 首页显示
      *
@@ -57,18 +68,6 @@ class RoleUsersController extends Controller
     }
 
     /**
-     * 修改数据
-     *
-     * @param UpdateRequest $request
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(UpdateRequest $request)
-    {
-        return $this->sendJson($this->repository->update($request->input('id'), $request->all()));
-    }
-
-    /**
      * 删除数据
      *
      * @param DestroyRequest $request
@@ -77,6 +76,6 @@ class RoleUsersController extends Controller
      */
     public function destroy(DestroyRequest $request)
     {
-        return $this->sendJson($this->repository->delete($request->input('id')));
+        return $this->sendJson($this->repository->delete($request->all()));
     }
 }

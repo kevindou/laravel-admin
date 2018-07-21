@@ -8,17 +8,9 @@ class UpdateRequest extends Request
 {
     public function rules()
     {
-        $rules = [
-            'id'     => 'required|integer|min:1|exists:admins,id',
-            'name'   => 'required|string|min:2|max:50',
-            'email'  => 'required|string|min:2|max:100|email',
-            'status' => 'required|integer'
+        return [
+            'user_id' => 'required|integer|min:1|exists:admins,id',
+            'role_id' => 'required|integer|min:1|exists:'.config('entrust.roles_table').',id',
         ];
-
-        if (request()->input('password')) {
-            $rules['password'] = 'required|string|min:6';
-        }
-
-        return $rules;
     }
 }

@@ -9,10 +9,8 @@ class StoreRequest extends Request
     public function rules()
     {
         return [
-            'name'     => 'required|string|min:2|max:50|unique:admins',
-            'email'    => 'required|string|min:2|max:100|email|unique:admins',
-            'password' => 'required|string|min:6',
-            'status'   => 'required|integer'
+            'user_id' => 'required|integer|min:1|exists:admins,id',
+            'role_id' => 'required|integer|min:1|exists:'.config('entrust.roles_table').',id',
         ];
     }
 }

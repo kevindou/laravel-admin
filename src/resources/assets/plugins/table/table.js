@@ -686,7 +686,7 @@
             k.search.type = k.search.type || "text";
 
             // select 默认选中
-            var defaultObject = k.search.type === "select" ? {"All": meTables.fn.getLanguage("all")} : null,
+            var defaultObject = k.search.type === "select" ? [meTables.fn.getLanguage("all") + k.search.title] : null,
                 method = k.search.type + "SearchCreate",
                 defaultMethod = "textSearchCreate";
             if (searchType === "middle") {
@@ -769,7 +769,7 @@
             html = "";
             if (defaultObject) {
                 for (i in defaultObject) {
-                    html += '<option value="' + i + '" selected="selected">' + defaultObject[i] + '</option>';
+                    html += '<option value="" selected="selected">' + defaultObject[i] + '</option>';
                 }
             }
 
@@ -792,7 +792,8 @@
 
         selectSearchMiddleCreate: function (params, value, defaultObject) {
             params["id"] = "search-" + params.name;
-            return '<label for="search-' + params.name + '"> ' + params.title + ': ' + this.selectInput(params, value, defaultObject) + '</label>';
+            params.class = params.class || "form-control";
+            return '<div class="input-group input-group-sm"> ' + this.selectInput(params, value, defaultObject) + '</div> ';
         },
 
         searchFormCreate: function (html, params) {
