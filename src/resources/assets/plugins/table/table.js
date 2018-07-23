@@ -166,7 +166,7 @@
             this.options.table.columns.forEach(function (k, v) {
                 // 查看详情信息
                 if (k.bViews !== false) {
-                    views += meTables.detailTableCreate(k.title, k.data, v, self.options.detailTable, self.uniqueName);
+                    views += meTables.detailTableCreate(k.title, k.data || k.name, v, self.options.detailTable, self.uniqueName);
                 }
 
                 // 编辑表单信息
@@ -960,7 +960,7 @@
         detailTable: function (object, data, tClass, row) {
             // 循环处理显示信息
             object.forEach(function (k) {
-                var tmpKey = k.data, tmpValue = data[tmpKey], dataInfo = $(tClass + tmpKey);
+                var tmpKey = k.data || k.name, tmpValue = data[tmpKey], dataInfo = $(tClass + tmpKey);
                 if (k.edit !== undefined && k.edit.type === 'password') tmpValue = "******";
                 (k.createdCell !== undefined && typeof k.createdCell === "function") ? k.createdCell(dataInfo, tmpValue, data, row, undefined) : dataInfo.html(tmpValue);
             });
@@ -1101,7 +1101,7 @@
                 shade: 0.3,
                 shadeClose: true,
                 maxmin: true,
-                area: ['50%', 'auto']
+                area: ['600px', 'auto']
             },
 
             detailTable: {                   // 查看详情配置信息
