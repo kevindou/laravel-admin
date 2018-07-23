@@ -10,7 +10,7 @@ class StoreRequest extends Request
     {
         return [
             'user_id' => 'required|integer|min:1|exists:admins,id',
-            'role_id' => 'required|integer|min:1|exists:'.config('entrust.roles_table').',id',
+            'role_id' => 'required|integer|min:1|exists:' . config('entrust.roles_table') . ',id',
         ];
     }
 }
