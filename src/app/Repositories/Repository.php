@@ -67,6 +67,11 @@ abstract class Repository
         if (!is_array($data) || !$data) {
             return $this->error('操作失败');
         }
+
+        $data = array_where($data, function ($value) {
+            return !is_null($value);
+        });
+
         if (!$model = $this->model->create($data)) {
             return $this->error('操作失败');
         }
@@ -100,7 +105,7 @@ abstract class Repository
         // 不能修改不存在的字段
         $columns = $this->getTableColumns();
         foreach ($update_data as $column => $value) {
-            if (!isset($columns[$column])) {
+            if (!isset($columns[$column]) || is_null($value)) {
                 unset($update_data[$column]);
             }
         }
