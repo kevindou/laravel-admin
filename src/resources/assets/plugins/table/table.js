@@ -1101,7 +1101,7 @@
                 shade: 0.3,
                 shadeClose: true,
                 maxmin: true,
-                area: ['600px', 'auto']
+                area: ['45%', 'auto']
             },
 
             detailTable: {                   // 查看详情配置信息
