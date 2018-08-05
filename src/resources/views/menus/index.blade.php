@@ -32,7 +32,7 @@
                                 <button type="submit" class="btn btn-info">
                                     <i class="fa fa-search"></i>搜索
                                 </button>
-                                <button type="reset" class="btn btn-warning example2-reset-table">
+                                <button type="reset" class="btn btn-warning me-table-reset">
                                     {{ trans('清除') }}
                                 </button>
                             </form>
