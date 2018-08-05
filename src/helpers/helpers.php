@@ -201,3 +201,37 @@ if (!function_exists('get_controller_action')) {
         return [$controller, $action];
     }
 }
+
+/**
+ * 判断是否为空 0 值不算
+ *
+ * @param mixed $value 判断的值
+ *
+ * @return boolean 是空返回ture
+ */
+function is_empty($value)
+{
+    return $value === '' || $value === [] || $value === null || is_string($value) && trim($value) === '';
+}
+
+/**
+ * 过滤数组数据
+ *
+ * @param array|mixed $array 数组信息
+ *
+ * @return array
+ */
+function filter_array($array)
+{
+    if (!is_array($array)) {
+        return $array;
+    }
+
+    foreach ($array as $key => $value) {
+        if (is_empty($value)) {
+            unset($array[$key]);
+        }
+    }
+
+    return $array;
+}

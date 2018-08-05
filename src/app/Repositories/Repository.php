@@ -68,10 +68,6 @@ abstract class Repository
             return $this->error('操作失败');
         }
 
-        $data = array_where($data, function ($value) {
-            return !is_null($value);
-        });
-
         if (!$model = $this->model->create($data)) {
             return $this->error('操作失败');
         }
@@ -105,7 +101,7 @@ abstract class Repository
         // 不能修改不存在的字段
         $columns = $this->getTableColumns();
         foreach ($update_data as $column => $value) {
-            if (!isset($columns[$column]) || is_null($value)) {
+            if (!isset($columns[$column])) {
                 unset($update_data[$column]);
             }
         }
@@ -180,6 +176,18 @@ abstract class Repository
         }
 
         return [];
+    }
+
+    public function filterFindOne($condition, $fields = '*')
+    {
+        $condition = $this->fileterCondtion($condition);
+        return $this->findOne($condition, $fields);
+    }
+
+    public function filterFindAll($condition, $fields = '*')
+    {
+        $condition = $this->fileterCondtion($condition);
+        return $this->findAll($condition, $fields);
     }
 
     /**
@@ -873,5 +881,32 @@ abstract class Repository
         }
 
         return $model;
+    }
+
+    /**
+     * 过滤查询条件
+     *
+     * @param mixed|array $condition 查询条件
+     *
+     * @return mixed
+     */
+    protected function filterCondition($condition)
+    {
+        if (!is_array($condition)) {
+            return $condition;
+        }
+
+        foreach ($condition as $key => $value) {
+            if (strtolower($key) === 'or') {
+                $condition[$key] = $this->filterCondition($value);
+                continue;
+            }
+
+            if (is_empty($value)) {
+                unset($condition[$key]);
+            }
+        }
+
+        return $condition;
     }
 }
