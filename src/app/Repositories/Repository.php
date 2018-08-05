@@ -898,8 +898,7 @@ abstract class Repository
 
         foreach ($condition as $key => $value) {
             if (strtolower($key) === 'or') {
-                $condition[$key] = $this->filterCondition($value);
-                continue;
+                $condition[$key] = $value = $this->filterCondition($value);
             }
 
             if (is_empty($value)) {
