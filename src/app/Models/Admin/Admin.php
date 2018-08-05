@@ -87,6 +87,11 @@ class Admin extends \Illuminate\Foundation\Auth\User
 
     public function scopeUser($query, $value)
     {
-        $query->whereIn('id', $value);
+        $query->whereIn('id', (array)$value);
+    }
+
+    public function roleInfo()
+    {
+        return $this->hasOne(RoleUser::class, 'user_id', 'id');
     }
 }
