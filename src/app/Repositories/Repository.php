@@ -252,8 +252,8 @@ abstract class Repository
     /**
      * 查询全部的一个字段组成的数组
      *
-     * @param mixed|array  $condition 查询条件
-     * @param string $column    查询的字段名称
+     * @param mixed|array $condition 查询条件
+     * @param string      $column    查询的字段名称
      *
      * @return array
      */
@@ -674,14 +674,11 @@ abstract class Repository
     public function setModelCondition($conditions = [], $fields = [])
     {
         // 查询条件为空，直接返回
-        if (!$conditions = $this->getPrimaryKeyCondition($conditions)) {
-            return $this->model;
-        }
-
-        $model   = $this->model;
-        $table   = $this->model->getTable();
-        $columns = $this->getTableColumns($model);
-        $fields  = (array)$fields;
+        $conditions = $this->getPrimaryKeyCondition($conditions);
+        $model      = $this->model;
+        $table      = $this->model->getTable();
+        $columns    = $this->getTableColumns($model);
+        $fields     = (array)$fields;
 
         // 分组，如果是relation的查询条件，需要放在前面build
         $relation_condition = $model_condition = [];

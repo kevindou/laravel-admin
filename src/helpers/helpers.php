@@ -207,7 +207,7 @@ if (!function_exists('get_controller_action')) {
  *
  * @param mixed $value 判断的值
  *
- * @return boolean 是空返回ture
+ * @return boolean 是空返回 true
  */
 function is_empty($value)
 {
