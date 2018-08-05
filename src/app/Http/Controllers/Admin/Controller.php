@@ -38,6 +38,18 @@ class Controller extends BaseController
     }
 
     /**
+     * 获取查询的 model
+     *
+     * @param array|mixed $condition 查询条件
+     *
+     * @return \Illuminate\Database\Eloquent\Model|mixed
+     */
+    public function findModel($condition)
+    {
+        return $this->repository->getFilterModel($condition);
+    }
+
+    /**
      * 数据搜索处理
      *
      * @return \Illuminate\Http\JsonResponse
@@ -63,12 +75,8 @@ class Controller extends BaseController
         }
 
         // 处理 where 查询
-        $query = DB::table(($this->repository->getModel())->getTable());
-        if (method_exists($this, 'where')) {
-            parse_str($request->input('where'), $array);
-            handle_where($query, $array, $this->where($array));
-        }
-
+        parse_str($request->input('where'), $condition);
+        $query = $this->findModel($condition);
         $total = $query->count();
 
         // 排序

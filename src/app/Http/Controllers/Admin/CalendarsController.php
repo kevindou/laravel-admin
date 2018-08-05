@@ -18,16 +18,18 @@ class CalendarsController extends Controller
     }
 
     /**
-     * 处理显示查询参数配置
+     * 获取查询的 model
      *
-     * @return array
+     * @param array|mixed $condition 查询条件
+     *
+     * @return \Illuminate\Database\Eloquent\Model|mixed
      */
-    public function where()
+    public function findModel($condition)
     {
-        return [
-            'desc'  => 'like',
-            'title' => 'like'
-        ];
+        return $this->repository->getFilterModel([
+            'desc:like'  => array_get($condition, 'desc'),
+            'title:like' => array_get($condition, 'title')
+        ]);
     }
 
     /**

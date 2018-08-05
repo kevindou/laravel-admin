@@ -62,16 +62,18 @@ class AdminsController extends Controller
     }
 
     /**
-     * 处理显示查询参数配置
+     * 获取查询的 model
      *
-     * @return array
+     * @param array|mixed $condition 查询条件
+     *
+     * @return \Illuminate\Database\Eloquent\Model|mixed
      */
-    public function where()
+    public function findModel($condition)
     {
-        return [
-            'name'  => 'like',
-            'email' => '='
-        ];
+        return $this->repository->getFilterModel([
+            'name:like' => array_get($condition, 'name'),
+            'email'     => array_get($condition, 'email'),
+        ]);
     }
 
     /**

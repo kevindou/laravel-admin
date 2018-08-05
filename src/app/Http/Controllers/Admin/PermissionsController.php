@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Admin\Role;
 use App\Http\Requests\Admin\Permissions\DestroyRequest;
 use App\Http\Requests\Admin\Permissions\StoreRequest;
 use App\Http\Requests\Admin\Permissions\UpdateRequest;
@@ -19,6 +18,21 @@ class PermissionsController extends Controller
     {
         parent::__construct();
         $this->repository = $repository;
+    }
+
+    /**
+     * 获取查询的 model
+     *
+     * @param array|mixed $condition 查询条件
+     *
+     * @return \Illuminate\Database\Eloquent\Model|mixed
+     */
+    public function findModel($condition)
+    {
+        return $this->repository->getFilterModel([
+            'name:like'   => array_get($condition, 'name'),
+            'description' => array_get($condition, 'description')
+        ]);
     }
 
     /**

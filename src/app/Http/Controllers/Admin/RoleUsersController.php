@@ -31,14 +31,6 @@ class RoleUsersController extends Controller
         $this->adminRepository = $adminRepository;
     }
 
-    public function where()
-    {
-        return [
-            'user_id' => '=',
-            'role_id' => '='
-        ];
-    }
-
     /**
      * 首页显示
      *

@@ -6,7 +6,6 @@ use App\Helpers\Tree;
 use App\Http\Requests\Admin\Roles\DestroyRequest;
 use App\Http\Requests\Admin\Roles\StoreRequest;
 use App\Http\Requests\Admin\Roles\UpdateRequest;
-use App\Models\Admin\RoleMenus;
 use App\Repositories\Admin\MenuRepository;
 use App\Repositories\Admin\PermissionRepository;
 use App\Repositories\Admin\PermissionRoleRepository;
@@ -72,17 +71,19 @@ class RolesController extends Controller
     }
 
     /**
-     * 处理查询参数配置
+     * 获取查询的 model
      *
-     * @return array
+     * @param array|mixed $condition 查询条件
+     *
+     * @return \Illuminate\Database\Eloquent\Model|mixed
      */
-    public function where()
+    public function findModel($condition)
     {
-        return [
-            'name'         => 'like',
-            'description'  => 'like',
-            'display_name' => 'like',
-        ];
+        return $this->repository->getFilterModel([
+            'name:like'         => array_get($condition, 'name'),
+            'description:like'  => array_get($condition, 'description'),
+            'display_name:like' => array_get($condition, 'display_name'),
+        ]);
     }
 
     /**

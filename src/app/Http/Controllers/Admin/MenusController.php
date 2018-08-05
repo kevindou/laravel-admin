@@ -37,17 +37,19 @@ class MenusController extends Controller
     }
 
     /**
-     * 处理查询参数配置
+     * 获取查询的 model
      *
-     * @return array
+     * @param array|mixed $condition 查询条件
+     *
+     * @return \Illuminate\Database\Eloquent\Model|mixed
      */
-    public function where()
+    public function findModel($condition)
     {
-        return [
-            'name'   => 'like',
-            'url'    => 'like',
-            'status' => 'in',
-        ];
+        return $this->repository->getFilterModel([
+            'name:like' => array_get($condition, 'name'),
+            'url:like'  => array_get($condition, 'url'),
+            'status:in' => array_get($condition, 'status')
+        ]);
     }
 
     /**

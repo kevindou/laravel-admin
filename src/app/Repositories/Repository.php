@@ -188,8 +188,7 @@ abstract class Repository
      */
     public function filterFindOne($condition, $fields = '*')
     {
-        $condition = $this->filterCondition($condition);
-        return $this->findOne($condition, $fields);
+        return $this->findOne($this->filterCondition($condition), $fields);
     }
 
     /**
@@ -245,8 +244,7 @@ abstract class Repository
      */
     public function filterFindAll($condition = [], $fields = '*')
     {
-        $condition = $this->filterCondition($condition);
-        return $this->findAll($condition, $fields);
+        return $this->findAll($this->filterCondition($condition), $fields);
     }
 
     /**
@@ -279,6 +277,19 @@ abstract class Repository
     public function findAllToIndex($condition, $fields, $key, $value = null)
     {
         return $this->setModelCondition($condition, $fields)->pluck($value, $key)->toArray();
+    }
+
+    /**
+     * 获取过滤查询的model
+     *
+     * @param mixed|array $condition 查询条件
+     * @param array       $fields    查询的字段
+     *
+     * @return Model|mixed
+     */
+    public function getFilterModel($condition, $fields = ['*'])
+    {
+        return $this->setModelCondition($this->filterCondition($condition), $fields);
     }
 
     /**
@@ -449,7 +460,7 @@ abstract class Repository
      *
      * @return mixed
      */
-    private function select($query, $fields = ['*'], $table, $columns = [])
+    private function select($query, $fields, $table, $columns = [])
     {
         $select     = [];
         $use_select = true;
@@ -700,7 +711,7 @@ abstract class Repository
      *
      * @return array
      */
-    protected function getRelations($model, $fields = [], $relation_condition)
+    protected function getRelations($model, $fields, $relation_condition)
     {
         // relation查询时，合并SQL，优化语句
         $relations = [];
@@ -802,6 +813,7 @@ abstract class Repository
         return function ($query) use ($relation_filters, $relation_fields) {
             // 获取relation的表字段
             /* @ver $model Model */
+            /* @ver $query \Illuminate\Database\Query\Builder  */
             $model   = $query->getRelated();
             $columns = $this->getTableColumns($model);
             $table   = $model->getTable();
