@@ -120,13 +120,7 @@ if (!function_exists('handle_method')) {
             case 'not in':
             case 'between':
             case 'not between':
-                $methods = explode(' ', $operator);
-                foreach ($methods as &$val) {
-                    $val = ucfirst($val);
-                }
-
-                unset($val);
-                $strMethod = 'where' . implode('', $methods);
+                $strMethod = 'where' . studly_case($operator);
                 $query->{$strMethod}($column, $value);
                 break;
             case 'like':

@@ -3,12 +3,13 @@
 namespace App\Models\Admin;
 
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Illuminate\Foundation\Auth\User;
 
 /**
  * Class Admin
  * @package App\Models
  */
-class Admin extends \Illuminate\Foundation\Auth\User
+class Admin extends User
 {
     use EntrustUserTrait;
 
@@ -80,11 +81,17 @@ class Admin extends \Illuminate\Foundation\Auth\User
             self::STATUS_DELETE   => '删除',
         ];
 
-        if ($intStatus !== null) $mixReturn = isset($mixReturn[$intStatus]) ? $mixReturn[$intStatus] : null;
+        if ($intStatus !== null) {
+            return array_get($mixReturn, $intStatus, null);
+        }
 
         return $mixReturn;
     }
 
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param $value
+     */
     public function scopeUser($query, $value)
     {
         $query->whereIn('id', (array)$value);

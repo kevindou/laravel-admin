@@ -292,11 +292,7 @@ abstract class Repository
      */
     public function findOneBySql($sql, $binds = [], $connection = null)
     {
-        if ($one = $this->getConnection($connection)->selectOne($sql, $binds)) {
-            return get_object_vars($one);
-        }
-
-        return $one;
+        return $this->getConnection($connection)->selectOne($sql, $binds);
     }
 
     /**
@@ -309,7 +305,7 @@ abstract class Repository
      *
      * @return mixed|null
      */
-    public function findColumnBySql($sql, $binds = [], $column, $connection = null)
+    public function findColumnBySql($sql, $binds, $column, $connection = null)
     {
         if ($one = $this->findOneBySql($sql, $binds, $connection)) {
             return array_get($one, $column);
@@ -329,16 +325,7 @@ abstract class Repository
      */
     public function findAllBySql($sql, $binds = [], $connection = null)
     {
-        if ($all = $this->getConnection($connection)->select($sql, $binds)) {
-            $return = [];
-            foreach ($all as $value) {
-                $return[] = get_object_vars($value);
-            }
-
-            return $return;
-        }
-
-        return $all;
+        return $this->getConnection($connection)->select($sql, $binds);
     }
 
     /**
@@ -351,7 +338,7 @@ abstract class Repository
      *
      * @return array
      */
-    public function findAllColumnBySql($sql, $binds = [], $column, $connection = null)
+    public function findAllColumnBySql($sql, $binds, $column, $connection = null)
     {
         if ($all = $this->findAllBySql($sql, $binds, $connection)) {
             return array_column($all, $column);
