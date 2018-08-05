@@ -178,16 +178,18 @@ abstract class Repository
         return [];
     }
 
+    /**
+     * 过滤查询一条数据
+     *
+     * @param mixed|array $condition 查询条件
+     * @param string      $fields    查询字段
+     *
+     * @return array
+     */
     public function filterFindOne($condition, $fields = '*')
     {
-        $condition = $this->fileterCondtion($condition);
+        $condition = $this->filterCondition($condition);
         return $this->findOne($condition, $fields);
-    }
-
-    public function filterFindAll($condition, $fields = '*')
-    {
-        $condition = $this->fileterCondtion($condition);
-        return $this->findAll($condition, $fields);
     }
 
     /**
@@ -234,14 +236,28 @@ abstract class Repository
     }
 
     /**
+     * 过滤查询多条数据
+     *
+     * @param mixed|array $condition 查询条件
+     * @param string      $fields    查询字段
+     *
+     * @return array
+     */
+    public function filterFindAll($condition = [], $fields = '*')
+    {
+        $condition = $this->filterCondition($condition);
+        return $this->findAll($condition, $fields);
+    }
+
+    /**
      * 查询全部的一个字段组成的数组
      *
-     * @param array  $condition 查询条件
+     * @param mixed|array  $condition 查询条件
      * @param string $column    查询的字段名称
      *
      * @return array
      */
-    public function findAllColumn($condition = [], $column)
+    public function findAllColumn($condition, $column)
     {
         if ($columns = $this->findAll($condition, [$column])) {
             return array_column($columns, $column);
