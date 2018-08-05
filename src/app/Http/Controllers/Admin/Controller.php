@@ -67,9 +67,8 @@ class Controller extends BaseController
         $order = [];
         if ($orderBy) {
             foreach ($orderBy as $value) {
-                $key = $value['column'];
-                if (!empty($columns[$key]) && !empty($columns[$key]['data'])) {
-                    $order[$columns[$key]['data']] = $value['dir'];
+                if ($field = array_get($columns, $value['column'] . '.data')) {
+                    $order[$field] = $value['dir'];
                 }
             }
         }
@@ -91,8 +90,6 @@ class Controller extends BaseController
             'recordsFiltered' => $total,
             'data'            => $query->offset($start)->limit($length)->get(),
             'code'            => 0,
-            'params'          => $request->input('params'),
-            'sql'             => $query->toSql(),
         ]);
     }
 }
