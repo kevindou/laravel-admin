@@ -70,4 +70,14 @@ class Menu extends Model
 
         return $mixReturn;
     }
+
+    /**
+     * 父级信息
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function parentInfo()
+    {
+        return $this->hasOne(self::class, 'id', 'parent');
+    }
 }

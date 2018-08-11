@@ -45,6 +45,7 @@ class MenuRepository extends Repository
             }
         }
 
+        unset($menus);
         return $arrReturn;
     }
 
