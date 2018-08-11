@@ -69,7 +69,7 @@
             }
         });
         $(function () {
-            var arrParents = @json($parents, 320);
+            var arrParents = @json(array_pluck($parents, 'name', 'id'), 320);
             arrParents["0"] = "顶级分类";
             var arrStatus = @json($status, 320),
                 arrColors = {"10": "label-success", "0": "label-warning", "-1": "label-danger"},

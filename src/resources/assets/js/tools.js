@@ -87,6 +87,16 @@ function getLaravelRequest(params, message) {
  * @param defaultValue
  */
 function getValue(arrValue, key, defaultValue) {
+    if (key in arrValue) {
+        return arrValue[key];
+    }
+
+    var index = key.lastIndexOf(".");
+    if (key.lastIndexOf(".") !== -1) {
+        arrValue = getValue(arrValue, key.substr(0, index), defaultValue);
+        key = key.substr(index + 1);
+    }
+
     return arrValue[key] ? arrValue[key] : defaultValue;
 }
 

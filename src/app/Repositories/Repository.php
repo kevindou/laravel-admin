@@ -267,16 +267,20 @@ abstract class Repository
     /**
      * 查询数据处理为 key => value 数组
      *
-     * @param array|mixed  $condition
-     * @param array|string $fields
-     * @param string       $key
-     * @param null|string  $value
+     * @param array|mixed $condition
+     * @param string      $key
+     * @param null|string $value
      *
      * @return mixed
      */
-    public function findAllToIndex($condition, $fields, $key, $value = null)
+    public function findAllToIndex($condition, $key, $value = null)
     {
-        return $this->setModelCondition($condition, $fields)->pluck($value, $key)->toArray();
+        $fields = $value == null ? ['*'] : [$key, $value];
+        if ($all = $this->findAll($condition, $fields)) {
+            return array_pluck($all, $value, $key);
+        }
+
+        return $all;
     }
 
     /**

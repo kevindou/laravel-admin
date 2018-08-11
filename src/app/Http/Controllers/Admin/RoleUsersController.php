@@ -38,8 +38,8 @@ class RoleUsersController extends Controller
      */
     public function index()
     {
-        $admins = $this->adminRepository->findAllToIndex([], ['id', 'name'], 'id', 'name');
-        $roles  = $this->roleRepository->findAllToIndex([], ['id', 'display_name'], 'id', 'display_name');
+        $admins = $this->adminRepository->findAllToIndex([], 'id', 'name');
+        $roles  = $this->roleRepository->findAllToIndex([], 'id', 'display_name');
         // 载入视图
         return view('admin::role_users.index', compact('admins', 'roles'));
     }
