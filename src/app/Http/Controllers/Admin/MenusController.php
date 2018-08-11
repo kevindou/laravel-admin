@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\Tree;
 use App\Http\Requests\Admin\Menus\DestroyRequest;
 use App\Http\Requests\Admin\Menus\StoreRequest;
 use App\Http\Requests\Admin\Menus\UpdateRequest;
@@ -10,10 +11,16 @@ use App\Repositories\Admin\MenuRepository;
 
 class MenusController extends Controller
 {
-    public function __construct(MenuRepository $menuRepository)
+    /**
+     * @var Tree
+     */
+    private $tree;
+
+    public function __construct(MenuRepository $menuRepository, Tree $tree)
     {
         parent::__construct();
         $this->repository = $menuRepository;
+        $this->tree       = $tree;
     }
 
     /**
@@ -27,13 +34,15 @@ class MenusController extends Controller
         $status = Menu::getStatus();
 
         // 查询父类等级
-        $parents = $this->repository->findAllToIndex([
-            'status:neq' => Menu::STATUS_DELETE,
-            'parent'     => 0
-        ], '*', 'id', 'name');
+        $parents = $this->repository->findAll(['status:neq' => Menu::STATUS_DELETE]);
+        $group   = $this->tree->init([
+            'parentIdName' => 'parent',
+            'childrenName' => 'children',
+            'array'        => $parents,
+        ])->getTree(0, '<option value="{id}">{extend_space}{name}</option>');
 
         // 载入视图
-        return view('admin::menus.index', compact('status', 'parents'));
+        return view('admin::menus.index', compact('status', 'parents', 'group'));
     }
 
     /**
@@ -48,7 +57,8 @@ class MenusController extends Controller
         return $this->repository->getFilterModel([
             'name:like' => array_get($condition, 'name'),
             'url:like'  => array_get($condition, 'url'),
-            'status:in' => array_get($condition, 'status')
+            'status:in' => array_get($condition, 'status'),
+            'parent'    => array_get($condition, 'parent')
         ]);
     }
 

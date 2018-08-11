@@ -160,3 +160,82 @@ if (!function_exists('filter_array')) {
         return $array;
     }
 }
+
+if (!function_exists('array_multi_sort')) {
+    /**
+     * 多维数组排序
+     *
+     * @param array  $array 排序的数据
+     * @param string $key   按照那个数组排序
+     * @param int    $desc  排序的方式
+     */
+    function array_multi_sort(&$array, $key, $desc)
+    {
+        array_multisort(array_column($array, $key), $desc, $array);
+    }
+}
+
+if (!function_exists('html_attribute')) {
+    /**
+     * 处理 html 属性
+     *
+     * @param array $params 属性信息
+     *                      ['id' => 'user', 'class' => 'item li']
+     *
+     * @return string
+     *               'id="user" class="item li"'
+     */
+    function html_attribute($params)
+    {
+        if (empty($params) || !is_array($params)) {
+            return '';
+        }
+
+        $html = '';
+        foreach ($params as $attr => $value) {
+            $html .= " $attr=\"{$value}\" ";
+        }
+
+        return $html;
+    }
+}
+
+if (!function_exists('render_menu')) {
+    /**
+     * 渲染后台导航
+     *
+     * @param array $menu 导航信息
+     *                    ['id' => 1, 'url' => '/admin/menu', 'children' => [], 'icon' => 'fa-home']
+     * @param array $params 渲染配置
+     *                      ['ul' => 'ul attributes 信息']
+     *
+     * @return string
+     */
+    function render_menu($menu, $params = [])
+    {
+        if (empty($menu) || !is_array($menu)) {
+            return '';
+        }
+
+        $html = '<ul ' . html_attribute(array_get($params, 'ul')) . '>';
+        foreach ($menu as $item) {
+            $children  = array_get($item, 'children');
+            $url       = array_get($item, 'url');
+            $href      = url($url);
+            $i_html    = $children ? '<i class="fa fa-angle-left pull-right"></i>' : '';
+            $tree_view = $children ? 'treeview' : '';
+            $html      .= "<li class=\"{$tree_view}\" data-url=\"{$url}\" data-id=\"{$item['id']}\">";
+            $html      .= "<a href=\"{$href}\">
+                            <i class=\"fa {$item['icon']}\"></i>
+                            <span>{$item['name']}</span>
+                            {$i_html}
+                       </a>";
+            if ($children) {
+                $html .= render_menu($children, ['ul' => ['class' => 'treeview-menu']]);
+            }
+            $html .= '<li>';
+        }
+
+        return $html . '</ul>';
+    }
+}

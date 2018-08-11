@@ -12,6 +12,14 @@
                             </button>
                             <form class="form-inline pull-right" id="search-form" name="searchForm">
                                 <div class="form-group">
+                                    <label class="sr-only">上级分类</label>
+                                    <select name="parent" class="form-control">
+                                        <option value="">请选择分类</option>
+                                        <option value="0">顶级分类</option>
+                                        {!! $group !!}
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label class="sr-only" for="inputSearchName">名称</label>
                                     <input type="text" name="name" class="form-control" id="inputSearchName"
                                            placeholder="导航名称">
@@ -55,6 +63,11 @@
 @push("script")
     <script src="{{ asset('admin-assets/plugins/select2/select2.min.js') }}"></script>
     <script>
+        mt.extend({
+            menusCreate: function (params) {
+                return '<select ' + this.handleParams(params) + '><option value="0">顶级分类</option>{!! $group !!}</select>';
+            }
+        });
         $(function () {
             var arrParents = @json($parents, 320);
             arrParents["0"] = "顶级分类";
@@ -84,8 +97,7 @@
                                 "title": "父级名称", "data": "parent", "render": function (data) {
                                     return arrParents[data] ? arrParents[data] : "顶级分类";
                                 },
-                                value: arrParents,
-                                "edit": {"type": "select", "number": true}
+                                "edit": {"type": "menus", "number": true}
                             },
                             {
                                 "title": "状态", "data": "status", "render": function (data) {

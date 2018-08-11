@@ -2,14 +2,21 @@
 
 namespace App\Repositories\Admin;
 
+use App\Helpers\Tree;
 use App\Models\Admin\Menu;
 use App\Repositories\Repository;
 
 class MenuRepository extends Repository
 {
-    public function __construct(Menu $model)
+    /**
+     * @var Tree
+     */
+    private $tree;
+
+    public function __construct(Menu $model, Tree $tree)
     {
         $this->model = $model;
+        $this->tree  = $tree;
     }
 
     /**
@@ -30,23 +37,14 @@ class MenuRepository extends Repository
             return [];
         }
 
-        $arrReturn = [];
-        foreach ($menus as $value) {
-            $id     = array_get($value, 'id');
-            $parent = array_get($value, 'parent');
-            if ($parent == 0) {
-                $arrReturn[$id] = array_merge($arrReturn[$id] ?? ['child' => []], $value);
-            } else {
-                if (isset($arrReturn[$parent])) {
-                    $arrReturn[$parent]['child'][] = $value;
-                } else {
-                    $arrReturn[$parent] = ['child' => [$value]];
-                }
-            }
-        }
-
-        unset($menus);
-        return $arrReturn;
+        return $this->tree->init([
+            'parentIdName' => 'parent',
+            'childrenName' => 'children',
+            'array'        => $menus,
+        ])->getTreeArray(0, 0, 1, [
+            'sort_key' => 'sort',
+            'sort_by'  => SORT_ASC
+        ]);
     }
 
     /**

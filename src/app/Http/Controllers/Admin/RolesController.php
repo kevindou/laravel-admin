@@ -134,9 +134,11 @@ class RolesController extends Controller
      *
      * @param DestroyRequest $request
      *
+     * @param Tree           $tree
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
-    public function permissions(DestroyRequest $request)
+    public function permissions(DestroyRequest $request, Tree $tree)
     {
         $id = (int)$request->get('id');
         if ($id == 1) {
@@ -155,12 +157,12 @@ class RolesController extends Controller
         $menuIds     = $this->roleMenusRepository->findAllColumn(['role_id' => $id], 'menu_id');
         $hasIds      = $this->permissionRoleRepository->findAllColumn(['role_id' => $id], 'permission_id');
 
-        $tree  = (new Tree([
+        $arrTree  = $tree->init([
             'parentIdName' => 'parent',
             'childrenName' => 'children',
             'array'        => $menus,
-        ]))->getTreeArray(0);
-        $trees = $this->menuRepository->getJsMenus($tree, $menuIds);
+        ])->getTreeArray(0);
+        $trees = $this->menuRepository->getJsMenus($arrTree, $menuIds);
         return view(
             'admin::roles.permissions',
             compact('role', 'permissions', 'hasIds', 'trees')

@@ -10,8 +10,12 @@ use Closure;
  */
 class Tree
 {
-    public function __construct($config = [])
+    public function init($config)
     {
+        if ($id = array_get($config, 'pk')) {
+            $this->pk = $id;
+        }
+
         if ($array = array_get($config, 'array')) {
             $this->array = $array;
         }
@@ -31,7 +35,14 @@ class Tree
         if ($childrenName = array_get($config, 'childrenName')) {
             $this->childrenName = $childrenName;
         }
+
+        return $this;
     }
+
+    /**
+     * @var string 主键名称
+     */
+    public $pk = 'id';
 
     /**
      * @var array 生成树型结构所需要的2维数组
@@ -154,7 +165,7 @@ class Tree
         if (is_array($array)) {
             krsort($array);
             foreach ($array as $v) {
-                $arrReturn[$v['id']] = $v;
+                $arrReturn[$v[$this->pk]] = $v;
             }
         }
 
@@ -185,13 +196,13 @@ class Tree
                 $arrSeparator = $this->handleSeparator($number, $total, $prefix);
                 // 追加信息
                 $value['extend_space']    = $prefix ? $prefix . $arrSeparator['prefix'] : '';
-                $value['extend_selected'] = $value['id'] == $selectedId ? 'selected' : '';
+                $value['extend_selected'] = $value[$this->pk] == $selectedId ? 'selected' : '';
                 // 确定使用的处理方式
                 $strTemplate = $value[$this->parentIdName] == 0 && $strGroup ? $strGroup : $handle;
                 // 建议使用函数数据
                 $this->html .= $this->handleHtml($strTemplate, $value);
                 $this->getTree(
-                    $value['id'],
+                    $value[$this->pk],
                     $handle,
                     $selectedId,
                     $prefix . $arrSeparator['suffix'] . $this->space,
@@ -230,7 +241,7 @@ class Tree
                 $a['extend_selected'] = $this->have($selectedId, $id) ? 'selected' : '';
                 $this->html           .= $this->handleHtml($handle, $a);
                 $this->getTreeMulti(
-                    $a['id'],
+                    $a[$this->pk],
                     $handle,
                     $selectedId,
                     $prefix . $arrSeparator['suffix'] . $this->space
@@ -286,29 +297,65 @@ class Tree
     /**
      * 生成树型结构数组
      *
-     * @param integer $id       表示获得这个ID下的所有子级
-     * @param int     $maxLevel $maxLevel 最大获取层级,默认不限制
-     * @param int     $level    当前层级,只在递归调用时使用,真实使用时不传入此参数
+     * @param integer    $id       表示获得这个ID下的所有子级
+     * @param int        $maxLevel $maxLevel 最大获取层级,默认不限制
+     * @param int        $level    当前层级,只在递归调用时使用,真实使用时不传入此参数
+     * @param array|null $sort     排序方式和名称
      *
      * @return array
      */
-    public function getTreeArray($id, $maxLevel = 0, $level = 1)
+    public function getTreeArray($id, $maxLevel = 0, $level = 1, $sort = null)
     {
         $returnArray = [];
         // 一级数组
         $children = $this->getChild($id);
         if (is_array($children)) {
             foreach ($children as $child) {
-                $child['_level']           = $level;
-                $returnArray[$child['id']] = $child;
+                $child['_level']                = $level;
+                $returnArray[$child[$this->pk]] = $child;
                 if ($maxLevel === 0 || ($maxLevel !== 0 && $maxLevel > $level)) {
-                    $mLevel                                         = $level + 1;
-                    $returnArray[$child['id']][$this->childrenName] = $this->getTreeArray($child['id'], $maxLevel, $mLevel);
+                    $mLevel                                              = $level + 1;
+                    $returnArray[$child[$this->pk]][$this->childrenName] = $this->getTreeArray($child[$this->pk], $maxLevel, $mLevel);
+                    if ($sort) {
+                        $this->arraySort(
+                            $returnArray[$child[$this->pk]][$this->childrenName],
+                            $this->pk,
+                            array_get($sort, 'sort_key', $this->pk),
+                            array_get($sort, 'sort_type', SORT_ASC)
+                        );
+                    }
                 }
             }
         }
 
+        if ($sort && $returnArray) {
+            $this->arraySort(
+                $returnArray,
+                $this->pk,
+                array_get($sort, 'sort_key', $this->pk),
+                array_get($sort, 'sort_type', SORT_ASC)
+            );
+        }
+
         return $returnArray;
+    }
+
+    /**
+     * 对数据进行排序后重建索引
+     *
+     * @param array  $array   排序的数据
+     * @param string $index   索引字段
+     * @param string $sortKey 排序字段
+     * @param int    $sortBy  排序方式
+     */
+    public function arraySort(&$array, $index, $sortKey, $sortBy = SORT_ASC)
+    {
+        if (empty($array) || !is_array($array)) {
+            return;
+        }
+
+        array_multi_sort($array, $sortKey, $sortBy);
+        $array = array_pluck($array, null, $index);
     }
 
     /**
