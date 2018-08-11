@@ -25,14 +25,17 @@ class ModelCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'admin:model {--table=} {--path=} {--r=}';
+    protected $signature = 'admin:model {--table=} {--path=} {--r=} {--name=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '生成 model {--table=} 指定表 {--path=} 指定目录[没有传递绝对路径，否则使用绝对路径 从 Models 开始]  {--r=} (true|false)是否需要生成Repositories 默认生成';
+    protected $description = '生成 model {--table=} 指定表 
+     {--path=} 默认为项目 app/Models ; 相对路径也是 app/Models 开始; 绝对路径就是指定路径 
+     {--r=} (true|false) 是否需要生成Repositories 默认生成
+     {--name=} 生成 model 名称 ';
 
     /**
      * 获取目录
@@ -46,9 +49,7 @@ class ModelCommand extends Command
     protected function getPath($path, $type = 'model')
     {
         $path = rtrim($path, '/') . '/';
-        if (strpos($path, '/') !== 0) {
-            $path = base_path('app/') . ($type == 'model' ? 'Models' : 'Repositories') . '/' . $path;
-        } elseif ($type != 'model') {
+        if ($type != 'model') {
             $path = str_replace('Models', 'Repositories', $path);
         }
 
@@ -62,6 +63,13 @@ class ModelCommand extends Command
 
     public function handle()
     {
+        // 处理为model 的路径
+        if (($path = $this->option('path')) && !starts_with($path, '/')) {
+            $path = base_path('app/Models/' . $path);
+        } else if (is_empty($path)) {
+            $path = base_path('app/Models');
+        }
+
         if (!$table = $this->option('table')) {
             $this->error('请输入表名称');
             return;
@@ -73,8 +81,10 @@ class ModelCommand extends Command
         }
 
         // 查询表结构
-        $structure  = DB::select('SHOW FULL COLUMNS FROM `' . $table . '`');
-        $model_name = ucfirst(camel_case(str_plural($table, 1)));
+        $structure = DB::select('SHOW FULL COLUMNS FROM `' . $table . '`');
+        if (!$model_name = $this->option('name')) {
+            $model_name = ucfirst(camel_case(str_plural($table, 1)));
+        }
 
         $primaryKey = 'id';
         $columns    = "[\n";
@@ -87,7 +97,6 @@ class ModelCommand extends Command
             $columns .= "\t\t'{$field}',\n";
         }
 
-        $path      = $this->option('path') ?: base_path('app/Models');
         $columns   .= "\t]";
         $arr_path  = explode('/', trim($this->getPath($path), '/'));
         $namespace = implode('\\', array_slice($arr_path, array_search('Models', $arr_path) + 1));
