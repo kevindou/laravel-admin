@@ -233,7 +233,7 @@ if (!function_exists('render_menu')) {
             if ($children) {
                 $html .= render_menu($children, ['ul' => ['class' => 'treeview-menu']]);
             }
-            $html .= '<li>';
+            $html .= '</li>';
         }
 
         return $html . '</ul>';
