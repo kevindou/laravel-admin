@@ -813,7 +813,7 @@ abstract class Repository
         return function ($query) use ($relation_filters, $relation_fields) {
             // 获取relation的表字段
             /* @ver $model Model */
-            /* @ver $query \Illuminate\Database\Query\Builder  */
+            /* @ver $query \Illuminate\Database\Query\Builder */
             $model   = $query->getRelated();
             $columns = $this->getTableColumns($model);
             $table   = $model->getTable();
