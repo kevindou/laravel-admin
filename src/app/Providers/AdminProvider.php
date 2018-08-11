@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Commands\AssetLinkCommand;
 use App\Commands\ModelCommand;
+use App\Commands\RequestCommand;
 use App\Commands\ViewCommand;
 use App\Composers\BreadCrumbsComposer;
 use App\Composers\DataTableComposer;
@@ -36,6 +37,7 @@ class AdminProvider extends ServiceProvider
                 AssetLinkCommand::class,
                 ModelCommand::class,
                 ViewCommand::class,
+                RequestCommand::class
             ]);
         }
 
