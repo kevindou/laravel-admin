@@ -21,16 +21,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="inputSearchName">名称</label>
-                                    <input type="text" name="name" class="form-control" id="inputSearchName"
+                                    <input type="text" name="name:like" class="form-control" id="inputSearchName"
                                            placeholder="导航名称">
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="inputSearchUrl">地址</label>
-                                    <input type="text" name="url" class="form-control" id="inputSearchUrl"
+                                    <input type="text" name="url:like" class="form-control" id="inputSearchUrl"
                                            placeholder="导航地址">
                                 </div>
                                 <div class="form-group" style="min-width:200px;">
-                                    <select class="form-control select2 pull-left" name="status[]" multiple="multiple"
+                                    <select class="form-control select2 pull-left" name="status:in[]" multiple="multiple"
                                             id="inputSearchStatus" data-placeholder="选择状态" style="width: 100%;">
                                         @foreach($status as $key => $value)
                                             <option value="{{ $key }}">{{ $value }}</option>

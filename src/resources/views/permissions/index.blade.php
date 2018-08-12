@@ -42,7 +42,7 @@
                             "title": "权限名称",
                             "data": "name",
                             "orderable": false,
-                            "search": {type: "text"},
+                            "search": {type: "text", name: "name:like"},
                             "edit": {
                                 "required": true, "rangelength": "[2, 190]"
                             }

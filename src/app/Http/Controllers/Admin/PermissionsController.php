@@ -21,21 +21,6 @@ class PermissionsController extends Controller
     }
 
     /**
-     * 获取查询的 model
-     *
-     * @param array|mixed $condition 查询条件
-     *
-     * @return \Illuminate\Database\Eloquent\Model|mixed
-     */
-    public function findModel($condition)
-    {
-        return $this->repository->getFilterModel([
-            'name:like'   => array_get($condition, 'name'),
-            'description' => array_get($condition, 'description')
-        ]);
-    }
-
-    /**
      * 首页显示
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

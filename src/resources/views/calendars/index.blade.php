@@ -61,14 +61,14 @@
                             "title": "标题",
                             "data": "title",
                             "orderable": false,
-                            "search": {"type": "text"},
+                            "search": {"type": "text", name: "title:like"},
                             "edit": {"rangelength": "[2, 255]", "required": true}
                         },
                         {
                             "title": "说明",
                             "data": "desc",
                             "orderable": false,
-                            "search": {"type": "text"},
+                            "search": {"type": "text", name: "desc:like"},
                             "edit": {
                                 "type": "textarea",
                                 "rangelength": "[2, 255]",

@@ -42,13 +42,16 @@
                 table: {
                     columns: [
                         {
-                            "title": "ID", "data": "id", "defaultOrder": "asc", "edit": {type: "hidden"}
+                            "title": "ID",
+                            "data": "id",
+                            "defaultOrder": "asc",
+                            "edit": {type: "hidden"}
                         },
                         {
                             "title": "管理员名称",
                             "data": "name",
                             "orderable": false,
-                            "search": {"type": "text"},
+                            "search": {"type": "text", name: "name:like"},
                             "edit": {
                                 required: "true", rangelength: "[2, 50]"
                             }

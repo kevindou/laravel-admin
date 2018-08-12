@@ -23,6 +23,7 @@
 @push("script")
     <script>
         var super_role_id = '{{ config('admin.super_role_id') }}';
+
         function handleOperator(td, data, rowData, row) {
             var attr = "data-index=\"" + rowData["id"] + "\" data-row=\"" + row + "\"";
             var html = "<button class='btn btn-info btn-xs me-table-update' " + attr + " ><i class='fa fa-edit'></i></button> ";
@@ -52,7 +53,7 @@
                             "title": "角色名称",
                             "data": "name",
                             "orderable": false,
-                            "search": {type: "text"},
+                            "search": {type: "text", name: "name:like"},
                             "edit": {
                                 "required": true, "rangelength": "[2, 190]"
                             }
@@ -61,7 +62,7 @@
                             "title": "角色说明",
                             "data": "description",
                             "orderable": false,
-                            "search": {type: "text"},
+                            "search": {type: "text", name: "description:like"},
                             "edit": {
                                 "required": true, "rangelength": "[2, 190]"
                             }
@@ -69,7 +70,7 @@
                         {
                             "title": "显示名称",
                             "data": "display_name",
-                            "search": {type: "text"},
+                            "search": {type: "text", name: "display_name:like"},
                             "orderable": false,
                             "edit": {
                                 "required": true, "rangelength": "[2, 190]"

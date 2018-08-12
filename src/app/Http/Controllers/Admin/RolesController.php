@@ -71,22 +71,6 @@ class RolesController extends Controller
     }
 
     /**
-     * 获取查询的 model
-     *
-     * @param array|mixed $condition 查询条件
-     *
-     * @return \Illuminate\Database\Eloquent\Model|mixed
-     */
-    public function findModel($condition)
-    {
-        return $this->repository->getFilterModel([
-            'name:like'         => array_get($condition, 'name'),
-            'description:like'  => array_get($condition, 'description'),
-            'display_name:like' => array_get($condition, 'display_name'),
-        ]);
-    }
-
-    /**
      * 添加数据
      *
      * @param StoreRequest $request
