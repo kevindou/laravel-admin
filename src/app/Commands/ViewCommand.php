@@ -10,7 +10,7 @@
 
 namespace App\Commands;
 
-use Illuminate\Console\Command;
+use App\Traits\CommandTrait;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\DB;
  */
 class ViewCommand extends Command
 {
+    use CommandTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -33,8 +35,7 @@ class ViewCommand extends Command
      * @var string
      */
     protected $description = '生成 view {--table=} 指定表 
-     {--path=} 默认为项目 app/resource/views/admin ; 相对路径也是 app/resource/views/admin 开始; 绝对路径就是指定路径
-     {--q=} (true|false) 是否询问编辑和搜索字段；默认不询问';
+     {--path=} 默认为项目 resource/views/admin ; 相对路径也是 resource/views/admin 开始; 绝对路径就是指定路径';
 
     /**
      * @var array 允许排序字段
@@ -46,28 +47,7 @@ class ViewCommand extends Command
         'updated_at'
     ];
 
-    /**
-     * 获取目录
-     *
-     * @param  string $file_name 文件名称
-     *
-     * @return string
-     */
-    protected function getPath($file_name)
-    {
-        // 处理为model 的路径
-        if (($path = $this->option('path')) && !starts_with($path, '/')) {
-            $path = base_path('resources/views/admin/' . $path);
-        } else if (is_empty($path)) {
-            $path = base_path('resources/views/admin');
-        }
-
-        if (!file_exists($path)) {
-            @mkdir($path, 0755, true);
-        }
-
-        return rtrim($path, '/') . '/' . ltrim($file_name, '/');
-    }
+    protected $basePath = 'resources/views/admin';
 
     public function handle()
     {
@@ -83,25 +63,19 @@ class ViewCommand extends Command
 
         // 查询表结构
         $structure = DB::select('SHOW FULL COLUMNS FROM `' . $table . '`');
-        if ($file_name = $this->getPath('index.blade.php')) {
-            if (file_exists($file_name) && !$this->confirm($file_name . ' 已经存在,是否覆盖？')) {
-                return;
-            }
-        }
-
-        $question = $this->option('q') == 'true';
-        $html     = $this->createView($structure, $question);
-        file_put_contents($file_name, $html);
-        $this->info($file_name . ' 处理成功');
+        $file_name = $this->getPath('index.blade.php');
+        $this->rendView($file_name, $structure);
     }
 
     /**
-     * @param      $array
-     * @param bool $question
+     * 渲染视图文件
+     *
+     * @param string $file_name
+     * @param  array $array
      *
      * @return string
      */
-    private function createView($array, $question = false)
+    private function rendView($file_name, $array)
     {
         $primary_key = 'id';
         $strHtml     = $strWhere = '';
@@ -109,40 +83,51 @@ class ViewCommand extends Command
             foreach ($array as $value) {
                 $field = array_get($value, 'Field');
                 $title = array_get($value, 'Comment', $field);
-                if (array_get($value, 'Key') == 'PRI') {
-                    $primary_key = $field;
-                }
-
-                $html = "\t\t\t{title:\"{$title}\",data:\"{$field}\",";
+                $html  = "\t\t\t\t{
+                \t title: \"{$title}\",\n\t\t\t\t\t data: \"{$field}\",\n";
 
                 // 编辑
-                if ($question && !in_array($field, [
-                        'id',
-                        'created_at',
-                        'updated_at'
-                    ]) && $this->confirm($field . '字段是否需要编辑?')) {
-                    $html .= 'edit:{type: "text"}';
+                if (array_get($value, 'Key') == 'PRI') {
+                    $primary_key = $field;
+                    $html        .= "\t\t\t\t\t edit: {type: \"hidden\"},\n";
+                } elseif (!in_array($field, ['created_at', 'updated_at'])) {
+                    $params = ['type: "text"'];
+                    // 不能为空
+                    if (array_get($value, 'Null') == 'NO') {
+                        $params[] = 'required: true';
+                    }
+
+                    // 类型处理
+                    $type = array_get($value, 'Type');
+                    if ($this->isInt($type)) {
+                        $params[] = 'number: true';
+                    } elseif ($string = $this->isString($type)) {
+                        $min = array_get($string, 'min', 2);
+                        $max = array_get($string, 'max');
+                        if (count($string) == 2) {
+                            $params[] = "rangelength: [{$min}, {$max}]";
+                        } elseif ($min) {
+                            $params[] = 'minlength: ' . $min;
+                        } elseif ($max) {
+                            $params[] = 'maxlength: ' . $max;
+                        }
+                    }
+
+                    $html .= "\t\t\t\t\t edit: {\n\t\t\t\t\t\t " . implode(",\n\t\t\t\t\t\t", $params) . "\n\t\t\t\t\t}\n";
                 }
 
-                if (!in_array($field, $this->sortFields)) {
-                    $html .= 'orderable:false,';
-                }
-
-                // 搜索
-                if ($question && !in_array($field, [
-                        'created_at',
-                        'updated_at'
-                    ]) && $this->confirm($field . '字段是否需要搜索?')) {
-                    $html .= 'search:{type: "text"}';
-                }
-
-                $strHtml .= trim($html, ', ') . "}, \n";
+                $strHtml .= trim($html, ', ') . "\t\t\t\t}, \n";
             }
         }
 
-        $strHtml            = rtrim($strHtml, " \n");
-        $primary_key_config = $primary_key != 'id' ? 'pk: "' . $primary_key . '",' : '';
-        $sHtml              = <<<html
+        $columns     = rtrim($strHtml, " \n");
+        $primary_key = $primary_key != 'id' ? 'pk: "' . $primary_key . '",' : '';
+        return $this->render($file_name, compact('columns', 'primary_key'));
+    }
+
+    public function getRenderHtml()
+    {
+        return <<<html
 @extends('admin::layouts.admin')
 @section("main-content")
     <div class="row">
@@ -167,7 +152,27 @@ class ViewCommand extends Command
 @endsection
 @include('admin::common.datatable')
 @push("script")
-    <script>
+    <script>    
+    \$(function () {
+        var meTable = meTables({
+            sTable: "#example2",
+            searchType: "middle",
+            checkbox: null,
+            {primary_key}
+            table: {
+                columns: [
+                    {columns}
+                    {
+                        title: "操作",
+                        data: null,
+                        orderable: false,
+                        createdCell: meTables.handleOperator
+                    }
+                ]
+            }
+        });
+    });
+    
     /**
     meTables.fn.extend({
         // 显示的前置和后置操作
@@ -187,30 +192,8 @@ class ViewCommand extends Command
         }
     });
     */
-    
-    $(function () {
-        var meTable = meTables({
-            sTable: "#example2",
-            searchType: "middle",
-            checkbox: null,
-            {$primary_key_config}
-            table: {
-                columns: [
-                    {$strHtml}
-                    {
-                        "title": "操作",
-                        "data": null,
-                        "orderable": false,
-                        "createdCell": meTables.handleOperator
-                    }
-                ]
-            }
-        });
-    });
     </script>
 @endpush
 html;
-        return $sHtml;
     }
-
 }

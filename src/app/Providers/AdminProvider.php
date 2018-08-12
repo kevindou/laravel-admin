@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Commands\AssetLinkCommand;
+use App\Commands\ControllerCommand;
 use App\Commands\ModelCommand;
 use App\Commands\RequestCommand;
 use App\Commands\ViewCommand;
@@ -37,7 +38,8 @@ class AdminProvider extends ServiceProvider
                 AssetLinkCommand::class,
                 ModelCommand::class,
                 ViewCommand::class,
-                RequestCommand::class
+                RequestCommand::class,
+                ControllerCommand::class
             ]);
         }
 
