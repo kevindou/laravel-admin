@@ -932,6 +932,24 @@
                 </div>';
         },
 
+        vueUploadCreate: function (params) {
+            params.type = "hidden";
+            return '<div id="vue-upload"><el-upload\n' +
+                '            :headers="headers" ' +
+                '            :limit="limit" ' +
+                '            :disabled="disabled" ' +
+                '            name="vue_image" ' +
+                '            class="upload-demo"\n' +
+                '            action="' + getValue(params, 'action') + '"\n' +
+                '            :on-remove="remove" ' +
+                '            :on-success="success"' +
+                '            :file-list="list"\n' +
+                '            list-type="picture">\n' +
+                '        <el-button size="small" type="primary"> 点击上传 </el-button>\n' +
+                '        <div slot="tip" class="el-upload__tip"> 只能上传jpg/png文件，且不超过2M </div>\n' +
+                '    </el-upload>' + this.inputCreate(params) + '</div>';
+        },
+
         // 添加时间
         dateTimeCreate: function (params) {
             return '<div class="input-group bootstrap-datetimepicker"> \
