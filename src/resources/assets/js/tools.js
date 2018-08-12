@@ -144,3 +144,32 @@ function initForm(select, data) {
 
     return true;
 }
+
+function vueUpload(select)
+{
+    return new Vue({
+        el: "#vue-upload",
+        data: {
+            headers: {
+                "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")
+            },
+            list: [],
+            limit: 1,
+            disabled: false,
+        },
+        methods: {
+            success(response, file) {
+                if (response.code === 0) {
+                    this.$message.success('上传成功');
+                    $(select).val(response.data.url);
+                } else {
+                    this.$message.error('上传失败：' + response.message);
+                    this.$children[0].clearFiles();
+                }
+            },
+            remove: function () {
+                $(select).val('');
+            }
+        }
+    });
+}
