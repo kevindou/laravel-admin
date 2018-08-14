@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\Command;
+
+use Illuminate\Support\Facades\DB;
 
 /**
  * Trait CommandTrait 命名行 trait
@@ -8,6 +10,48 @@ namespace App\Traits;
  */
 trait CommandTrait
 {
+    /**
+     * 查询表是否存在
+     *
+     * @param $table
+     *
+     * @return array
+     */
+    protected function findTableExist($table)
+    {
+        return DB::select("SHOW TABLES like '{$table}'");
+    }
+
+    /**
+     * 查询表结构
+     *
+     * @param string $table 表名称
+     *
+     * @return array 表结构数组
+     */
+    protected function findTableStructure($table)
+    {
+        return DB::select('SHOW FULL COLUMNS FROM `' . $table . '`');
+    }
+
+    /**
+     * 获取主键信息
+     *
+     * @param string $table   表名称
+     *
+     * @param string $default 默认主键为ID
+     *
+     * @return mixed|string
+     */
+    protected function findPrimaryKey($table, $default = 'id')
+    {
+        if ($structure = $this->findTableStructure($table)) {
+            $default = array_get(array_pluck($structure, 'Field', 'Key'), 'PRI', $default);
+        }
+
+        return $default;
+    }
+
     /**
      * 判断是否 int 类型
      *

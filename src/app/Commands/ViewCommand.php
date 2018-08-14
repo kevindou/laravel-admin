@@ -10,15 +10,14 @@
 
 namespace App\Commands;
 
-use App\Traits\CommandTrait;
-use Illuminate\Support\Facades\DB;
+use App\Traits\Command\CommandTrait;
 
 /**
  * Class View 用来生成 视图
  *
  * @package App\Commands
  */
-class ViewCommand extends Command
+class ViewCommand extends AdminCommand
 {
     use CommandTrait;
 
@@ -34,8 +33,9 @@ class ViewCommand extends Command
      *
      * @var string
      */
-    protected $description = '生成 view {--table=} 指定表 
-     {--path=} 默认为项目 resource/views/admin ; 相对路径也是 resource/views/admin 开始; 绝对路径就是指定路径';
+    protected $description = '生成 view 
+     {--table=} 指定表名称 
+     {--path=}  指定目录 [ 没有传递绝对路径，否则使用相对对路径 从 resource/views/admin 开始 ]';
 
     /**
      * @var array 允许排序字段
@@ -47,6 +47,9 @@ class ViewCommand extends Command
         'updated_at'
     ];
 
+    /**
+     * @var string 指定目录
+     */
     protected $basePath = 'resources/views/admin';
 
     public function handle()
@@ -56,15 +59,14 @@ class ViewCommand extends Command
             return;
         }
 
-        if (!$tables = DB::select('SHOW TABLES like "' . $table . '"')) {
+        if (!$this->findTableExist($table)) {
             $this->error('表不存在');
             return;
         }
 
         // 查询表结构
-        $structure = DB::select('SHOW FULL COLUMNS FROM `' . $table . '`');
         $file_name = $this->getPath('index.blade.php');
-        $this->rendView($file_name, $structure);
+        $this->rendView($file_name, $this->findTableStructure($table));
     }
 
     /**

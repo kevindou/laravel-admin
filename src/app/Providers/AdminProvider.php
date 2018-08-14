@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Commands\AssetLinkCommand;
 use App\Commands\ControllerCommand;
+use App\Commands\GenerateCommand;
 use App\Commands\ModelCommand;
+use App\Commands\RepositoryCommand;
 use App\Commands\RequestCommand;
 use App\Commands\ViewCommand;
 use App\Composers\BreadCrumbsComposer;
@@ -36,10 +38,12 @@ class AdminProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 AssetLinkCommand::class,
+                GenerateCommand::class,
                 ModelCommand::class,
-                ViewCommand::class,
+                RepositoryCommand::class,
                 RequestCommand::class,
-                ControllerCommand::class
+                ControllerCommand::class,
+                ViewCommand::class,
             ]);
         }
 
