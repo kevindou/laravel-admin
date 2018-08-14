@@ -48,6 +48,16 @@ class ViewCommand extends AdminCommand
     ];
 
     /**
+     * @var array 字体和标题对应
+     */
+    protected $fieldTitleMap = [
+        'id'         => 'ID',
+        'sort'       => '排序',
+        'created_at' => '创建时间',
+        'updated_at' => '修改时间'
+    ];
+
+    /**
      * @var string 指定目录
      */
     protected $basePath = 'resources/views';
@@ -84,8 +94,11 @@ class ViewCommand extends AdminCommand
         if ($array) {
             foreach ($array as $value) {
                 $field = array_get($value, 'Field');
-                $title = array_get($value, 'Comment', $field);
-                $html  = "\t\t\t\t{
+                if (!$title = array_get($this->fieldTitleMap, $field)) {
+                    $title = array_get($value, 'Comment') ?: studly_case($field);
+                }
+
+                $html = "\t\t\t\t{
                 \t title: \"{$title}\",\n\t\t\t\t\t data: \"{$field}\",\n";
 
                 // 编辑

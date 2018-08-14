@@ -167,7 +167,7 @@ class {class_name} extends Controller
     public function __construct({repository} \${repository_name})
     {
         parent::__construct();
-        \$this->{repository_name} = \${repository_name};
+        \$this->repository = \${repository_name};
     }
 
     /**
@@ -189,7 +189,7 @@ class {class_name} extends Controller
      */
     public function store(StoreRequest \$request)
     {
-        return \$this->sendJson(\$this->{repository_name}->create(\$request->all()));
+        return \$this->sendJson(\$this->repository->create(\$request->all()));
     }
 
     /**
@@ -201,7 +201,7 @@ class {class_name} extends Controller
      */
     public function update(UpdateRequest \$request)
     {
-        return \$this->sendJson(\$this->{repository_name}->update(\$request->input('{primary_key}'), \$request->all()));
+        return \$this->sendJson(\$this->repository->update(\$request->input('{primary_key}'), \$request->all()));
     }
 
     /**
@@ -213,7 +213,7 @@ class {class_name} extends Controller
      */
     public function destroy(DestroyRequest \$request)
     {
-        return \$this->sendJson(\$this->{repository_name}->delete(\$request->input('{primary_key}')));
+        return \$this->sendJson(\$this->repository->delete(\$request->input('{primary_key}')));
     }
 }
 html;
