@@ -62,7 +62,7 @@ class ControllerCommand extends AdminCommand
         }
 
         $pk        = $pk ?: 'id';
-        $name      = $this->handleOptionName('IndexController');
+        $name      = $this->handleOptionName('IndexController', 'Controller');
         $file_name = $this->getPath($name . '.php', false);
         list($namespace, $class_name) = $this->getNamespaceAndClassName($file_name, 'Controllers');
         // repository 命名空间和类名称
@@ -151,13 +151,13 @@ class ControllerCommand extends AdminCommand
      
 namespace App\Http\Controllers{namespace};
 
-use App\Http\Controllers\BaseController;
+use App\Http\Controllers\Admin\Controller;
 use App\Http\Requests{request_namespace}\DestroyRequest;
 use App\Http\Requests{request_namespace}\StoreRequest;
 use App\Http\Requests{request_namespace}\UpdateRequest;
 use App\Repositories{repository_namespace}\{repository};
 
-class {class_name} extends BaseController
+class {class_name} extends Controller
 {
     /**
      * @var {repository}
@@ -166,6 +166,7 @@ class {class_name} extends BaseController
     
     public function __construct({repository} \${repository_name})
     {
+        parent::__construct();
         \$this->{repository_name} = \${repository_name};
     }
 
@@ -188,7 +189,7 @@ class {class_name} extends BaseController
      */
     public function store(StoreRequest \$request)
     {
-        return \$this->send(\$this->{repository_name}->create(\$request->all()));
+        return \$this->sendJson(\$this->{repository_name}->create(\$request->all()));
     }
 
     /**
@@ -200,7 +201,7 @@ class {class_name} extends BaseController
      */
     public function update(UpdateRequest \$request)
     {
-        return \$this->send(\$this->{repository_name}->update(\$request->input('{primary_key}'), \$request->all()));
+        return \$this->sendJson(\$this->{repository_name}->update(\$request->input('{primary_key}'), \$request->all()));
     }
 
     /**
@@ -212,7 +213,7 @@ class {class_name} extends BaseController
      */
     public function destroy(DestroyRequest \$request)
     {
-        return \$this->send(\$this->{repository_name}->delete(\$request->input('{primary_key}')));
+        return \$this->sendJson(\$this->{repository_name}->delete(\$request->input('{primary_key}')));
     }
 }
 html;

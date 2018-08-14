@@ -10,7 +10,7 @@ class RoleMenusRepository extends Repository
 {
     public function __construct(RoleMenus $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 
     /**

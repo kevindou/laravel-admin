@@ -10,7 +10,7 @@ class PermissionRepository extends Repository
 {
     public function __construct(Permission $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 
     /**

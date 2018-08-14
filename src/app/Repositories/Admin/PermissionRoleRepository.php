@@ -9,6 +9,6 @@ class PermissionRoleRepository extends Repository
 {
     public function __construct(PermissionRole $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 }

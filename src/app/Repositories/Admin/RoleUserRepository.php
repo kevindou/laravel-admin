@@ -9,7 +9,7 @@ class RoleUserRepository extends Repository
 {
     public function __construct(RoleUser $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 
     /**

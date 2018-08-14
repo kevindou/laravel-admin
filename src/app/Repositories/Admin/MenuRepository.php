@@ -15,7 +15,7 @@ class MenuRepository extends Repository
 
     public function __construct(Menu $model, Tree $tree)
     {
-        $this->model = $model;
+        parent::__construct($model);
         $this->tree  = $tree;
     }
 

@@ -9,6 +9,6 @@ class UploadRepository extends Repository
 {
     public function __construct(Upload $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 }

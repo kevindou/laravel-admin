@@ -9,6 +9,6 @@ class CalendarRepository extends Repository
 {
     public function __construct(Calendar $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 }

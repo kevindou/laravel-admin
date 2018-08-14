@@ -10,7 +10,7 @@ class RoleRepository extends Repository
 {
     public function __construct(Role $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 
     /**

@@ -9,6 +9,6 @@ class AdminRepository extends Repository
 {
     public function __construct(Admin $model)
     {
-        $this->model = $model;
+        parent::__construct($model);
     }
 }

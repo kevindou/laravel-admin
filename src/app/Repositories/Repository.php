@@ -55,6 +55,11 @@ abstract class Repository
         'not like'    => 'NOT LIKE'
     ];
 
+    public function __construct(Model $model)
+    {
+        $this->model = $model;
+    }
+
     /**
      * 创建数据
      *

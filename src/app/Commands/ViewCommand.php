@@ -35,7 +35,7 @@ class ViewCommand extends AdminCommand
      */
     protected $description = '生成 view 
      {--table=} 指定表名称 
-     {--path=}  指定目录 [ 没有传递绝对路径，否则使用相对对路径 从 resource/views/admin 开始 ]';
+     {--path=}  指定目录 [ 没有传递绝对路径，否则使用相对对路径 从 resource/views 开始 ]';
 
     /**
      * @var array 允许排序字段
@@ -50,7 +50,7 @@ class ViewCommand extends AdminCommand
     /**
      * @var string 指定目录
      */
-    protected $basePath = 'resources/views/admin';
+    protected $basePath = 'resources/views';
 
     public function handle()
     {
