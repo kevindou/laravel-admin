@@ -504,9 +504,14 @@ abstract class Repository
     {
         if ($orders = explode(',', $order_by)) {
             foreach ($orders as $order) {
+                $order = trim($order);
                 list($k, $v) = array_pad(explode(' ', preg_replace('/\s+/', ' ', $order)), 2, null);
-                if ($k && isset($columns[$k]) && in_array(strtolower($v), ['', 'asc', 'desc'])) {
-                    $query = $query->orderBy($table ? $table . '.' . $k : $k, $v ?: 'desc');
+                if ($k && in_array(strtolower($v), ['', 'asc', 'desc'])) {
+                    if (!isset($columns[$k])) {
+                        $table = null;
+                    }
+
+                    $query->orderBy($table ? $table . '.' . $k : $k, $v ?: 'desc');
                 }
             }
         }
