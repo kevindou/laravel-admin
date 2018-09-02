@@ -180,7 +180,7 @@ abstract class Repository
             return $one->toArray();
         }
 
-        return [];
+        return null;
     }
 
     /**
