@@ -21,5 +21,5 @@ return [
     'verify_permissions'   => true,           // 验证权限
 
     'login_url'  => '/admin/index/index', // 登录成功跳转地址
-    'logout_url' => 'admin/login/index', // 退出后跳转地址
+    'logout_url' => '/admin/login/index', // 退出后跳转地址
 ];
