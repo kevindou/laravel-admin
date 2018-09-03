@@ -91,6 +91,6 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        return redirect(config('admin.logout_url'));
+        return redirect(config('admin.logout_url') ?: '/admin/login/index');
     }
 }
