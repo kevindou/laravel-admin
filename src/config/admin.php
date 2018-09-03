@@ -19,4 +19,7 @@ return [
     'user_schedule_events' => true,           // 我的日程是否显示
     'user_detail'          => true,           // 用户详情
     'verify_permissions'   => true,           // 验证权限
+
+    'login_url'  => '/admin/index/index', // 登录成功跳转地址
+    'logout_url' => 'admin/login/index', // 退出后跳转地址
 ];

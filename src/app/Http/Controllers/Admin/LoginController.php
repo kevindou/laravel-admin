@@ -37,6 +37,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest:admin')->except('logout');
+        $this->redirectTo = config('admin.login_url') ?: $this->redirectTo;
     }
 
     /**
@@ -90,6 +91,6 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        return redirect('/admin/login/index');
+        return redirect(config('admin.logout_url'));
     }
 }
