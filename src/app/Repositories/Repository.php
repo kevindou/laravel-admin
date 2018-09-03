@@ -288,6 +288,17 @@ abstract class Repository
         return $all;
     }
 
+    public function findCountAndItems($condition, $fields = ['*'])
+    {
+        $offset = array_pull($condition, 'offset', 0) ?: request()->get('offset');
+        $limit  = array_pull($condition, 'limit', 10) ?: request()->get('limit');
+        $model  = $this->getFilterModel($condition, $fields);
+        return [
+            'total' => $model->count(),
+            'items' => $model->offset(intval($offset))->limit(intval($limit))->get()->toArray(),
+        ];
+    }
+
     /**
      * 获取过滤查询的model
      *
