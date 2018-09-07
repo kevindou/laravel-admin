@@ -125,7 +125,7 @@
     <script src="{{ asset('admin-assets/plugins/dropzone/dropzone.min.js') }}"></script>
     <script src="{{ asset('admin-assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('admin-assets/plugins/jquery-validation/validate.message.js') }}"></script>
-    <script src="https://unpkg.com/vue"></script>
+    <script src="{{ asset('admin-assets/plugins/vue/vue.min.js') }}"></script>
     <script>
         var defaultValue = {
             id: 0,
