@@ -68,8 +68,25 @@
                 this.options.table.ajax = {
                     url: self.getUrl("search"),
                     data: function (d) {
-                        d.where = $(self.options.searchForm).serialize();
-                        return d;
+                        // 第一步：获取字段信息
+                        var return_object = [];
+                        return_object.push({name: "offset", value: d.start});
+                        return_object.push({name: "limit", value: d.length});
+                        return_object.push({name: "draw", value: d.draw});
+                        for (var i in d.columns) {
+                            if (d.columns[i].data) {
+                                return_object.push({name: "columns[]", value: d.columns[i].data});
+                            }
+                        }
+
+                        var from_data = $(self.options.searchForm).serializeArray();
+                        from_data.forEach(function (value) {
+                            if (value.value !== "") {
+                                return_object.push(value);
+                            }
+                        });
+
+                        return return_object;
                     }
                 }
             }

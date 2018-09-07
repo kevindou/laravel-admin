@@ -45,9 +45,9 @@ class Controller extends BaseController
      *
      * @return \Illuminate\Database\Eloquent\Model|mixed
      */
-    public function findModel($condition)
+    public function findModel($condition, $fields = ['*'])
     {
-        return $this->repository->getFilterModel($condition);
+        return $this->repository->getFilterModel($condition, $fields);
     }
 
     /**
@@ -57,39 +57,24 @@ class Controller extends BaseController
      */
     public function search()
     {
-        $request = request();
-        // 查询的分页信息
-        $start   = $request->input('start');
-        $length  = $request->input('length');
-        $orderBy = $request->input('order');
-        $columns = $request->input('columns');
+        // 处理请求参数
+        $request_data = request()->all();
+        $offset       = (int)array_pull($request_data, 'offset', 0);
+        $limit        = (int)array_pull($request_data, 'limit', 10);
+        $draw         = (int)array_pull($request_data, 'draw', 1);
+        $fields       = array_pull($request_data, 'columns');
+        array_forget($request_data, '_');
 
-        // 处理排序
-        $order = [];
-        if ($orderBy) {
-            foreach ($orderBy as $value) {
-                if ($field = array_get($columns, $value['column'] . '.data')) {
-                    $order[$field] = $value['dir'];
-                }
-            }
-        }
-
-        // 处理 where 查询
-        parse_str($request->input('where'), $condition);
-        $query = $this->findModel($condition);
+        // 查询数据
+        $query = $this->findModel($request_data, $fields);
         $total = $query->count();
-
-        // 排序
-        foreach ($order as $key => $value) {
-            $query->orderBy($key, $value);
-        }
 
         // 返回结果
         return $this->returnJson([
-            'draw'            => $request->input('draw'),
+            'draw'            => $draw,
             'recordsTotal'    => $total,
             'recordsFiltered' => $total,
-            'data'            => $query->offset($start)->limit($length)->get(),
+            'data'            => $query->offset($offset)->limit($limit)->get(),
             'code'            => 0,
         ]);
     }
