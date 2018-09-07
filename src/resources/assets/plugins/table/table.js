@@ -68,17 +68,34 @@
                 this.options.table.ajax = {
                     url: self.getUrl("search"),
                     data: function (d) {
-                        // 第一步：获取字段信息
+                        // 第一步：分页必须的参数
                         var return_object = [];
                         return_object.push({name: "offset", value: d.start});
                         return_object.push({name: "limit", value: d.length});
                         return_object.push({name: "draw", value: d.draw});
+
+                        // 第二步：查询的字段信息
                         for (var i in d.columns) {
                             if (d.columns[i].data) {
                                 return_object.push({name: "columns[]", value: d.columns[i].data});
                             }
                         }
+                        
+                        // 第三步：排序处理
+                        var order = [];
+                        for (var i in d.order) {
+                            var index = d.order[i]["column"];
+                            if (d.columns[index] && d.columns[index]["data"]) {
+                                order.push(d.columns[index]["data"] + " " + d.order[i]["dir"]);
+                            }
+                        }
 
+                        if (order.length > 0) {
+                            return_object.push({name: "orderBy", value: order.join(",")});
+                        }
+
+
+                        // 第四步：表单的数据
                         var from_data = $(self.options.searchForm).serializeArray();
                         from_data.forEach(function (value) {
                             if (value.value !== "") {
