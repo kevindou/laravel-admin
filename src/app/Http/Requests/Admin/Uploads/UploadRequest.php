@@ -9,7 +9,7 @@ class UploadRequest extends Request
     public function rules()
     {
         return [
-            'file' => 'file|size:10000'
+            'file' => 'file|max:100000'
         ];
     }
 }
