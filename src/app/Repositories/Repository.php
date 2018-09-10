@@ -130,6 +130,28 @@ abstract class Repository
     }
 
     /**
+     * 通过复杂的查询条件修改数据
+     *
+     * @param array $condition   修改数据条件
+     * @param array $update_data 修改的数据
+     *
+     * @return array
+     */
+    final public function findConditionUpdate($condition, $update_data)
+    {
+        try {
+            $rows = $this->getFilterModel($condition)->update($update_data);
+            if ($rows && method_exists($this, 'clearCache')) {
+                $this->clearCache($condition);
+            }
+
+            return $this->success($rows, '更新成功');
+        } catch (\Exception $e) {
+            return $this->error($this->getError($e));
+        }
+    }
+
+    /**
      * 删除数据
      *
      * @param array|mixed $condition 查询条件
@@ -146,6 +168,27 @@ abstract class Repository
 
             $return = $this->model->where($condition)->delete();
             return $this->success($return);
+        } catch (\Exception $e) {
+            return $this->error($this->getError($e));
+        }
+    }
+
+    /**
+     * 复杂查询条件删除
+     *
+     * @param array $condition 删除条件
+     *
+     * @return array
+     */
+    final public function findConditionDetete($condition)
+    {
+        $condition = $this->getPrimaryKeyCondition($condition);
+        try {
+            if (method_exists($this, 'clearCache')) {
+                $this->clearCache($condition);
+            }
+
+            return $this->success($this->getFilterModel($condition)->delete());
         } catch (\Exception $e) {
             return $this->error($this->getError($e));
         }
