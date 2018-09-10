@@ -36,7 +36,9 @@ abstract class AdminCommand extends Command
         // 处理路径
         $path = $use_path ? $this->option('path') : '';
         if (is_empty($path) || !starts_with($path, '/')) {
-            $path = base_path(rtrim($this->basePath, '/') . '/' . $path);
+            $array_path = explode('/', str_replace('\\', '/', $path));
+            array_studly_case($array_path);
+            $path = base_path(rtrim($this->basePath, '/') . '/' . implode('/', $array_path));
         }
 
         return rtrim($path, '/') . '/' . ltrim($file_name, '/');

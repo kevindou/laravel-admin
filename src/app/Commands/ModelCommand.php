@@ -56,7 +56,7 @@ class ModelCommand extends AdminCommand
             return;
         }
 
-        $model_name = $this->handleOptionName(str_plural($table, 1));
+        $model_name = $this->handleOptionName(str_replace_last('s', '', str_plural($table, 1)));
         list($columns, $primaryKey) = $this->getColumnsAndPrimaryKey($table);
         $file_name = $this->getPath($model_name . '.php');
         list($namespace, $class_name) = $this->getNamespaceAndClassName($file_name, 'Models');
