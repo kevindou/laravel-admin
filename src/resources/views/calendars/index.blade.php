@@ -5,7 +5,7 @@
             <div class="box box-primary">
                 <!-- /.box-header -->
                 <div class="box-header with-border">
-                    <div class="col-sm-12" id="me-table-search-form">
+                    <div class="col-sm-12" id="me-table-search-form-me-table">
                         <button class="btn btn-success btn-sm pull-left me-table-create">
                             {{ trans('admin.create') }}
                         </button>
@@ -25,104 +25,84 @@
 @include('admin::common.datatable')
 @push("script")
     <script>
-        meTables.extend({
-            "colorCreate": function (params) {
-                return '<input type="hidden" name="style" value="#3c8dbc" id="style-input">\
-                                <ul class="fc-color-picker color-chooser" id="style-select">\
-                                    <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>\
-                                    <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>\
-                                </ul>';
-            }
-        });
-
         $(function () {
-            var table = meTables({
-                "title": "日程管理",
-                "sTable": "#me-table",
-                "searchType": "middle",
-                "table": {
+            var table = $("#me-table").MeTables({
+                title: "日程管理",
+                number: null,
+                table: {
                     columns: [
                         {
-                            "title": "id",
-                            "data": "id",
-                            "defaultOrder": "desc",
-                            "edit": {"type": "hidden"}
+                            title: "id",
+                            data: "id",
+                            defaultOrder: "desc",
+                            edit: {type: "hidden"}
                         },
                         {
-                            "title": "标题",
-                            "data": "title",
-                            "orderable": false,
-                            "search": {"type": "text", name: "title:like"},
-                            "edit": {"rangelength": "[2, 255]", "required": true}
+                            title: "标题",
+                            data: "title",
+                            orderable: false,
+                            search: {type: "text", name: "title:like"},
+                            edit: {"rangelength": "[2, 255]", "required": true}
                         },
                         {
-                            "title": "说明",
-                            "data": "desc",
-                            "orderable": false,
-                            "search": {"type": "text", name: "desc:like"},
-                            "edit": {
-                                "type": "textarea",
-                                "rangelength": "[2, 255]",
-                                "rows": 5,
-                                "required": true
+                            title: "说明",
+                            data: "desc",
+                            orderable: false,
+                            search: {type: "text", name: "desc:like"},
+                            edit: {
+                                type: "textarea",
+                                rangelength: "[2, 255]",
+                                required: true
                             }
                         },
                         {
-                            "title": "开始时间",
-                            "data": "start",
-                            "edit": {
-                                "type": "dateTime",
-                                "required": true
+                            title: "开始时间",
+                            data: "start",
+                            edit: {
+                                type: "dateTime",
+                                required: true
                             }
                         },
                         {
-                            "title": "结束时间",
-                            "data": "end",
-                            "edit": {
-                                "type": "dateTime",
-                                "required": true
+                            title: "结束时间",
+                            data: "end",
+                            edit: {
+                                type: "dateTime",
+                                required: true
                             }
                         },
                         {
-                            "title": "状态",
-                            "data": "status",
-                            "hide": true,
-                            "value": @json($status, 320),
-                            "edit": {"type": "radio", "number": true, "required": true}
+                            title: "状态",
+                            data: "status",
+                            hide: true,
+                            value: @json($status, 320),
+                            edit: {type: "radio", number: true, required: true}
                         },
                         {
-                            "title": "时间状态",
-                            "data": "time_status",
-                            "hide": true,
-                            "value": @json($timeStatus, 320),
-                            "edit": {
-                                "type": "radio",
-                                "number": true,
-                                "required": true
+                            title: "时间状态",
+                            data: "time_status",
+                            hide: true,
+                            value: @json($timeStatus, 320),
+                            edit: {
+                                type: "radio",
+                                number: true,
+                                required: true
                             }
                         },
                         {
-                            "title": "背景颜色", "data": "style", "hide": true,
-                            "edit": {"type": "color", "number": true, "required": true}
+                            title: "背景颜色",
+                            data: "style",
+                            hide: true,
+                            edit: {type: "color", number: true, required: true}
                         },
-                        {"title": "创建时间", "data": "created_at"},
-                        {"title": "修改时间", "data": "updated_at"},
                         {
-                            "width": "80px",
-                            "title": "操作",
-                            "data": null,
-                            "orderable": false,
-                            "createdCell": meTables.handleOperator
-                        }
+                            title: "创建时间",
+                            data: "created_at"
+                        },
+                        {
+                            title: "修改时间",
+                            data: "updated_at"
+                        },
                     ]
                 }
             });

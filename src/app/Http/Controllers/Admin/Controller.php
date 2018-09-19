@@ -58,15 +58,14 @@ class Controller extends BaseController
     public function search()
     {
         // 处理请求参数
-        $request_data = request()->all();
-        $offset       = (int)array_pull($request_data, 'offset', 0);
-        $limit        = (int)array_pull($request_data, 'limit', 10);
-        $draw         = (int)array_pull($request_data, 'draw', 1);
-        $fields       = array_pull($request_data, 'columns');
-        array_forget($request_data, '_');
+        $offset       = (int)request()->input('offset', 0);
+        $limit        = (int)request()->input('limit', 10);
+        $draw         = (int)request()->input('draw', 1);
+        $fields       = request()->input('columns', []);
+        $condition    = request()->input('where', []);
 
         // 查询数据
-        $query = $this->findModel($request_data, $fields);
+        $query = $this->findModel($condition, $fields);
         $total = $query->count();
 
         // 返回结果

@@ -146,6 +146,28 @@
 
             return html;
         },
+
+        /**
+         * 颜色选择
+         * @param params
+         * @returns {string}
+         */
+        colorCreate: function (params) {
+            return '<input type="hidden" name="style" value="#3c8dbc" id="style-input">\
+                                <ul class="fc-color-picker color-chooser" id="style-select">\
+                                    <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>\
+                                    <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>\
+                                </ul>';
+        }
     });
 
     // 修改默认配置

@@ -35,7 +35,6 @@
 
         $(function () {
             var meTable = $("#example2").MeTables({
-                searchType: "middle",
                 checkbox: null,
                 number: null,
                 table: {
