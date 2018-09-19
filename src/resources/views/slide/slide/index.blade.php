@@ -2,15 +2,17 @@
 @section("main-content")
     <div class="row">
         <div class="col-xs-12">
-            <div class="box box-primary">
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <div class="col-sm-12" id="me-table-search-form-example2">
+                        <button class="btn btn-success btn-sm pull-left me-table-button-example2" data-func="create">
+                            {{ trans('admin.create') }}
+                        </button>
+                    </div>
+                </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="row">
-                        <div class="col-sm-12" style="margin-bottom: 20px;" id="me-table-search-form">
-                            <button class="btn btn-success btn-sm pull-left me-table-create">
-                                {{ trans('admin.create') }}
-                            </button>
-                        </div>
                         <div class="col-sm-12">
                             <table id="example2" class="table table-bordered table-hover"></table>
                         </div>
@@ -33,9 +35,8 @@
             arrTypes = @json($types, 320),
             $vue_upload = null;
         $(function () {
-            meTables({
-                sTable: "#example2",
-                searchType: "middle",
+            var table = $("#example2").MeTables({
+                number: false,
                 checkbox: null,
                 table: {
                     columns: [
@@ -54,23 +55,21 @@
                                 required: true,
                                 number: true
                             },
-                            render: function(data) {
+                            render: function (data) {
                                 return getValue(arrTypes, data);
                             }
                         },
                         {
                             title: "名称",
                             data: "title",
-                            search: {type: "text", name: "title:like"},
-                            edit: {
-                                type: "text",
-                                required: true,
-                                rangelength: [2, 50]
-                            }
+                            search: {name: "title:like"},
+                            sortable: false,
+                            edit: {required: true, rangelength: [2, 50]}
                         },
                         {
                             title: "描述",
                             data: "description",
+                            sortable: false,
                             edit: {
                                 type: "textarea",
                                 required: true,
@@ -81,6 +80,7 @@
                         {
                             title: "内容",
                             data: "content",
+                            sortable: false,
                             edit: {
                                 type: "textarea",
                                 minlength: 2
@@ -89,6 +89,7 @@
                         {
                             title: "图片",
                             data: "image",
+                            sortable: false,
                             edit: {
                                 type: "vueUpload",
                                 required: true,
@@ -102,11 +103,8 @@
                         {
                             title: "链接",
                             data: "url",
-                            edit: {
-                                type: "text",
-                                required: true,
-                                rangelength: [2, 191]
-                            }
+                            sortable: false,
+                            edit: {required: true, rangelength: [2, 191]}
                         },
                         {
                             title: "打开方式",
@@ -129,19 +127,14 @@
                                 number: true
                             },
                             render: function (data) {
-                                var c = data == 1 ? "green" : "red";
+                                var c = parseInt(data) === 1 ? "green" : "red";
                                 return '<span style="color:' + c + '">' + getValue(arrStatus, data) + '</span>';
                             }
                         },
                         {
                             title: "排序",
                             data: "sort",
-                            edit: {
-                                type: "text",
-                                required: true,
-                                value: 100,
-                                number: true
-                            }
+                            edit: {required: true, value: 100, number: true}
                         },
                         {
                             title: "创建时间",
@@ -150,37 +143,28 @@
                         {
                             title: "修改时间",
                             data: "updated_at",
-                        },
-                        {
-                            title: "操作",
-                            data: null,
-                            orderable: false,
-                            createdCell: meTables.handleOperator
                         }
                     ]
                 }
             });
 
             $vue_upload = vueUpload("input[name=image][type=hidden]");
-        });
 
-        meTables.fn.extend({
-            // 显示的前置和后置操作
-            beforeShow: function (data, child) {
-                if ($vue_upload.list.length > 0) {
-                    $vue_upload.list.pop();
+            $.extend(table, {
+                // 显示的前置和后置操作
+                beforeShow: function (data) {
+                    if ($vue_upload.list.length > 0) {
+                        $vue_upload.list.pop();
+                    }
+
+                    if (this.action === "update" && getValue(data, "image")) {
+                        $vue_upload.list.push({
+                            name: getValue(data, "name"),
+                            url: getValue(data, "image")
+                        })
+                    }
                 }
-
-                if (this.action === "update" && getValue(data, "image")) {
-                    $vue_upload.list.push({
-                        name: getValue(data, "name"),
-                        url: getValue(data, "image")
-                    })
-                }
-
-                return true;
-            }
+            });
         });
-
     </script>
 @endpush

@@ -2,15 +2,17 @@
 @section("main-content")
     <div class="row">
         <div class="col-xs-12">
-            <div class="box box-primary">
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <div class="col-sm-12" id="me-table-search-form-example2">
+                        <button class="btn btn-success btn-sm pull-left me-table-button-example2" data-func="create">
+                            {{ trans('admin.create') }}
+                        </button>
+                    </div>
+                </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="row">
-                        <div class="col-sm-12" style="margin-bottom: 20px;" id="me-table-search-form">
-                            <button class="btn btn-success btn-sm pull-left me-table-create">
-                                {{ trans('admin.create') }}
-                            </button>
-                        </div>
                         <div class="col-sm-12">
                             <table id="example2" class="table table-bordered table-hover"></table>
                         </div>
@@ -23,7 +25,7 @@
 @include('admin::common.datatable')
 @push("script")
     <script>
-        mt.extend({
+        $.extend($.fn.meTables, {
             menusCreate: function (params) {
                 return '<select ' + this.handleParams(params) + '>' +
                     '<option value="0">顶级分类</option>{!! $group !!}</select>';
@@ -45,10 +47,8 @@
             arrParents = @json(array_pluck($parents, null, 'id'), 320);
         arrParents[0] = {"name": "顶级分类"};
         $(function () {
-
-            var meTable = meTables({
-                sTable: "#example2",
-                searchType: "middle",
+            $("#example2").MeTables({
+                number: false,
                 checkbox: null,
                 table: {
                     columns: [
@@ -60,12 +60,9 @@
                         {
                             title: "父级分类",
                             data: "parent_id",
-                            orderable: false,
+                            sortable: false,
                             search: {type: "menus"},
-                            edit: {
-                                type: "menus",
-                                number: true
-                            },
+                            edit: {type: "menus", number: true},
                             render: function (data) {
                                 return getValue(arrParents, data + ".name", data);
                             }
@@ -73,14 +70,10 @@
                         {
                             title: "导航分类",
                             data: "type_id",
-                            orderable: false,
+                            sortable: false,
                             value: arrTypes,
                             search: {type: "select"},
-                            edit: {
-                                type: "select",
-                                required: true,
-                                number: true
-                            },
+                            edit: {type: "select", required: true, number: true},
                             render: function (data) {
                                 return getValue(arrTypes, data);
                             }
@@ -88,68 +81,41 @@
                         {
                             title: "导航名称",
                             data: "name",
-                            orderable: false,
-                            search: {type: "text", name: "name:like"},
-                            edit: {
-                                type: "text",
-                                required: true,
-                                rangelength: "[2, 100]"
-                            }
+                            sortable: false,
+                            search: {name: "name:like"},
+                            edit: {required: true, rangelength: "[2, 100]"}
                         },
                         {
                             title: "导航地址",
                             data: "url",
-                            orderable: false,
-                            edit: {
-                                type: "text",
-                                required: true,
-                                rangelength: "[1, 100]"
-                            }
+                            sortable: false,
+                            edit: {required: true, rangelength: "[1, 100]"}
                         },
                         {
                             title: "导航图标",
                             data: "icon",
-                            orderable: false,
-                            edit: {
-                                type: "text",
-                                rangelength: "[2, 10]"
-                            }
+                            sortable: false,
+                            edit: {rangelength: "[2, 10]"}
                         },
                         {
                             title: "打开方式",
                             data: "target",
-                            orderable: false,
+                            sortable: false,
                             value: arrTarget,
-                            edit: {
-                                type: "radio",
-                                default: "_self",
-                                required: true
-                            }
+                            edit: {type: "radio", default: "_self", required: true}
                         },
                         {
                             title: "状态",
                             data: "status",
-                            orderable: false,
+                            sortable: false,
                             value: arrStatus,
-                            edit: {
-                                type: "radio",
-                                default: 1,
-                                required: true
-                            },
-                            render: function (data) {
-                                var c = data == 1 ? "green" : "red";
-                                return '<span style="color:' + c + '">' + getValue(arrStatus, data) + '</span>';
-                            }
+                            edit: {type: "radio", default: 1, required: true},
+                            render: $.fn.meTables.statusRender
                         },
                         {
                             title: "排序",
                             data: "sort",
-                            edit: {
-                                type: "text",
-                                value: 100,
-                                number: true,
-                                required: true
-                            }
+                            edit: {value: 100, number: true, required: true}
                         },
                         {
                             title: "创建时间",
@@ -158,12 +124,6 @@
                         {
                             title: "修改时间",
                             data: "updated_at"
-                        },
-                        {
-                            title: "操作",
-                            data: null,
-                            orderable: false,
-                            "createdCell": meTables.handleOperator
                         }
                     ]
                 }

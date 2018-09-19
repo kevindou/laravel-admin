@@ -15,7 +15,7 @@
         <form action="{{ url('/admin/article/articles/update') }}" method="post" id="update-form">
             {{ csrf_field() }}
             <input type="hidden" name="id" value="{{ array_get($info, 'id') }}">
-            @include('admin.article.articles._form', compact('info'))
+            @include('admin::article.articles._form', compact('info'))
             <div class="col-xs-12">
                 <div class="box box-primary">
                     <div class="box-header">

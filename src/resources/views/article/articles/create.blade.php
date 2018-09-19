@@ -14,7 +14,7 @@
         @endif
         <form action="{{ url('/admin/article/articles/store') }}" method="post" id="create-form">
             {{ csrf_field() }}
-            @include('admin.article.articles._form', ['info' => [
+            @include('admin::article.articles._form', ['info' => [
             'status' => 1, 'recommend' => 2, 'author' => '金星', 'sort' => 100
             ]])
             <div class="col-xs-12">

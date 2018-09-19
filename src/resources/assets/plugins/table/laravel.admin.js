@@ -171,6 +171,11 @@
                                     <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>\
                                     <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>\
                                 </ul>';
+        },
+
+        statusRender: function (data) {
+            var c = parseInt(data) === 1 ? "green" : "red";
+            return '<span style="color:' + c + '">' + (data === 1 ? "启用" : "禁用") + '</span>';
         }
     });
 
@@ -178,6 +183,8 @@
     $.fn.meTables.defaults.table.dom = "t<'row'<'table-page col-sm-4'li><'col-sm-8'p>>";
     $.fn.meTables.defaults.url.create = 'store';
     $.fn.meTables.defaults.url.delete = 'destroy';
+    $.fn.meTables.defaults.number = null;
+    $.fn.meTables.defaults.checkbox = null;
     $.extend($.fn.meTables.defaults, {
         /**
          * 搜索表单

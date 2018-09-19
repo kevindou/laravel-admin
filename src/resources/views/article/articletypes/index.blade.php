@@ -2,15 +2,17 @@
 @section("main-content")
     <div class="row">
         <div class="col-xs-12">
-            <div class="box box-primary">
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <div class="col-sm-12" id="me-table-search-form-example2">
+                        <button class="btn btn-success btn-sm pull-left me-table-button-example2" data-func="create">
+                            {{ trans('admin.create') }}
+                        </button>
+                    </div>
+                </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="row">
-                        <div class="col-sm-12" style="margin-bottom: 20px;" id="me-table-search-form">
-                            <button class="btn btn-success btn-sm pull-left me-table-create">
-                                {{ trans('admin.create') }}
-                            </button>
-                        </div>
                         <div class="col-sm-12">
                             <table id="example2" class="table table-bordered table-hover"></table>
                         </div>
@@ -25,10 +27,7 @@
     <script>
         var arr_status = {"1": "启用", "2": "停用"};
         $(function () {
-            var meTable = meTables({
-                sTable: "#example2",
-                searchType: "middle",
-                checkbox: null,
+            $("#example2").MeTables({
                 pk: "type_id",
                 table: {
                     columns: [
@@ -40,48 +39,29 @@
                         {
                             title: "名称",
                             data: "name",
-                            orderable: false,
-                            edit: {
-                                type: "text",
-                                required: true,
-                                rangelength: [2, 100]
-                            }
+                            sortable: false,
+                            search: {name: "name:like"},
+                            edit: {required: true, rangelength: [2, 100]}
                         },
                         {
                             title: "说明",
                             data: "description",
-                            orderable: false,
-                            edit: {
-                                type: "text",
-                                required: true,
-                                rangelength: [2, 191]
-                            }
+                            sortable: false,
+                            edit: {required: true, rangelength: [2, 191]}
                         },
                         {
                             title: "排序",
                             data: "sort",
-                            edit: {
-                                type: "text",
-                                required: true,
-                                number: true,
-                                value: 100
-                            },
+                            edit: {required: true, number: true, value: 100},
                         },
                         {
                             title: "状态",
                             data: "status",
                             value: arr_status,
-                            orderable: false,
-                            edit: {
-                                type: "radio",
-                                default: 1,
-                                required: true,
-                                number: true
-                            },
-                            render: function (data) {
-                                var c = data == 1 ? "green" : "red";
-                                return '<span style="color:' + c + '">' + getValue(arr_status, data) + '</span>';
-                            }
+                            sortable: false,
+                            search: {type: "select"},
+                            edit: {type: "radio", default: 1, required: true, number: true},
+                            render: $.fn.meTables.statusRender
                         },
                         {
                             title: "创建时间",
@@ -90,36 +70,10 @@
                         {
                             title: "修改时间",
                             data: "updated_at",
-                        },
-                        {
-                            title: "操作",
-                            data: null,
-                            orderable: false,
-                            createdCell: meTables.handleOperator
                         }
                     ]
                 }
             });
         });
-
-        /**
-         meTables.fn.extend({
-        // 显示的前置和后置操作
-        beforeShow: function(data, child) {
-            return true;
-        },
-        afterShow: function(data, child) {
-            return true;
-        },
-        
-        // 编辑的前置和后置操作
-        beforeSave: function(data, child) {
-            return true;
-        },
-        afterSave: function(data, child) {
-            return true;
-        }
-    });
-         */
     </script>
 @endpush
