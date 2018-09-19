@@ -13,9 +13,9 @@ trait JsonTrait
      * @var array json 数据
      */
     public $arrJson = [
-        'code'    => 1000,
-        'message' => '',
-        'data'    => '',
+        'code' => 1000,
+        'msg'  => '',
+        'data' => '',
     ];
 
     /**
@@ -27,7 +27,7 @@ trait JsonTrait
      */
     public function handleJson($data, $code = 0, $message = '')
     {
-        list($this->arrJson['data'], $this->arrJson['code'], $this->arrJson['message']) = func_get_args();
+        list($this->arrJson['data'], $this->arrJson['code'], $this->arrJson['msg']) = func_get_args();
     }
 
     /**
@@ -45,7 +45,7 @@ trait JsonTrait
         }
 
         // 处理错误信息
-        $this->arrJson['message'] = $this->arrJson['message'] ?: trans('error.' . $this->arrJson['code']);
+        $this->arrJson['msg'] = $this->arrJson['msg'] ?: trans('error.' . $this->arrJson['code']);
         return response()->json($this->arrJson, 200, [], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
@@ -60,9 +60,9 @@ trait JsonTrait
     public function success($data, $message = '')
     {
         return $this->returnJson([
-            'code'    => 0,
-            'message' => $message,
-            'data'    => $data
+            'code' => 0,
+            'msg'  => $message,
+            'data' => $data
         ]);
     }
 
@@ -77,9 +77,9 @@ trait JsonTrait
     public function error($code = 1000, $message = '')
     {
         return $this->returnJson([
-            'code'    => $code,
-            'message' => $message,
-            'data'    => null,
+            'code' => $code,
+            'msg'  => $message,
+            'data' => null,
         ]);
     }
 

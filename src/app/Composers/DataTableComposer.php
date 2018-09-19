@@ -31,7 +31,8 @@ class DataTableComposer
                 'admin-assets/plugins/datatables/js/dataTables.bootstrap.min.js',
                 'admin-assets/plugins/jquery-validation/jquery.validate.min.js',
                 'admin-assets/plugins/jquery-validation/validate.message.js',
-                'admin-assets/plugins/table/table.js',
+                'admin-assets/plugins/table/jquery.meTables.js',
+                'admin-assets/plugins/table/laravel.admin.js',
             ],
         ]);
     }
