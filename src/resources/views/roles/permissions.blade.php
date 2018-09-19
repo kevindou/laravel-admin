@@ -6,7 +6,7 @@
             {{ csrf_field() }}
             <div class="col-md-3">
                 <!-- general form elements -->
-                <div class="box box-primary">
+                <div class="box box-widget">
                     <div class="box-header with-border">
                         <h3 class="box-title">角色信息</h3>
                     </div>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
 
-                <div class="box box-primary">
+                <div class="box box-widget">
                     <div class="box-header with-border">
                         <h3 class="box-title">角色信息</h3>
                     </div>
@@ -60,7 +60,7 @@
 
             <div class="col-md-9">
                 <!-- general form elements -->
-                <div class="box box-primary">
+                <div class="box box-widget">
                     <div class="box-header with-border">
                         <h3 class="box-title"> 权限信息 </h3>
                     </div>

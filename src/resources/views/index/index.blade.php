@@ -179,7 +179,7 @@ $breadCrumb = [['label' => 'Dashboard']];
             <!-- /.box (chat box) -->
 
             <!-- TO DO List -->
-            <div class="box box-primary">
+            <div class="box box-widget">
                 <div class="box-header">
                     <i class="ion ion-clipboard"></i>
 

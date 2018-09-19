@@ -4,7 +4,7 @@ $strUserAvatar    = data_get($user, 'avatar') ?: asset('admin-assets/img/avatar.
 $strUserName      = data_get($user, 'name') ?: 'admin';
 $strUserCreatedAt = data_get($user, 'created_at') ?: date('Y-m-d H:i:s');
 ?>
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     @include('admin::common.header')
@@ -238,7 +238,6 @@ $strUserCreatedAt = data_get($user, 'created_at') ?: date('Y-m-d H:i:s');
 @stack('script')
 <script>
     var strCurrentUrl = strCurrentUrl || $("#admin-menus").data("url") || "/";
-    console.info(strCurrentUrl);
     var $li = $("li[data-url='" + strCurrentUrl + "']").addClass("active");
     $li.parents(".treeview-menu").addClass("menu-open");
     $li.parents("li").addClass("active");

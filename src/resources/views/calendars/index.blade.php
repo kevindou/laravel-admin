@@ -2,11 +2,10 @@
 @section("main-content")
     <div class="row">
         <div class="col-xs-12">
-            <div class="box box-primary">
-                <!-- /.box-header -->
+            <div class="box box-widget">
                 <div class="box-header with-border">
                     <div class="col-sm-12" id="me-table-search-form-me-table">
-                        <button class="btn btn-success btn-sm pull-left me-table-create">
+                        <button class="btn btn-success btn-sm pull-left me-table-button-me-table" data-func="create">
                             {{ trans('admin.create') }}
                         </button>
                     </div>
@@ -26,7 +25,7 @@
 @push("script")
     <script>
         $(function () {
-            var table = $("#me-table").MeTables({
+            $("#me-table").MeTables({
                 title: "日程管理",
                 number: null,
                 table: {
@@ -40,14 +39,14 @@
                         {
                             title: "标题",
                             data: "title",
-                            orderable: false,
+                            sortable: false,
                             search: {type: "text", name: "title:like"},
                             edit: {"rangelength": "[2, 255]", "required": true}
                         },
                         {
                             title: "说明",
                             data: "desc",
-                            orderable: false,
+                            sortable: false,
                             search: {type: "text", name: "desc:like"},
                             edit: {
                                 type: "textarea",

@@ -473,7 +473,11 @@
             // 确定操作的表单和模型
             var t = $.getValue(MeTables.language, this.action === "create" ? "meTables.insert" : "meTables.update");
             $(this.options.modalSelector).find('h4').html(this.options.title + t);
-            try {$(this.options.formSelector).validate(this.options.formValidate).resetForm();} catch (e) {}
+            try {
+                $(this.options.formSelector).find(".has-error").removeClass("has-error");
+                $(this.options.formSelector).validate(this.options.formValidate).resetForm();
+            } catch (e) {
+            }
             MeTables.initForm(this.options.formSelector, data);
 
             // 显示之后的处理
@@ -828,7 +832,7 @@
         // dataTables 表格默认配置对象信息
         table: {
             paging: true,
-            lengthMenu: [15, 30, 50, 100],
+            lengthMenu: [10, 30, 50, 100],
             searching: false,
             ordering: true,
             info: true,
@@ -878,8 +882,12 @@
         , number: {
             title: $.getValue(MeTables.language, "meTables.number"),
             data: null,
+            view: false,
             render: function (data, type, row, meta) {
-                console.info(meta);
+                if (!meta || $.isEmptyObject(meta)) {
+                    return false;
+                }
+
                 return meta.row + 1 + meta.settings._iDisplayStart;
             },
             sortable: false
@@ -1356,21 +1364,23 @@
             // 循环处理显示信息
             object.forEach(function (k) {
                 var tmpKey = k.data, tmpValue = data[tmpKey], dataInfo = $(tClass + tmpKey);
-                // 处理值
-                if ($.getValue(k, "edit.type") === 'password') {
-                    tmpValue = "******";
-                }
-
-                // createdCell 函数
-                if ($.isFunction($.getValue(k, "createdCell"))) {
-                    k.createdCell(dataInfo, tmpValue, data, row, undefined);
-                } else {
-                    // render 修改值
-                    if ($.isFunction($.getValue(k, "render"))) {
-                        tmpValue = k.render(tmpValue, true, row);
+                if ($.getValue(k, "view", true)) {
+                    // 处理值
+                    if ($.getValue(k, "edit.type") === 'password') {
+                        tmpValue = "******";
                     }
 
-                    dataInfo.html(tmpValue)
+                    // createdCell 函数
+                    if ($.isFunction($.getValue(k, "createdCell"))) {
+                        k.createdCell(dataInfo, tmpValue, data, row, undefined);
+                    } else {
+                        // render 修改值
+                        if ($.isFunction($.getValue(k, "render"))) {
+                            tmpValue = k.render(tmpValue, true, row);
+                        }
+
+                        dataInfo.html(tmpValue)
+                    }
                 }
             });
         },

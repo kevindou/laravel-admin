@@ -1,7 +1,7 @@
 @extends('admin::layouts.admin')
 @section("main-content")
     <div id="vue-app">
-        <div class="box box-success">
+        <div class="box box-widget">
             <div class="box-header with-border">
                 {{ trans('admin.dropFileUploadList') }}
                 <button id="addNewUploads" class="btn btn-info btn-sm pull-right">
@@ -239,7 +239,7 @@
                             vueImage.list.splice(vueImage.index, 1, json.data);
                             $("#update-upload-modal").modal("hide")
                         } else {
-                            layer.msg(json.message, {icon: 5})
+                            layer.msg(json.msg, {icon: 5})
                         }
                     });
                 }

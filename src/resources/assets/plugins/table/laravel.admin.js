@@ -7,6 +7,10 @@
             // 添加按钮信息
             if (!$.isEmptyObject(data)) {
                 for (var i in data) {
+                    if ($.isEmptyObject(data[i])) {
+                        continue;
+                    }
+
                     var class_list = [
                         "btn btn-xs",
                         data[i]['className'],
@@ -173,6 +177,7 @@
     // 修改默认配置
     $.fn.meTables.defaults.table.dom = "t<'row'<'table-page col-sm-4'li><'col-sm-8'p>>";
     $.fn.meTables.defaults.url.create = 'store';
+    $.fn.meTables.defaults.url.delete = 'destroy';
     $.extend($.fn.meTables.defaults, {
         /**
          * 搜索表单

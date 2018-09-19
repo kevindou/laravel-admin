@@ -65,7 +65,7 @@
         </div>
         <!-- /.col -->
         <div class="col-md-9">
-            <div class="box box-primary">
+            <div class="box box-widget">
                 <div class="box-body no-padding">
                     <!-- THE CALENDAR -->
                     <div id="calendar"></div>
@@ -424,7 +424,7 @@
                         $('#external-events').prepend(event);
                         $events.val('')
                     } else {
-                        layer.msg(json.message, {icon: 5});
+                        layer.msg(json.msg, {icon: 5});
                     }
                 });
             });
@@ -440,7 +440,7 @@
                         dataType: "json",
                         data: $fm.serializeArray()
                     }).done(function (json) {
-                        layer.msg(json.message, {icon: json.code === 0 ? 6 : 5});
+                        layer.msg(json.msg, {icon: json.code === 0 ? 6 : 5});
                         if (json.code === 0) {
                             var style = "";
                             try {
@@ -497,7 +497,7 @@
                             'id': calenderCalEvent._id,
                         }
                     }).done(function (json) {
-                        layer.msg(json.message, {icon: json.code === 0 ? 6 : 5});
+                        layer.msg(json.msg, {icon: json.code === 0 ? 6 : 5});
                         if (json.code === 0) {
                             calendar.fullCalendar('removeEvents', function (ev) {
                                 return (ev._id === calenderCalEvent._id);
