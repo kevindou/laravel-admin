@@ -15,10 +15,16 @@
         <form action="{{ url('/admin/article/articles/store') }}" method="post" id="create-form">
             {{ csrf_field() }}
             @include('admin::article.articles._form', ['info' => [
-            'status' => 1, 'recommend' => 2, 'author' => '金星', 'sort' => 100
+            'status' => 1,
+            'recommend' => 2,
+            'author' => '金星',
+            'sort' => 100
             ]])
             <div class="col-xs-12">
-                <div class="box box-primary">
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"> {{ trans('文章内容') }}</h3>
+                    </div>
                     <div class="box-body" id="body-content">
                         <div class="form-group">
                             <label for="title">
@@ -27,13 +33,13 @@
                             </label>
                             <?php $formats = [1 => 'Html', 2 => 'Markdown']; ?>
                             @foreach ($formats as $format => $label)
-                            <div class="radio">
-                                <label>
-                                    <input type="radio"
-                                           @if(old('format', 2) == $format) checked @endif
-                                           name="format" value="{{ $format }}" >{{ $label }}
-                                </label>
-                            </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio"
+                                               @if(old('format', 2) == $format) checked @endif
+                                               name="format" value="{{ $format }}">{{ $label }}
+                                    </label>
+                                </div>
                             @endforeach
                         </div>
                         <div class="format-1 hide format-input">

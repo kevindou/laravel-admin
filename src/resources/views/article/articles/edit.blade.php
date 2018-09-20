@@ -15,11 +15,16 @@
         <form action="{{ url('/admin/article/articles/update') }}" method="post" id="update-form">
             {{ csrf_field() }}
             <input type="hidden" name="id" value="{{ array_get($info, 'id') }}">
-            @include('admin::article.articles._form', compact('info'))
+            <div class="detail-update" style="display: none">
+                @include('admin::article.articles._form', compact('info'))
+            </div>
             <div class="col-xs-12">
-                <div class="box box-primary">
-                    <div class="box-header">
+                <div class="box box-widget">
+                    <div class="box-header with-border">
                         <h3 class="box-title"> {{ trans('文章内容') }} </h3>
+                        <button class="btn btn-xs btn-info detail" data-show="false" type="button">
+                            显示详情编辑
+                        </button>
                     </div>
                     <div class="box-body">
                         @if($info['format'] == 1)
@@ -92,6 +97,17 @@
             // 表单提交处理
             $("#update-form").submit(function () {
                 return $(this).validate().form();
+            });
+
+            // 详情展示和隐藏
+            $("button.detail").click(function () {
+                if ($(this).data("show") === "false") {
+                    $(".detail-update").slideUp();
+                    $(this).data("show", "true").html('显示详情编辑');
+                } else {
+                    $(".detail-update").slideDown();
+                    $(this).data("show", "false").html('隐藏详情编辑')
+                }
             });
         });
     </script>
