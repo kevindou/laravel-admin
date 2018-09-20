@@ -234,7 +234,7 @@ $strUserCreatedAt = data_get($user, 'created_at') ?: date('Y-m-d H:i:s');
 <script src="{{ asset('admin-assets/plugins/stickytabs/jquery.stickytabs.js') }}"></script>
 <script src="{{ asset('admin-assets/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ asset('admin-assets/plugins/layer/layer.js') }}"></script>
-<script src="{{ asset('admin-assets/js/tools.js') }}"></script>
+<script src="{{ asset('admin-assets/laravel-admin/tools.min.js') }}"></script>
 @stack('script')
 <script>
     var strCurrentUrl = strCurrentUrl || $("#admin-menus").data("url") || "/";
