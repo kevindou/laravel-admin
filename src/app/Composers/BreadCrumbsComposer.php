@@ -57,13 +57,14 @@ class BreadCrumbsComposer
 
         if ($menu) {
             $title        = $title ?: $menu['name'];
-            $breadCrumb[] = array_only($menu, ['name', 'url']);
+            $breadCrumb[] = array_only($menu, ['id', 'name', 'url']);
             if ($parent_menu = $this->menuRepository->findOne(['id' => array_get($menu, 'parent')])) {
-                array_unshift($breadCrumb, array_only($parent_menu, ['name', 'url']));
+                array_unshift($breadCrumb, array_only($parent_menu, ['id', 'name', 'url']));
                 $description = $description ?: $parent_menu['name'];
             }
         }
 
-        $view->with(compact('breadCrumb', 'title', 'description'));
+        $menu_ids = array_column($breadCrumb, 'id');
+        $view->with(compact('breadCrumb', 'title', 'description', 'menu_ids'));
     }
 }

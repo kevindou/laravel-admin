@@ -4,10 +4,57 @@ $strUserAvatar    = data_get($user, 'avatar') ?: asset('admin-assets/img/avatar.
 $strUserName      = data_get($user, 'name') ?: 'admin';
 $strUserCreatedAt = data_get($user, 'created_at') ?: date('Y-m-d H:i:s');
 ?>
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     @include('admin::common.header')
+    <style>
+        #admin-nav > li.active > a {
+            background-color: #f9f9f9;
+            padding-bottom: 13px;
+            border-bottom: 2px solid #00c0ef;
+        }
+
+        .navbar-top-links .dropdown-menu ul.admin-ul a {
+            padding: 0 0 0 3px;
+        }
+
+        .admin-ul {
+            display: inline-block;
+            min-width: 160px;
+            margin: 5px;
+            padding: 0;
+            list-style: none;
+            zoom: 1;
+        }
+
+        .admin-ul > li {
+            height: 28px;
+            line-height: 28px;
+        }
+
+        .admin-ul > li > a {
+            padding-left: 5px;
+            display: block;
+            line-height: 28px;
+            height: 28px;
+            color: #373d41;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .admin-ul > li > a:hover {
+            color: white;
+            background: #00c0ef;
+        }
+
+        .admin-ul > li.first {
+            padding-left: 5px;
+            color: #999;
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 <body class=" hold-transition sidebar-mini skin-white">
 <div class="wrapper">
@@ -25,7 +72,8 @@ $strUserCreatedAt = data_get($user, 'created_at') ?: date('Y-m-d H:i:s');
             <a href="#" class="sidebar-toggle b-l" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
-            <!-- Navbar Right Menu -->
+        @includeIf('admin::common.top_nav')
+        <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     @if (config('admin.messages-menu'))
@@ -241,6 +289,12 @@ $strUserCreatedAt = data_get($user, 'created_at') ?: date('Y-m-d H:i:s');
     var $li = $("li[data-url='" + strCurrentUrl + "']").addClass("active");
     $li.parents(".treeview-menu").addClass("menu-open");
     $li.parents("li").addClass("active");
+    // 后台菜单处理
+    $(".admin-top-nav>li").hover(function () {
+        $(this).addClass("open")
+    }, function () {
+        $(this).removeClass("open")
+    });
 </script>
 </body>
 </html>

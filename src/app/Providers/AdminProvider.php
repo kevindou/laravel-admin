@@ -31,9 +31,9 @@ class AdminProvider extends ServiceProvider
             });
         }
 
-        view()->composer(['admin::common.breadcrumbs'], BreadCrumbsComposer::class);
+        view()->composer(['admin::common.breadcrumbs', 'admin::common.top_nav'], BreadCrumbsComposer::class);
         view()->composer(['admin::common.datatable'], DataTableComposer::class);
-        view()->composer(['admin::common.menu'], MenusComposer::class);
+        view()->composer(['admin::common.menu', 'admin::common.top_nav'], MenusComposer::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([

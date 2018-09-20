@@ -16,7 +16,7 @@ class MenuRepository extends Repository
     public function __construct(Menu $model, Tree $tree)
     {
         parent::__construct($model);
-        $this->tree  = $tree;
+        $this->tree = $tree;
     }
 
     /**
@@ -112,5 +112,39 @@ class MenuRepository extends Repository
         }
 
         return $arrReturn;
+    }
+
+    /**
+     * 查询父类信息
+     *
+     * @param $parent_id
+     *
+     * @return array|bool
+     */
+    public function findParents($parent_id)
+    {
+        if ($parent_id) {
+            return false;
+        }
+
+        if (!$one = $this->findOne(['parent' => $parent_id], ['*', 'parentInfo' => ['*']])) {
+            return false;
+        }
+
+
+        array_unshift($array, $one);
+        if ($parent = array_get($one, 'parent_info')) {
+            array_unshift($array, $parent);
+            if ($parent_id = array_get($parent, 'parent')) {
+                if ($parents = $this->findParents($parent_id)) {
+                    do {
+                        array_unshift($array, array_pop($parents));
+                    } while ($parents);
+                }
+            }
+        }
+
+
+        return $array;
     }
 }
