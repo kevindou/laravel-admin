@@ -22,7 +22,7 @@ class DataTableComposer
      */
     public function compose(View $view)
     {
-        $suffix = app()->isLocale() ? '.js' : '.min.js';
+        $suffix = app()->isLocal() ? '.js' : '.min.js';
         $view->with([
             'tableCss'        => [
                 'admin-assets/plugins/datatables/css/dataTables.bootstrap.min.css',
