@@ -22,6 +22,7 @@ class DataTableComposer
      */
     public function compose(View $view)
     {
+        $suffix = app()->isLocal() ? '.js' : '.min.js';
         $view->with([
             'tableCss'        => [
                 'admin-assets/plugins/datatables/css/dataTables.bootstrap.min.css',
@@ -31,8 +32,8 @@ class DataTableComposer
                 'admin-assets/plugins/datatables/js/dataTables.bootstrap.min.js',
                 'admin-assets/plugins/jquery-validation/jquery.validate.min.js',
                 'admin-assets/plugins/jquery-validation/validate.message.js',
-                'admin-assets/plugins/table/jquery.meTables.js',
-                'admin-assets/plugins/table/laravel.admin.js',
+                'admin-assets/laravel-admin/jquery.meTables' . $suffix,
+                'admin-assets/laravel-admin/laravel.admin.js' . $suffix,
             ],
         ]);
     }
