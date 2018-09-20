@@ -509,14 +509,14 @@
             var value = $(_self.options.searchForm).serializeArray();
             for (var i in value) {
                 if (!MeTables.empty(value[i]["value"]) && value[i]["value"] !== "All") {
-                    var strName = MeTables.getAttributeName(value[i]["name"], "where");
+                    var strName = MeTables.getAttributeName(value[i]["name"], _self.options.filter);
                     html += '<input type="hidden" name="' + strName + '" value="' + value[i]["value"] + '"/>';
                 }
             }
 
             // 默认查询参数添加
-            for (i in _self.options.where) {
-                html += '<input type="hidden" name="where[' + i + ']" value="' + _self.options.where[i] + '"/>';
+            for (i in _self.options.defaultFilter) {
+                html += '<input type="hidden" name="' + _self.options.filter + '[' + i + ']" value="' + _self.options.where[i] + '"/>';
             }
 
             // 表单提交
@@ -605,16 +605,19 @@
                     from_data.forEach(function (value) {
                         if (value.value !== "") {
                             return_object.push({
-                                name: MeTables.getAttributeName(value.name, "where"),
+                                name: MeTables.getAttributeName(value.name, _self.options.filter),
                                 value: value.value
                             });
                         }
                     });
 
                     // 第五步：添加附加数据
-                    if (_self.options.where) {
+                    if (_self.options.defaultFilter) {
                         for (var i in _self.options.where) {
-                            return_object.push({name: "where[" + i + "]", value: _self.options.where[i]});
+                            return_object.push({
+                                name: _self.options.filter + "[" + i + "]",
+                                value: _self.options.where[i]
+                            });
                         }
                     }
 
@@ -741,7 +744,8 @@
         pk: "id",		                // 行内编辑pk索引值
         modalSelector: "#table-modal",  // 编辑Modal选择器
         formSelector: "#edit-form",	    // 编辑表单选择器
-        params: null,				    // 请求携带参数
+        defaultFilter: null,			// 默认查询条件 {id: 1, type: 2}
+        filter: "filter",               // 查询参数名称
 
         // 请求相关
         isSuccess: function (json) {
