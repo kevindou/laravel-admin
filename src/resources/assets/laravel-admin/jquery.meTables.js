@@ -515,8 +515,9 @@
             }
 
             // 默认查询参数添加
-            for (i in _self.options.defaultFilter) {
-                html += '<input type="hidden" name="' + _self.options.filter + '[' + i + ']" value="' + _self.options.where[i] + '"/>';
+            for (i in _self.options.defaultFilters) {
+                html += '<input type="hidden" name="';
+                html += _self.options.filters + '[' + i + ']" value="' + _self.options.defaultFilters[i] + '"/>';
             }
 
             // 表单提交
@@ -605,18 +606,18 @@
                     from_data.forEach(function (value) {
                         if (value.value !== "") {
                             return_object.push({
-                                name: MeTables.getAttributeName(value.name, _self.options.filter),
+                                name: MeTables.getAttributeName(value.name, _self.options.filters),
                                 value: value.value
                             });
                         }
                     });
 
                     // 第五步：添加附加数据
-                    if (_self.options.defaultFilter) {
-                        for (var i in _self.options.where) {
+                    if (_self.options.defaultFilters) {
+                        for (var i in _self.options.defaultFilters) {
                             return_object.push({
-                                name: _self.options.filter + "[" + i + "]",
-                                value: _self.options.where[i]
+                                name: _self.options.filters + "[" + i + "]",
+                                value: _self.options.defaultFilters[i]
                             });
                         }
                     }
@@ -744,8 +745,8 @@
         pk: "id",		                // 行内编辑pk索引值
         modalSelector: "#table-modal",  // 编辑Modal选择器
         formSelector: "#edit-form",	    // 编辑表单选择器
-        defaultFilter: null,			// 默认查询条件 {id: 1, type: 2}
-        filter: "filter",               // 查询参数名称
+        defaultFilters: null,			// 默认查询条件 {id: 1, type: 2}
+        filters: "filter",              // 查询参数名称
 
         // 请求相关
         isSuccess: function (json) {

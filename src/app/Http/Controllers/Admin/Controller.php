@@ -64,7 +64,7 @@ class Controller extends BaseController
         $limit     = (int)request()->input('limit', 10);
         $draw      = (int)request()->input('draw', 1);
         $fields    = request()->input('columns', []);
-        $condition = request()->input('filter', []);
+        $condition = request()->input('filters', []);
 
         // 查询数据
         $query = $this->findModel(array_merge($condition, ['orderBy' => request()->input('orderBy')]), $fields);
