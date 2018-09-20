@@ -3,11 +3,14 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-widget">
-                <div class="box-header with-border">
-                    <div class="col-sm-12" id="me-table-search-form-me-table">
-                        <button class="btn btn-success btn-sm pull-left me-table-button-me-table" data-func="create">
-                            {{ trans('admin.create') }}
-                        </button>
+                <div class="row">
+                    <div class="box-header with-border">
+                        <div class="col-sm-12" id="me-table-search-form-me-table">
+                            <button class="btn btn-success btn-sm pull-left me-table-button-me-table"
+                                    data-func="create">
+                                {{ trans('admin.create') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="box-body">

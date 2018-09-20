@@ -4,12 +4,13 @@
         <div class="col-xs-12">
             <div class="box box-widget">
                 <div class="box-header with-border">
-                    <div class="col-sm-12" id="me-table-search-form-example2">
-                        <a class="btn btn-info btn-sm pull-left" style="margin-left:5px"
-                           href="{{ url('admin/article/articles/create') }}">
-                            <i class="fa fa-plus"></i>
-                            {{ trans('添加') }}
-                        </a>
+                    <div class="row">
+                        <div class="col-sm-12" id="me-table-search-form-example2">
+                            <a class="btn btn-success btn-sm pull-left"
+                               href="{{ url('admin/article/articles/create') }}">
+                                {{ trans('添加') }}
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <!-- /.box-header -->

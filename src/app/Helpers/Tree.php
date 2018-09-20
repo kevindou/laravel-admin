@@ -315,7 +315,13 @@ class Tree
                 $returnArray[$child[$this->pk]] = $child;
                 if ($maxLevel === 0 || ($maxLevel !== 0 && $maxLevel > $level)) {
                     $mLevel                                              = $level + 1;
-                    $returnArray[$child[$this->pk]][$this->childrenName] = $this->getTreeArray($child[$this->pk], $maxLevel, $mLevel);
+                    $returnArray[$child[$this->pk]][$this->childrenName] = $this->getTreeArray(
+                        $child[$this->pk],
+                        $maxLevel,
+                        $mLevel,
+                        $sort
+                    );
+
                     if ($sort) {
                         $this->arraySort(
                             $returnArray[$child[$this->pk]][$this->childrenName],

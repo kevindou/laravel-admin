@@ -33,6 +33,8 @@ class MenusController extends Controller
         // 默认状态信息
         $status = Menu::getStatus();
 
+        dd($this->repository->getPermissionMenus(1));
+
         // 查询父类等级
         $parents = $this->repository->findAll(['status:neq' => Menu::STATUS_DELETE]);
         $group   = $this->tree->init([

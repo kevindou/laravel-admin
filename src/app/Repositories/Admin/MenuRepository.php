@@ -22,6 +22,8 @@ class MenuRepository extends Repository
     /**
      * 获取权限对应的导航栏目信息
      *
+     * @param integer $uid 用户ID
+     *
      * @return array
      */
     public function getPermissionMenus($uid = null)

@@ -4,45 +4,48 @@
         <div class="col-xs-12">
             <div class="box box-widget">
                 <div class="box-header with-border">
-                    <div class="col-sm-12">
-                        <button class="btn btn-success btn-sm pull-left me-table-button-example2" data-func="create">
-                            {{ trans('admin.create') }}
-                        </button>
-                        <form class="form-inline pull-right" id="search-form" name="searchForm">
-                            <div class="form-group">
-                                <label class="sr-only">上级分类</label>
-                                <select name="parent" class="form-control">
-                                    <option value="">请选择分类</option>
-                                    <option value="0">顶级分类</option>
-                                    {!! $group !!}
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="inputSearchName">名称</label>
-                                <input type="text" name="name:like" class="form-control" id="inputSearchName"
-                                       placeholder="导航名称">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="inputSearchUrl">地址</label>
-                                <input type="text" name="url:like" class="form-control" id="inputSearchUrl"
-                                       placeholder="导航地址">
-                            </div>
-                            <div class="form-group" style="min-width:200px;">
-                                <select class="form-control select2 pull-left" name="status:in[]"
-                                        multiple="multiple"
-                                        id="inputSearchStatus" data-placeholder="选择状态" style="width: 100%;">
-                                    @foreach($status as $key => $value)
-                                        <option value="{{ $key }}">{{ $value }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-info">
-                                <i class="fa fa-search"></i>搜索
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button class="btn btn-success btn-sm pull-left me-table-button-example2"
+                                    data-func="create">
+                                {{ trans('admin.create') }}
                             </button>
-                            <button type="reset" class="btn btn-warning me-table-reset">
-                                {{ trans('清除') }}
-                            </button>
-                        </form>
+                            <form class="form-inline pull-right" id="search-form" name="searchForm">
+                                <div class="form-group">
+                                    <label class="sr-only">上级分类</label>
+                                    <select name="parent" class="form-control">
+                                        <option value="">请选择分类</option>
+                                        <option value="0">顶级分类</option>
+                                        {!! $group !!}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="inputSearchName">名称</label>
+                                    <input type="text" name="name:like" class="form-control" id="inputSearchName"
+                                           placeholder="导航名称">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="inputSearchUrl">地址</label>
+                                    <input type="text" name="url:like" class="form-control" id="inputSearchUrl"
+                                           placeholder="导航地址">
+                                </div>
+                                <div class="form-group" style="min-width:200px;">
+                                    <select class="form-control select2 pull-left" name="status:in[]"
+                                            multiple="multiple"
+                                            id="inputSearchStatus" data-placeholder="选择状态" style="width: 100%;">
+                                        @foreach($status as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fa fa-search"></i>搜索
+                                </button>
+                                <button type="reset" class="btn btn-warning me-table-reset">
+                                    {{ trans('清除') }}
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="box-body">
@@ -94,15 +97,15 @@
                                 edit: {required: "true", rangelength: "[2, 50]"}
                             },
                             {
-                                title: "地址", 
+                                title: "地址",
                                 data: "url",
                                 sortable: false,
                                 edit: {required: "true", rangelength: "[1, 255]"}
                             },
                             {
-                                title: "图标", 
-                                data: "icon", 
-                                sortable: false, 
+                                title: "图标",
+                                data: "icon",
+                                sortable: false,
                                 render: function (data) {
                                     return data ? "<i class=\"fa " + data + "\"></i>" : data;
                                 },
