@@ -43,6 +43,8 @@ class Controller extends BaseController
      *
      * @param array|mixed $condition 查询条件
      *
+     * @param array       $fields 查询的字段信息
+     *
      * @return \Illuminate\Database\Eloquent\Model|mixed
      */
     public function findModel($condition, $fields = ['*'])
