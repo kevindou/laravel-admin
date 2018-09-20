@@ -123,27 +123,31 @@ class MenuRepository extends Repository
      */
     public function findParents($parent_id)
     {
-        if ($parent_id) {
+        if (empty($parent_id) || $parent_id < 0) {
             return false;
         }
 
+        // 没有查询到直接返回
         if (!$one = $this->findOne(['parent' => $parent_id], ['*', 'parentInfo' => ['*']])) {
             return false;
         }
 
-
-        array_unshift($array, $one);
-        if ($parent = array_get($one, 'parent_info')) {
-            array_unshift($array, $parent);
-            if ($parent_id = array_get($parent, 'parent')) {
-                if ($parents = $this->findParents($parent_id)) {
-                    do {
-                        array_unshift($array, array_pop($parents));
-                    } while ($parents);
-                }
-            }
+        // 没有父类直接返回
+        $array = [$one];
+        if (!$parent = array_get($one, 'parent_info')) {
+            return $array;
         }
 
+        // 父类没有父类了，直接返回
+        array_unshift($array, $parent);
+        if (!$parent_id = array_get($parent, 'parent')) {
+            return $array;
+        }
+
+        // 父类可能还有几级父类处理
+        do {
+            array_unshift($array, array_pop($parents));
+        } while ($parents);
 
         return $array;
     }
