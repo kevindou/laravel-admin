@@ -28,7 +28,7 @@ class ArticleTypesController extends Controller
      */
     public function index()
     {
-        return view('admin::article.articletypes.index');
+        return view('admin::article.article_types.index');
     }
 
     /**
